@@ -59,6 +59,18 @@
     "@typescript-eslint/no-explicit-any": "off",
     "react-hooks/exhaustive-deps": "off"
   },
+  "overrides": [
+    {
+      "files": [
+        "lib/ui/screen-components/un-protected/layout/app-bar/index.tsx",
+        "lib/ui/screens/protected/resturant-store/restaurant/index.tsx",
+        "lib/ui/screens/protected/resturant-store/store/index.tsx"
+      ],
+      "rules": {
+        "max-lines": "off"
+      }
+    }
+  ],
   "settings": {
     "import/resolver": {
       "typescript": {}

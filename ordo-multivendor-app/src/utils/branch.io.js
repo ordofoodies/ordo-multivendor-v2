@@ -174,9 +174,9 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
       'referral_link',
       {
         locallyIndex: true,
-        title: 'Join Enatega and get credits!',
+        title: 'Join Ordo and get credits!',
         contentDescription: `Use my referral code ${referralCode} to get credits on your first order!`,
-        contentImageUrl: 'https://cdn-inech.nitrocdn.com/jdKghPovkzWfRohbpgAZaZYRcFhYiZiI/assets/images/optimized/rev-2fba21a/enatega.com/wp-content/uploads/2025/11/Enatega-logo-250-Purple-135x.webp',
+        contentImageUrl: 'https://ordofoodies.com/assets/images/png/logo-main.png',
         contentMetadata: {
           customMetadata: {
             referralCode: referralCode,
@@ -192,7 +192,7 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
       linkData.data
     )
 
-    const shareText = `Hey! Join Enatega - the easiest and cheapest way to shop for your African foods and groceries with convenient doorstep delivery in the UK. Use my referral code ${referralCode} to get credits for every order! For the first order you complete, I get 100 Borku credits! Download:${url}`
+    const shareText = `Hey! Join Ordo - the easiest and cheapest way to shop for your African foods and groceries with convenient doorstep delivery in the UK. Use my referral code ${referralCode} to get credits for every order! For the first order you complete, I get 100 Borku credits! Download:${url}`
 
     return { url: url, shareText: shareText, success: true }
   } catch (error) {
@@ -202,7 +202,7 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
 
 const createFallbackLink = (referralCode, userInfo = {}) => {
   const fallbackUrl = `https://390ag.app.link/?referralCode=${referralCode}&ref=${referralCode}`
-  const fallbackText = `Hey! Join Enatega - the easiest and cheapest way to shop for your African foods and groceries with convenient doorstep delivery in the UK. Use my referral code ${referralCode} to get credits for every order! For the first order you complete, I get 100 Enatega credits! Download:${fallbackUrl}`
+  const fallbackText = `Hey! Join Ordo - the easiest and cheapest way to shop for your African foods and groceries with convenient doorstep delivery in the UK. Use my referral code ${referralCode} to get credits for every order! For the first order you complete, I get 100 Ordo credits! Download:${fallbackUrl}`
 
   return {
     url: fallbackUrl,

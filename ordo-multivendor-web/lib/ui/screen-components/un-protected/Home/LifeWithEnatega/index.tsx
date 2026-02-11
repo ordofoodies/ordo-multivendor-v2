@@ -6,8 +6,8 @@ import HomeCard from "@/lib/ui/useable-components/Home-Card";
 import MoveableCard from "@/lib/ui/useable-components/Moveable-Card";
 
 // images
-import deliveryFee from "@/public/assets/images/png/deliveryFee.webp";
-import ZeroDelivery from "@/public/assets/images/png/0delivery.webp";
+import deliveryFee from "@/public/assets/images/png/deliveryFee.png";
+import ZeroDelivery from "@/public/assets/images/png/0delivery.png";
 import RestaurantApp from "@/public/assets/images/png/restaurantApp.png"
 import RiderApp from "@/public/assets/images/png/riderApp.png"
 import CustomerApp from "@/public/assets/images/png/CustomerApp.png"

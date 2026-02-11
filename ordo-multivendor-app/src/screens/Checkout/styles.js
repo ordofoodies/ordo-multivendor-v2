@@ -447,7 +447,7 @@ const styles = (props = null) =>
     },
     // Wallet Styles
     walletCard: {
-      backgroundColor: '#90E36D',
+      backgroundColor: '#FF8000',
       borderRadius: 12,
       padding: 16,
       marginVertical: 8,
@@ -484,7 +484,7 @@ const styles = (props = null) =>
       padding: 16,
       marginVertical: 8,
       borderWidth: 1,
-      borderColor: props !== null ? props?.primary || '#90E36D' : '#90E36D'
+      borderColor: props !== null ? props?.primary || '#FF8000' : '#FF8000'
     },
     walletAppliedHeader: {
       flexDirection: props?.isRTL ? 'row-reverse' : 'row',
@@ -522,7 +522,7 @@ const styles = (props = null) =>
       borderRadius: 6
     },
     walletModalCard: {
-      backgroundColor: '#90E36D',
+      backgroundColor: '#FF8000',
       borderRadius: 12,
       padding: 16,
       marginTop: 8
@@ -535,7 +535,7 @@ const styles = (props = null) =>
     walletModalInput: {
       height: scale(50),
       borderWidth: 2,
-      borderColor: props !== null ? props?.primary || '#90E36D' : '#90E36D',
+      borderColor: props !== null ? props?.primary || '#FF8000' : '#FF8000',
       backgroundColor: props !== null ? props?.themeBackground : '#FFFFFF',
       padding: 16,
       borderRadius: 12,
@@ -550,7 +550,7 @@ const styles = (props = null) =>
       alignItems: 'center'
     },
     walletModalButton: {
-      backgroundColor: '#90E36D',
+      backgroundColor: '#FF8000',
       justifyContent: 'center',
       alignItems: 'center',
       height: scale(50),

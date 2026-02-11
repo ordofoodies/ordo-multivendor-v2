@@ -318,7 +318,7 @@ export default function CurrentLocation() {
         </View>
       )}
 
-      <ForceUpdate />
+      {/* <ForceUpdate /> */}
 
       <ModalDropdown theme={currentTheme} visible={citiesModalVisible} onItemPress={handleMarkerPress} onClose={() => setCitiesModalVisible(false)} />
     </View>
