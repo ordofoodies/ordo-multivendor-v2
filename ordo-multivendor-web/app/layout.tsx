@@ -7,7 +7,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import Script from "next/script";
 
 export const metadata = {
-  title: "Enatega Multivendor",
+  title: "Ordo Multivendor",
   manifest: "/manifest.json",
 };
 
