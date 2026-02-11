@@ -2,7 +2,8 @@
 
 /* IMPORTANT: In "styled" mode you must add the PrimeReact Theme here. Do NOT include in "unstyled" mode */
 @import "primereact/resources/themes/lara-light-blue/theme.css"
-  layer(primereact);
+layer(primereact);
+
 @layer tailwind-base {
   @tailwind base;
 }
@@ -13,9 +14,9 @@
 }
 
 :root {
-  --primary-color: #75d04b;
-   --primary-light: #F3FFEE;
-   --primary-dark: #5AC12F;
+  --primary-color: #FF8000;
+  --primary-light: #FFF2E6;
+  --primary-dark: #FF8000;
   --secondary-color: #0EA5E9;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
@@ -43,17 +44,15 @@ body,
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 .p-sidebar-left {
   justify-content: flex-end !important;
 }
+
 /* Screen Container */
 /* Start Generation Here */
 .screen-container {
@@ -62,6 +61,7 @@ body {
   height: 90dvh;
   overflow-y: auto;
 }
+
 /* End Generation Here */
 
 /* Layout */
@@ -119,6 +119,7 @@ body {
   font-weight: 700;
   line-height: 40px;
 }
+
 .heading-2 {
   font-size: 22px;
   font-weight: 700;
@@ -187,16 +188,18 @@ body {
 /* Scroll Bar  */
 ::-webkit-scrollbar {
   width: 7px;
-  height: 7px; /* Added height for horizontal scrollbars */
-  background: rgba(
-    255,
-    255,
-    255,
-    0.8
-  ); /* Light gray background for better visibility */
+  height: 7px;
+  /* Added height for horizontal scrollbars */
+  background: rgba(255,
+      255,
+      255,
+      0.8);
+  /* Light gray background for better visibility */
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #d3d3d3; /* A more lighter gray color for the scrollbar thumb */
+  background: #d3d3d3;
+  /* A more lighter gray color for the scrollbar thumb */
   border-radius: 7px;
 }
 
@@ -248,7 +251,7 @@ body {
 }
 
 .p-inputotp-input,
-.p-inputotp > .p-inputtext {
+.p-inputotp>.p-inputtext {
   width: 40px;
   height: 40px;
   font-size: 1.25rem;
@@ -259,8 +262,9 @@ body {
 
 /* Medium screens (tablets) */
 @media (max-width: 768px) {
+
   .p-inputotp-input,
-  .p-inputotp > .p-inputtext {
+  .p-inputotp>.p-inputtext {
     width: 30px;
     height: 30px;
     font-size: 1.125rem;
@@ -269,8 +273,9 @@ body {
 
 /* Small screens (phones) */
 @media (max-width: 480px) {
+
   .p-inputotp-input,
-  .p-inputotp > .p-inputtext {
+  .p-inputotp>.p-inputtext {
     width: 35px;
     height: 35px;
     font-size: 1rem;
@@ -287,13 +292,15 @@ body {
 
 .p-multiselect-token {
   background-color: var(--primary-color);
-  color: white; /* optional: change the text color to white for better contrast */
+  color: white;
+  /* optional: change the text color to white for better contrast */
 }
 
 .p-multiselect-filter-container {
   display: flex;
   align-items: center;
 }
+
 .p-multiselect-filter {
   height: 35px;
   border: 1px solid lightgray;
@@ -301,11 +308,11 @@ body {
   box-shadow: none;
 }
 
-.p-multiselect-select-all > .p-checkbox > .p-checkbox-box {
+.p-multiselect-select-all>.p-checkbox>.p-checkbox-box {
   border: 1px solid lightgray;
 }
 
-.p-multiselect-item > .p-multiselect-checkbox > .p-checkbox > .p-checkbox-box {
+.p-multiselect-item>.p-multiselect-checkbox>.p-checkbox>.p-checkbox-box {
   border: 1px solid lightgray;
   /* background-color: var(--secondary-color); */
 }
@@ -322,8 +329,12 @@ body {
 }
 
 .p-dropdown-label {
-  font-size: 0.875rem /* 14px */;
-  line-height: 1.25rem /* 20px */;
+  font-size: 0.875rem
+    /* 14px */
+  ;
+  line-height: 1.25rem
+    /* 20px */
+  ;
 }
 
 /* Input Number */
@@ -344,6 +355,7 @@ body {
   box-shadow: none;
   outline: none;
 }
+
 /* ------------------------ */
 
 /* Text Icon Clickable */
@@ -358,10 +370,13 @@ body {
   position: relative;
 }
 
-.text-icon-clickable-container > span {
-  font-size: 0.2rem; /* equivalent to text-xs */
-  font-weight: 400; /* equivalent to font-normal */
-  line-height: 1.5rem; /* equivalent to leading-6 */
+.text-icon-clickable-container>span {
+  font-size: 0.2rem;
+  /* equivalent to text-xs */
+  font-weight: 400;
+  /* equivalent to font-normal */
+  line-height: 1.5rem;
+  /* equivalent to leading-6 */
 }
 
 /* Data Table */
@@ -432,9 +447,10 @@ body {
 }
 
 /* Password */
-.p-password > .p-icon-field {
+.p-password>.p-icon-field {
   width: 100%;
 }
+
 .p-password-input {
   padding-left: 10px;
   width: 100%;
@@ -450,13 +466,15 @@ body {
 }
 
 .p-datatable-header .p-component::placeholder {
-  font-size: 14px; /* Adjust the font size as needed */
+  font-size: 14px;
+  /* Adjust the font size as needed */
   color: #adacac;
   /* font-weight: 500; */
 }
 
 .p-datatable-header .p-component {
-  font-size: 14px; /* Adjust the font size as needed */
+  font-size: 14px;
+  /* Adjust the font size as needed */
   font-weight: lighter;
 }
 
@@ -516,7 +534,7 @@ body {
   margin-top: -2px;
 }
 
-.p-dropdown-label > .p-inputtext {
+.p-dropdown-label>.p-inputtext {
   margin-top: 10px;
 }
 
@@ -546,6 +564,7 @@ body {
   padding: 0;
   border: 0;
 }
+
 .p-autocomplete-input {
   width: 100%;
   padding-left: 10px;
@@ -582,7 +601,7 @@ body {
   border: 1px dashed gray;
 }
 
-.p-fieldset-legend > a {
+.p-fieldset-legend>a {
   padding: 10px;
 }
 
@@ -637,13 +656,15 @@ body {
 }
 
 .p-dataview-header .p-component::placeholder {
-  font-size: 14px; /* Adjust the font size as needed */
+  font-size: 14px;
+  /* Adjust the font size as needed */
   color: #adacac;
   /* font-weight: 500; */
 }
 
 .p-dataview-header .p-component {
-  font-size: 14px; /* Adjust the font size as needed */
+  font-size: 14px;
+  /* Adjust the font size as needed */
   font-weight: lighter;
 }
 
@@ -658,11 +679,11 @@ body {
 }
 
 .hover-clickable-row:hover {
-  background-color: rgba(0, 0, 0, 0.05); /* Light hover effect */
+  background-color: rgba(0, 0, 0, 0.05);
+  /* Light hover effect */
 }
 
-.react-international-phone-input-container
-  .react-international-phone-country-selector-button {
+.react-international-phone-input-container .react-international-phone-country-selector-button {
   height: 40px;
 }
 
@@ -681,7 +702,8 @@ Discovery Caurousal
 /* Responsive Image Styling */
 .carousel-banner {
   width: 100%;
-  height: 340px; /* Default height */
+  height: 340px;
+  /* Default height */
   object-fit: cover;
   border-radius: 12px;
 }
@@ -738,6 +760,7 @@ Discovery Caurousal
 
 /* Remove button on smaller screens */
 @media (max-width: 768px) {
+
   .discovery-carousel .p-carousel-prev,
   .discovery-carousel .p-carousel-next {
     display: none;
@@ -780,10 +803,13 @@ Discovery Caurousal
 /* ScrollPanel Styling (Horizontal) */
 .scroll-container {
   width: 100%;
-  height: 350px; /* Adjust height as needed */
-  overflow-x: auto; /* Enable horizontal scrolling */
+  height: 350px;
+  /* Adjust height as needed */
+  overflow-x: auto;
+  /* Enable horizontal scrolling */
   overflow-y: hidden;
-  white-space: nowrap; /* Prevent items from wrapping */
+  white-space: nowrap;
+  /* Prevent items from wrapping */
 }
 
 /* Scroll Content */
@@ -807,20 +833,24 @@ Discovery Caurousal
 
 /* styles/globals.css */
 @layer components {
+
   /* Make Accordion container, header, and content transparent */
   .custom-accordion .p-accordion,
   .custom-accordion .p-accordion-header,
   .custom-accordion .p-accordion-content {
     background-color: transparent !important;
-    box-shadow: none !important; /* Remove shadows */
-    border: none !important; /* Remove borders if desired */
+    box-shadow: none !important;
+    /* Remove shadows */
+    border: none !important;
+    /* Remove borders if desired */
     padding-left: 0;
   }
 
   /* Make AccordionTab header (the one inside each AccordionTab) transparent */
   .custom-accordion .p-accordion-header {
     background-color: transparent !important;
-    box-shadow: none !important; /* Remove any shadow on the header */
+    box-shadow: none !important;
+    /* Remove any shadow on the header */
   }
 
   .custom-accordion .p-accordion-header-link {
@@ -833,6 +863,7 @@ Discovery Caurousal
     display: none;
   }
 }
+
 /* Panel Menu */
 
 .p-panelmenu .p-panelmenu-header.p-highlight .p-menuitem-text,
@@ -850,6 +881,7 @@ Discovery Caurousal
 .p-stepper-nav {
   display: none !important;
 }
+
 /* Change border color */
 .p-checkbox-box {
   border: 2px solid #9ca3af !important;
@@ -870,6 +902,7 @@ Discovery Caurousal
   background: var(--primary-color) !important;
   border-color: var(--primary-light) !important;
 }
+
 .p-inputotp-input {
   border: 1px solid lightgray;
   border-radius: 32px;
@@ -877,8 +910,7 @@ Discovery Caurousal
 
 /* 3D Text Effect */
 .text-3d-effect {
-  transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(1deg)
-    rotateY(1deg) rotateZ(1deg);
+  transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(1deg) rotateY(1deg) rotateZ(1deg);
   transform-style: preserve-3d;
   text-shadow: 6px 6px 10px rgba(0, 0, 0, 0.5);
 }
@@ -887,11 +919,12 @@ Discovery Caurousal
   display: none !important;
 }
 
-.rce-mbox-right-notch , .rce-mbox-left-notch{
+.rce-mbox-right-notch,
+.rce-mbox-left-notch {
   display: none;
 }
 
-.p-dialog-content{
+.p-dialog-content {
   padding-left: 0;
   padding-right: 0;
 }
@@ -904,31 +937,36 @@ Discovery Caurousal
   text-align: right;
 }
 
- .message-left .rce-mbox-text {
-  background-color: var(--primary-color); /* Light green for current user */
+.message-left .rce-mbox-text {
+  background-color: var(--primary-color);
+  /* Light green for current user */
   border-radius: 3px;
   padding: 5px;
-  color:white;
-  width:fit-content
+  color: white;
+  width: fit-content
 }
 
 .message-right {
   /* background-color: #f1f1f1;; Light green for current user */
   border-radius: 10px;
-  padding: 4px;  
+  padding: 4px;
 
 }
 
 /* 🔹 Dark mode Dropdown wrapper (the white container around filter) */
 .dark .p-dropdown-panel {
-  background-color: #1f2937 !important; /* gray-800 */
-  color: #f9fafb !important;           /* gray-100 */
-  border-color: #4b5563 !important;    /* gray-600 */
+  background-color: #1f2937 !important;
+  /* gray-800 */
+  color: #f9fafb !important;
+  /* gray-100 */
+  border-color: #4b5563 !important;
+  /* gray-600 */
 }
 
 /* 🔹 The header above items (where filter input lives) */
 .dark .p-dropdown-header {
-  background-color: #1f2937 !important; /* gray-800 */
+  background-color: #1f2937 !important;
+  /* gray-800 */
   border-bottom: 1px solid #4b5563 !important;
 }
 
@@ -948,35 +986,46 @@ Discovery Caurousal
 
 
 .dark .p-dropdown-panel .p-dropdown-filter {
-  background-color: #1f2937; /* gray-800 */
-  color: #f9fafb;           /* gray-100 */
+  background-color: #1f2937;
+  /* gray-800 */
+  color: #f9fafb;
+  /* gray-100 */
   border: 1px solid #4b5563;
 }
 
 /* 🔹 Selected option text box (closed dropdown) */
 .dark .p-dropdown .p-dropdown-label {
-  background-color: #1f2937 !important; /* gray-800 */
-  color: #f9fafb !important;            /* gray-100 */
-  border-color: #4b5563 !important;     /* gray-600 */
+  background-color: #1f2937 !important;
+  /* gray-800 */
+  color: #f9fafb !important;
+  /* gray-100 */
+  border-color: #4b5563 !important;
+  /* gray-600 */
 }
 
 /* 🔹 Placeholder text */
 .dark .p-dropdown .p-dropdown-label.p-placeholder {
-  color: #9ca3af !important; /* gray-400 */
+  color: #9ca3af !important;
+  /* gray-400 */
 }
 
 
 /* 🔹 Input field (already partly handled by Tailwind) */
 .dark .p-autocomplete-input {
-  background-color: #1f2937 !important; /* gray-800 */
-  color: #f9fafb !important;           /* gray-100 */
-  border-color: #4b5563 !important;    /* gray-600 */
+  background-color: #1f2937 !important;
+  /* gray-800 */
+  color: #f9fafb !important;
+  /* gray-100 */
+  border-color: #4b5563 !important;
+  /* gray-600 */
 }
 
 /* 🔹 Suggestion panel (the floating dropdown) */
 .dark .p-autocomplete-panel {
-  background-color: #1f2937 !important; /* gray-800 */
-  border: 1px solid #4b5563 !important; /* gray-600 */
+  background-color: #1f2937 !important;
+  /* gray-800 */
+  border: 1px solid #4b5563 !important;
+  /* gray-600 */
   color: #f9fafb !important;
 }
 
@@ -988,7 +1037,8 @@ Discovery Caurousal
 
 /* 🔹 Highlight (hover / arrow-selected item) */
 .dark .p-autocomplete-item.p-highlight {
-  background-color: #374151 !important; /* gray-700 */
+  background-color: #374151 !important;
+  /* gray-700 */
   color: #ffffff !important;
 }
 
@@ -997,18 +1047,21 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:active {
   /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-800 bg for dark */
-  -webkit-text-fill-color: #f3f4f6 !important; /* gray-100 text for dark */
+  -webkit-text-fill-color: #f3f4f6 !important;
+  /* gray-100 text for dark */
   transition: background-color 5000s ease-in-out 0s;
 }
 
 /* === Dark mode autofill === */
- input:-webkit-autofill,
- input:-webkit-autofill:hover,
- input:-webkit-autofill:focus,
- input:-webkit-autofill:active {
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
   /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-700 bg */
-  -webkit-text-fill-color: #000000 !important; /* gray-100 text */
-  caret-color: #000000 !important; /* keeps cursor visible */
+  -webkit-text-fill-color: #000000 !important;
+  /* gray-100 text */
+  caret-color: #000000 !important;
+  /* keeps cursor visible */
 }
 
 
@@ -1018,17 +1071,18 @@ input:-webkit-autofill:active {
 .dark input:-webkit-autofill:focus,
 .dark input:-webkit-autofill:active {
   /* -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important; gray-700 bg */
-  -webkit-text-fill-color: #f3f4f6 !important; /* gray-100 text */
-  caret-color: #f3f4f6 !important; /* keeps cursor visible */
+  -webkit-text-fill-color: #f3f4f6 !important;
+  /* gray-100 text */
+  caret-color: #f3f4f6 !important;
+  /* keeps cursor visible */
 }
 
-[dir = "rtl"] .p-icon-field-right > .p-input-icon:last-of-type {
+[dir="rtl"] .p-icon-field-right>.p-input-icon:last-of-type {
   left: 0;
   right: auto;
 }
 
 .rtl-carousel .p-carousel-container {
-  direction: ltr !important; /* Force LTR for animation */
+  direction: ltr !important;
+  /* Force LTR for animation */
 }
-
-

@@ -387,7 +387,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                     onClick={logoClickHandler}
                     className="text-xl font-bold text-gray-900 dark:text-white"
                   >
-                    <Logo fillColor="#000000" darkmode="#FFFFFFFF" />
+                    <Logo />
                   </div>
                 )}
                 {!isSearchFocused && (

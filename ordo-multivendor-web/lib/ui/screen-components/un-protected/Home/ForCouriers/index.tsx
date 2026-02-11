@@ -6,7 +6,7 @@ import TranparentButton from "@/lib/ui/useable-components/Home-Buttons/Tranparen
 import competetiveEarning from "@/public/assets/images/png/competitiveEarning.webp";
 import flexibleHours from "@/public/assets/images/png/flexibleHours.webp";
 
-import Banner2 from "@/public/assets/images/png/Banner2.webp";
+import Banner2 from "@/public/assets/images/png/Banner2.png";
 import { useTranslations } from "next-intl";
 
 import reachNewCustomersImg from "@/lib/assets/we_do_heavy_lifting.png";

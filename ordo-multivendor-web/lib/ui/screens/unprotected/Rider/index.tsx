@@ -13,7 +13,7 @@ import StartingImage from '@/lib/ui/useable-components/RiderandRestaurantsInfos/
 import growth from "@/public/assets/images/png/Growth.png";
 import getMoreOrders from "@/public/assets/images/png/GetMoreOrders.png";
 import deliverMoreCustomers from "@/public/assets/images/png/deliverToCustomer.png";
-import RiderBanner from '@/public/assets/images/png/RidersBanner.webp';
+import RiderBanner from '@/public/assets/images/png/RidersBanner.png';
 
 const Rider = () => {
   const t = useTranslations();
