@@ -44,17 +44,18 @@ export const useCreateAccount = () => {
 
   // Configure Google Sign-In ONCE for Android
   useEffect(() => {
-    console.log('🔧 Configuring Google Sign-In for Android...')
+    console.log('🔧 Configuring Google Sign-In for Android...');
     GoogleSignin.configure({
-      webClientId: '650001300965-9ochl634tuvv6iguei6dl57jkmfto6r9.apps.googleusercontent.com', // Web client ID for Expo
-      androidClientId: '650001300965-ii3nafver2uiu4qat9gbde9rkmhmvj0j.apps.googleusercontent.com', // Android client ID
-      iosClientId: '650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7.apps.googleusercontent.com', // iOS client ID
+      webClientId: "822560760184-039q45jjdc1b7thg39qi37js40tmdb14.apps.googleusercontent.com", // Web client ID for Expo
+      androidClientId: "822560760184-v5rhhue5lfqhtferr234butm08qgg95o.apps.googleusercontent.com", // Android client ID
+      iosClientId: "822560760184-qjcj5ho18j2kpdi03ne4cejlfs55t1rl.apps.googleusercontent.com", // iOS client ID
       offlineAccess: true,
       hostedDomain: '',
-      forceCodeForRefreshToken: true
-    })
-    console.log('✅ Google Sign-In configured for Android')
-  }, [])
+      forceCodeForRefreshToken: true,
+
+    });
+    console.log('✅ Google Sign-In configured for Android');
+  }, []);
 
   // Google Sign-In Function for Android
   const signIn = async () => {

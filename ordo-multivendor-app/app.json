@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Enatega Multi",
-    "scheme": "enategamultivendor",
-    "version": "1.1.16",
-    "description": "Enatega is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
-    "slug": "enategamultivendor",
-    "owner": "ninjas_code",
+    "name": "ÖRDO",
+    "scheme": "ordo-customer",
+    "version": "1.0.2",
+    "description": "ÖRDO is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
+    "slug": "ordo-customer",
+    "owner": "ordofoodies",
     "experiments": {
       "buildCacheProvider": "eas"
     },
@@ -38,15 +38,11 @@
       },
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
-      "bundleIdentifier": "com.enatega.multivendor",
+      "bundleIdentifier": "com.ordocustomer.app",
       "icon": "./assets/icon.png",
       "config": {
-        "googleMapsApiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
+        "googleMapsApiKey": "AIzaSyASc2PXUyjCvYdI-3dB1J4VycPWYJp_izI"
       },
-      "associatedDomains": [
-        "applinks:390ag.app.link",
-        "applinks:390ag-alternate.app.link"
-      ],
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
@@ -57,8 +53,7 @@
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "enategamultivendor",
-              "com.googleusercontent.apps.650001300965-dkji7jutv8gc5m4n7cdg3nft87sauhn7"
+              "com.googleusercontent.apps.822560760184-qjcj5ho18j2kpdi03ne4cejlfs55t1rl"
             ]
           }
         ],
@@ -67,14 +62,14 @@
     },
     "notification": {
       "iosDisplayInForeground": true,
-      "color": "#90E36D",
+      "color": "#FF8000",
       "icon": "./assets/not-icon.png",
       "androidMode": "default",
-      "androidCollapsedTitle": "Enatega Multivendor"
+      "androidCollapsedTitle": "Ordo Multivendor"
     },
     "android": {
-      "versionCode": 116,
-      "package": "com.enatega.multivendor",
+      "versionCode": 2,
+      "package": "com.ordocustomer.app",
       "userInterfaceStyle": "automatic",
       "googleServicesFile": "./google-services.json",
       "splash": {
@@ -84,7 +79,7 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyCcm7_Wd7uvmC9YnYLu2JHGWPt6z1MaL1E"
+          "apiKey": "AIzaSyASc2PXUyjCvYdI-3dB1J4VycPWYJp_izI"
         }
       },
       "permissions": [
@@ -93,9 +88,11 @@
         "android.permission.FOREGROUND_SERVICE",
         "com.google.android.gms.permission.AD_ID"
       ],
-      "icon": "./assets/appIcon.png",
-      "navigationBar": {
-        "visible": "immersive"
+      "queries": {
+        "packages": [
+          "com.whatsapp",
+          "com.whatsapp.w4b"
+        ]
       },
       "intentFilters": [
         {
@@ -103,34 +100,6 @@
           "data": [
             {
               "scheme": "whatsapp"
-            }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
-        },
-        {
-          "action": "android.intent.action.VIEW",
-          "data": [
-            {
-              "scheme": "https",
-              "host": "390ag.app.link",
-              "pathPrefix": "/"
-            }
-          ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
-        },
-        {
-          "action": "android.intent.action.VIEW",
-          "data": [
-            {
-              "scheme": "https",
-              "host": "390ag-alternate.app.link",
-              "pathPrefix": "/"
             }
           ],
           "category": [
@@ -160,7 +129,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $Enatega Multivendor to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $Ordo Multivendor to use your location."
         }
       ],
       "expo-font",
@@ -169,24 +138,22 @@
       "expo-video",
       "expo-apple-authentication",
       [
-        "@config-plugins/react-native-branch",
+        "expo-tracking-transparency",
         {
-          "apiKey": "key_live_be3dN5e3ugtnbqt3W0zIvphjFqk8YBws",
-          "iosAppDomain": "390ag.app.link"
+          "userTrackingPermission": "Allow this app to collect app-related data that can be used for tracking you or your device."
         }
-      ],
-      "./plugins/fix-appdelegate.js"
+      ]
     ],
     "extra": {
       "eas": {
-        "projectId": "331d4e5b-b12a-434a-92ec-d6d283dc0e46"
+        "projectId": "68c3f3f5-6e74-4d4b-886f-99909d483a0d"
       }
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/331d4e5b-b12a-434a-92ec-d6d283dc0e46"
+      "url": "https://u.expo.dev/68c3f3f5-6e74-4d4b-886f-99909d483a0d"
     }
   }
 }
