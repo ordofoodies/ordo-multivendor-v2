@@ -463,7 +463,7 @@ function Main(props) {
                     </View>
                   )}
                 </View>
-                <ForceUpdate />
+                {/* <ForceUpdate /> */}
               </View>
             </View>
             <ActiveOrders onActiveOrdersChange={handleActiveOrdersChange} />
