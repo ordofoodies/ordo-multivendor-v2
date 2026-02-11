@@ -1,10 +1,9 @@
 // components/Logo.tsx
 
-import { useTheme } from "@/lib/providers/ThemeProvider";
+// import { useTheme } from "@/lib/providers/ThemeProvider";
 import Image from "next/image";
 
-const Logo = ({
-}) =>{
+const Logo = () => {
 
   // const {theme} = useTheme()
   return (
