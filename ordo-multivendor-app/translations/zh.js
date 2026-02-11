@@ -555,7 +555,7 @@ export const zh = {
   none: '没有',
   yourEmail: '输入您的电子邮件地址轻松登录！',
   yourEmailPassword: '请输入您的密码以获取访问权限！',
-  brandName: 'Enatega',
+  brandName: 'Ordo',
 welcomeText: '欢迎来到Enatega',
   createAccountDesc: '享受最好的餐厅或从附近的商店获得您需要的东西，随时送达！',
   phoneNumber: '电话号码',
