@@ -16,9 +16,9 @@ layer(primereact);
 }
 
 :root {
-  --primary-color: #b1c748;
-  --primary-dark: #5ac12f;
-  --secondary-color: #bac973;
+  --primary-color: #FF8000;
+  --primary-dark: #FF8000;
+  --secondary-color: #FFF2E6;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
@@ -40,7 +40,7 @@ body,
 *,
 *::before,
 *::after {
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 body {
@@ -54,6 +54,7 @@ body {
 .dark .p-datatable-scrollable .p-datatable-thead {
   top: -3px;
 }
+
 /* Screen Container */
 /* Start Generation Here */
 .screen-container {
@@ -163,7 +164,8 @@ body {
   background-color: white;
 }
 
-.dark .p-card, .dark .card {
+.dark .p-card,
+.dark .card {
   background-color: var(--dark-900);
 }
 
@@ -175,23 +177,24 @@ body {
 .dark .p-card-body {
   background-color: var(--dark-900);
   border-radius: 0.9rem 0.9rem 0.9rem 0.9rem;
-} 
+}
 
-.dark .p-tabview-panels , .dark .p-tabview-nav {
+.dark .p-tabview-panels,
+.dark .p-tabview-nav {
   background-color: var(--dark-900);
 }
 
-.dark .p-unselectable-text{
+.dark .p-unselectable-text {
   background-color: var(--dark-600);
 }
 
-.dark .p-dialog-header{
+.dark .p-dialog-header {
   background-color: var(--dark-900);
   color: white;
   border-bottom: 1px solid white
 }
 
-.dark .p-dialog-content{
+.dark .p-dialog-content {
   background-color: var(--dark-900);
 }
 
@@ -516,7 +519,7 @@ body {
 .dark .p-datatable-table tr.p-highlight {
   background-color: rgba(90, 193, 47, 0.15) !important;
   /* soft green tint */
-  color: #5ac12f !important;
+  color: #FF8000 !important;
 }
 
 /* === Dark mode: dropdown input inside DataTable === */

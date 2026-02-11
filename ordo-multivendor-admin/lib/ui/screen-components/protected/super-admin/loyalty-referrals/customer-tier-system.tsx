@@ -32,7 +32,7 @@ function LevelCard({ name, point, loading, onMenuClick }: LevelCardProps) {
   return (
     <div className="bg-[#F9FAFB] dark:bg-dark-900 border border-[#E4E4E7] dark:border-dark-600 rounded-2xl p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
-        <span className="inline-block bg-[#F0FFEA] dark:bg-dark-600 border border-[#5AC12F] dark:border-primary-dark px-3 py-1 rounded-full text-sm font-medium text-foreground dark:text-white">
+        <span className="inline-block bg-[#F0FFEA] dark:bg-dark-600 border border-[#FF8000] dark:border-primary-dark px-3 py-1 rounded-full text-sm font-medium text-foreground dark:text-white">
           {name}
         </span>
         {loading ? (
