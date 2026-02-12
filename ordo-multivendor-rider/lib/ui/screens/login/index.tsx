@@ -42,7 +42,6 @@ const initial: ILoginInitialValues = {
 const LoginScreen = () => {
   // States
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [initialValues, setInitialValues] = useState(initial);
 
   // Hooks
   const { appTheme } = useApptheme();
@@ -71,23 +70,11 @@ const LoginScreen = () => {
     }
   };
 
-  const onInit = () => {
-    try {
-      client
-        ?.clearStore()
-        .catch((err) => console.log("Apollo clearStore error:", err));
-
-      if (!creds?.username) return;
-      setInitialValues(creds);
-    } catch (err) {
-      console.log("error login", err);
-    }
-  };
-
-  // Use Effect
   useEffect(() => {
-    onInit();
-  }, [creds]);
+    client
+      ?.clearStore()
+      .catch((err) => console.log("Apollo clearStore error:", err));
+  }, []);
 
   if (loading) {
     return (
@@ -109,8 +96,7 @@ const LoginScreen = () => {
         // contentContainerStyle={{ height: height * 1 }}
         >
           <Formik
-            initialValues={initialValues}
-            enableReinitialize={true}
+            initialValues={initial}
             validationSchema={SignInSchema}
             onSubmit={onLoginHandler}
           >

@@ -15,7 +15,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "npx eslint && prettier --write .",
-    "upload-sourcemaps": "SENTRY_AUTH_TOKEN=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 npx sentry-expo upload-sourcemaps"
+    "upload-sourcemaps": "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"
   },
   "jest": {
     "preset": "jest-expo"
