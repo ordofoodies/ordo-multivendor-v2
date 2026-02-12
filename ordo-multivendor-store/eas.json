@@ -5,7 +5,7 @@
       "channel": "development",
       "distribution": "internal",
       "ios": {
-        "simulator": false
+        "simulator": true
       },
        "android": {
         "buildType": "apk"
@@ -19,12 +19,15 @@
         "buildType": "apk"
       },
       "env": {
-        "SENTRY_AUTH_TOKEN": "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"
+        "SENTRY_AUTH_TOKEN": "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"
       }
     },
 
     "production": {
-      "channel": "production"
+      "channel": "production",
+      "env": {
+        "SENTRY_AUTH_TOKEN": "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"
+      }
     }
   },
   "submit": {
