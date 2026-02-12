@@ -26,7 +26,7 @@ import { useApptheme } from "@/lib/context/theme.context";
 import { useTranslation } from "react-i18next";
 import CustomContinueButton from "../custom-continue-button";
 import { CircleCrossIcon } from "../svg";
-import usePrintOrder from "@/lib/hooks/usePrintOrder";
+// import usePrintOrder from "@/lib/hooks/usePrintOrder";
 
 const SetTimeScreenAndAcceptOrder = ({
   id,
@@ -43,7 +43,7 @@ const SetTimeScreenAndAcceptOrder = ({
 
   const { muteRing, loading: loadingRing } = useOrderRing();
   const { acceptOrder, loading: loadingAcceptOrder } = useAcceptOrder();
-  const { printOrder } = usePrintOrder();
+  // const { printOrder } = usePrintOrder();
 
   const onAcceptOrderHandler = async () => {
     try {
@@ -57,27 +57,27 @@ const SetTimeScreenAndAcceptOrder = ({
       handleDismissModal();
     }
   };
-  const onAcceptAndPrintOrderHandler = async () => {
-    try {
-      setIsAcceptingOrder(true);
-      const status = await printOrder(id);
+  // const onAcceptAndPrintOrderHandler = async () => {
+  //   try {
+  //     setIsAcceptingOrder(true);
+  //     const status = await printOrder(id);
 
-      if (status) {
-        // null means it's ioS so ignore printing and true mean print wa successfull
-        await acceptOrder(id, selectedTime?.toString() || "0");
-        await muteRing(orderId);
-      }
+  //     if (status) {
+  //       // null means it's ioS so ignore printing and true mean print wa successfull
+  //       await acceptOrder(id, selectedTime?.toString() || "0");
+  //       await muteRing(orderId);
+  //     }
 
-      setIsAcceptingOrder(false);
-      handleDismissModal();
-    } catch (err) {
-      // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
-      console.log(err);
-    } finally {
-      setIsAcceptingOrder(false);
-      handleDismissModal();
-    }
-  };
+  //     setIsAcceptingOrder(false);
+  //     handleDismissModal();
+  //   } catch (err) {
+  //     // FlashMessageComponent({ message: err?.message ?? "Order accept failed" });
+  //     console.log(err);
+  //   } finally {
+  //     setIsAcceptingOrder(false);
+  //     handleDismissModal();
+  //   }
+  // };
 
   return (
     <View className="flex-1 items-center justify-center px-4 pb-20">
@@ -127,7 +127,7 @@ const SetTimeScreenAndAcceptOrder = ({
           title={t("Done")}
         />
       </View>
-      {Platform.OS === "android" && (
+      {/* {Platform.OS === "android" && (
         <View>
           <CustomContinueButton
             isLoading={(loadingAcceptOrder || loadingRing) && isAcceptingOrder}
@@ -136,7 +136,7 @@ const SetTimeScreenAndAcceptOrder = ({
             title={t("AcceptAndPrint")}
           />
         </View>
-      )}
+      )} */}
     </View>
   );
 };
