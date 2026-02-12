@@ -22,7 +22,7 @@ export default function RestaurantsScreen() {
   );
 
   const { loading: cuisinesloading, restaurantCuisinesData } = useGetCuisines();
-
+  //
   // ✅ Initial load
   useEffect(() => {
     if (page === 1 && queryData?.length) {

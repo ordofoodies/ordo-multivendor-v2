@@ -13,7 +13,8 @@ import {
 import React, { useMemo } from 'react';
 
 export default function StatesTable() {
-  // COntext
+
+  // Context
   const { CURRENCY_CODE } = useConfiguration();
 
   const { data, loading } = useQueryGQL(GET_DASHBOARD_ORDERS_BY_TYPE, {

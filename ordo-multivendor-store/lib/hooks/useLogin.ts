@@ -7,7 +7,6 @@ import { useContext, useState } from "react";
 
 import { Href, router } from "expo-router";
 import {
-  DEFAULT_STORE_CREDS,
   STORE_LOGIN,
 } from "../api/graphql/mutation/login";
 import { AuthContext } from "../context/global/auth.context";
@@ -17,7 +16,6 @@ import { ROUTES } from "../utils/constants";
 import { IStoreLoginCompleteResponse } from "../utils/interfaces/auth.interface";
 
 const useLogin = () => {
-  const [creds, setCreds] = useState({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Context
@@ -29,14 +27,11 @@ const useLogin = () => {
     onError,
   });
 
-  useQuery(DEFAULT_STORE_CREDS, { onCompleted, onError });
-
   // Handlers
   async function onCompleted({
     restaurantLogin,
-    lastOrderCreds,
   }: IStoreLoginCompleteResponse) {
-    console.log("🚀 ~ onCompleted called with:", { restaurantLogin, lastOrderCreds });
+    console.log("🚀 ~ onCompleted called with:", { restaurantLogin });
     
     setIsLoading(false);
     
@@ -44,15 +39,6 @@ const useLogin = () => {
       await setItem("store-id", restaurantLogin?.restaurantId);
       await setTokenAsync(restaurantLogin?.token);
       router.replace(ROUTES.home as Href);
-    } else if (
-      lastOrderCreds &&
-      lastOrderCreds?.restaurantUsername &&
-      lastOrderCreds?.restaurantPassword
-    ) {
-      setCreds({
-        username: lastOrderCreds?.restaurantUsername,
-        password: lastOrderCreds?.restaurantPassword,
-      });
     }
   }
 
@@ -166,7 +152,6 @@ const useLogin = () => {
   };
 
   return {
-    creds,
     onLogin,
     isLogging: isLoading,
   };
