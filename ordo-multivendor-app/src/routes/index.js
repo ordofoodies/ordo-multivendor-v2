@@ -235,7 +235,7 @@ function BottomTabNavigator() {
           height: Platform.OS === 'ios' ? 70 + insets.bottom : 70 + insets.bottom,
           backgroundColor: currentTheme.cardBackground
         },
-        tabBarActiveTintColor: '#0EA5E9',
+        tabBarActiveTintColor: currentTheme.main,
         tabBarInactiveTintColor: currentTheme.fontNewColor,
         tabBarLabelStyle: { fontSize: 12 },
         headerRight: () => <RightButton icon='cart' iconColor={currentTheme.iconColor} menuHeader={false} t={t} />

@@ -3,12 +3,21 @@ import useEnvVars from '../../../environment'
 
 const useGeocoding = () => {
   const { GOOGLE_MAPS_KEY } = useEnvVars()
+  const API_KEY = GOOGLE_MAPS_KEY
 
   const getAddress = async (latitude, longitude) => {
+    console.log('🔍 [useGeocoding] Starting geocoding request')
+    console.log('📍 Coordinates:', { latitude, longitude })
+    console.log('🔑 API Key:', API_KEY ? `${API_KEY.substring(0, 10)}...` : 'UNDEFINED')
+    
     try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_KEY}&language=en`
-      )
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}&language=en`
+      console.log('🌐 Request URL:', url.replace(API_KEY, 'API_KEY_HIDDEN'))
+      
+      const response = await axios.get(url)
+      
+      console.log('📡 Response status:', response.status)
+      console.log('📦 Response data:', JSON.stringify(response.data, null, 2))
 
       // Check if the response is successful and contains results
       if (
@@ -26,13 +35,16 @@ const useGeocoding = () => {
         )
         const city = cityComponent ? cityComponent.long_name : null
         
+        console.log('✅ Address found:', { formattedAddress, city })
         return { formattedAddress, city }
         
       } else {
+        console.log('❌ No results in response')
         throw new Error('No address found for the given coordinates.')
       }
     } catch (error) {
-      console.error('Error fetching address:', error.message)
+      console.error('❌ Error fetching address:', error.message)
+      console.error('❌ Full error:', error)
       throw error
     }
   }

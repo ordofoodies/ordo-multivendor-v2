@@ -156,10 +156,10 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
         ref: referralCode,
         code: referralCode,
         inviterName: userInfo.name || 'Your friend',
-        $fallback_url: `https://apps.apple.com/app/enatega-multivendor/id1526488093`,
-        $desktop_url: `https://multivendor.enatega.com/?ref=${referralCode}`,
-        $ios_url: `https://apps.apple.com/app/enatega-multivendor/id1526488093`,
-        $android_url: `https://play.google.com/store/apps/details?id=com.enatega.multivendor`,
+        $fallback_url: `https://ordofoodies.com/?ref=${referralCode}`,
+        $desktop_url: `https://ordofoodies.com/?ref=${referralCode}`,
+        $ios_url: `https://ordofoodies.com/?ref=${referralCode}`,
+        $android_url: `https://play.google.com/store/apps/details?id=com.ordocustomer.app`,
       }
     }
 
@@ -192,7 +192,7 @@ export const createReferralLink = async (referralCode, userInfo = {}) => {
       linkData.data
     )
 
-    const shareText = `Hey! Join Ordo - the easiest and cheapest way to shop for your African foods and groceries with convenient doorstep delivery in the UK. Use my referral code ${referralCode} to get credits for every order! For the first order you complete, I get 100 Borku credits! Download:${url}`
+    const shareText = `Hey! Join Ordo - the easiest and cheapest way to shop for your African foods and groceries with convenient doorstep delivery in the UK. Use my referral code ${referralCode} to get credits for every order! For the first order you complete, I get 100 Ordo credits! Download: ${url}`
 
     return { url: url, shareText: shareText, success: true }
   } catch (error) {

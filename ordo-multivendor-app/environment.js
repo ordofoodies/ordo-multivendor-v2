@@ -9,6 +9,10 @@ import * as Updates from 'expo-updates'
 
 const useEnvVars = (env = Updates.channel) => {
   const configuration = useContext(ConfigurationContext)
+  console.log('🔧 [useEnvVars] Environment:', env)
+  console.log('🔧 [useEnvVars] Configuration:', configuration)
+  console.log('🔧 [useEnvVars] Google API Key:', configuration?.googleApiKey)
+  
   if (env === 'production' || env === 'staging') {
     return {
 

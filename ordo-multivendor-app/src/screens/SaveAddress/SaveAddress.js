@@ -226,7 +226,7 @@ function SaveAddress(props) {
                           <CustomApartmentIcon
                             iconColor={
                               selectedLabel === 'Apartment'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                           />
@@ -242,7 +242,7 @@ function SaveAddress(props) {
                             bolder
                             textColor={
                               selectedLabel === 'Apartment'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                             isRTL
@@ -261,7 +261,7 @@ function SaveAddress(props) {
                           <CustomHomeIcon
                             iconColor={
                               selectedLabel === 'House'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                           />
@@ -277,7 +277,7 @@ function SaveAddress(props) {
                             bolder
                             textColor={
                               selectedLabel === 'House'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                             isRTL
@@ -296,7 +296,7 @@ function SaveAddress(props) {
                           <CustomWorkIcon
                             iconColor={
                               selectedLabel === 'Office'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                           />
@@ -312,7 +312,7 @@ function SaveAddress(props) {
                             bolder
                             textColor={
                               selectedLabel === 'Office'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                             isRTL
@@ -331,7 +331,7 @@ function SaveAddress(props) {
                           <CustomOtherIcon
                             iconColor={
                               selectedLabel === 'Other'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                           />
@@ -347,7 +347,7 @@ function SaveAddress(props) {
                             bolder
                             textColor={
                               selectedLabel === 'Other'
-                                ? currentTheme.newheaderColor
+                                ? '#FF8000'
                                 : currentTheme.darkBgFont
                             }
                             isRTL

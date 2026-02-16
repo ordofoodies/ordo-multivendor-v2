@@ -22,9 +22,9 @@ const styles = (props = null) =>
       borderWidth: 1
     },
     markerImage: {
-      height: 30,        // Reduced to 30
-      width: 30,         // Reduced to 30
-      borderRadius: 15,  // Half of width/height
+      height: 24,
+      width: 24,
+      borderRadius: 12,
       overflow: 'hidden',
       borderWidth: 2,
       borderColor: '#fff'

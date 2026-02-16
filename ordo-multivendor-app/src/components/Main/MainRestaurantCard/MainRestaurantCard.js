@@ -51,7 +51,7 @@ function MainRestaurantCard(props) {
               <MaterialIcons
                 name={ICONS[props?.icon]}
                 size={24}
-                color={currentTheme.editProfileButton}
+                color={currentTheme.main}
               />
             )}
           </View>

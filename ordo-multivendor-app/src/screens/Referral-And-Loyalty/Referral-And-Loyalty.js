@@ -208,7 +208,7 @@ function ReferralAndLoyaltyRewards(props) {
       fontSize: 12,
       fontWeight: '600',
       color: currentTheme.primary,
-      backgroundColor: isDark ? `rgba(${parseInt(currentTheme.primary.slice(1, 3), 16)}, ${parseInt(currentTheme.primary.slice(3, 5), 16)}, ${parseInt(currentTheme.primary.slice(5, 7), 16)}, 0.1)` : '#F0FDF4',
+      backgroundColor: isDark ? `rgba(${parseInt(currentTheme.primary.slice(1, 3), 16)}, ${parseInt(currentTheme.primary.slice(3, 5), 16)}, ${parseInt(currentTheme.primary.slice(5, 7), 16)}, 0.1)` : '#FFE5CC',
       paddingHorizontal: 12,
       paddingVertical: 6,
       borderRadius: 6

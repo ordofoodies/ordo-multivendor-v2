@@ -162,8 +162,8 @@ function NewRestaurantCard(props) {
             <View style={styles().border} />
             <View style={styles(currentTheme).deliveryInfo}>
               <View style={styles(currentTheme).deliveryTime}>
-                <AntDesign name='clock-circle' size={14} color={currentTheme.editProfileButton} />
-                <TextDefault textColor={currentTheme.editProfileButton} numberOfLines={1} bold Normal>
+                <AntDesign name='clock-circle' size={14} color={currentTheme.main} />
+                <TextDefault textColor={currentTheme.main} numberOfLines={1} bold Normal>
                   {props?.deliveryTime + ' '}
                   {t('min')}
                 </TextDefault>

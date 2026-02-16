@@ -104,9 +104,6 @@ export default function MapSection() {
                 }}
                 style={styles().markerContainer}
               >
-                <View
-                  style={styles(currentTheme).greenDot}
-                />
                 <Image
                   source={{uri: rest?.image}}
                   width={20}

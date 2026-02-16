@@ -99,7 +99,7 @@ const styles = (props = null) =>
       borderRadius: scale(20),
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: props !== null ? props?.buttonBackground : 'transparent',
+      backgroundColor: '#FF8000',
       alignSelf: 'center',
       marginTop: scale(20),
       marginBottom: scale(20)

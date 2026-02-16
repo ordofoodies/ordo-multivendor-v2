@@ -2,7 +2,7 @@
   "expo": {
     "name": "ÖRDO",
     "scheme": "ordo-customer",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "description": "ÖRDO is a starter kit food ordering app built in React Native using Expo for IOS and Android. It's made keeping good aesthetics in mind as well keeping the best coding practices in mind. Its fully customisable to easily help you in your next food delivery project. https://market.nativebase.io/view/react-native-food-delivery-backend-app",
     "slug": "ordo-customer",
     "owner": "ordofoodies",
@@ -43,6 +43,10 @@
       "config": {
         "googleMapsApiKey": "AIzaSyASc2PXUyjCvYdI-3dB1J4VycPWYJp_izI"
       },
+      "associatedDomains": [
+        "applinks:390ag.app.link",
+        "applinks:390ag-alternate.app.link"
+      ],
       "usesAppleSignIn": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Allow $(PRODUCT_NAME) to use location to determine the delivery address for your orders.",
@@ -53,6 +57,7 @@
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
+              "enategamultivendor",
               "com.googleusercontent.apps.822560760184-qjcj5ho18j2kpdi03ne4cejlfs55t1rl"
             ]
           }
@@ -68,7 +73,7 @@
       "androidCollapsedTitle": "Ordo Multivendor"
     },
     "android": {
-      "versionCode": 2,
+      "versionCode": 4,
       "package": "com.ordocustomer.app",
       "userInterfaceStyle": "automatic",
       "googleServicesFile": "./google-services.json",
@@ -94,12 +99,44 @@
           "com.whatsapp.w4b"
         ]
       },
+      "icon": "./assets/appIcon.png",
+      "navigationBar": {
+        "visible": "immersive"
+      },
       "intentFilters": [
         {
           "action": "android.intent.action.VIEW",
           "data": [
             {
               "scheme": "whatsapp"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "action": "android.intent.action.VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "390ag.app.link",
+              "pathPrefix": "/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        },
+        {
+          "action": "android.intent.action.VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "390ag-alternate.app.link",
+              "pathPrefix": "/"
             }
           ],
           "category": [
@@ -137,12 +174,20 @@
       "expo-web-browser",
       "expo-video",
       "expo-apple-authentication",
-      [
+       [
         "expo-tracking-transparency",
         {
           "userTrackingPermission": "Allow this app to collect app-related data that can be used for tracking you or your device."
         }
-      ]
+      ],
+      [
+        "@config-plugins/react-native-branch",
+        {
+          "apiKey": "key_live_be3dN5e3ugtnbqt3W0zIvphjFqk8YBws",
+          "iosAppDomain": "390ag.app.link"
+        }
+      ],
+      "./plugins/fix-appdelegate.js"
     ],
     "extra": {
       "eas": {

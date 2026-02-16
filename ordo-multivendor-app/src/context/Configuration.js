@@ -26,7 +26,8 @@ export const ConfigurationProvider = props => {
           costType: 'perKM',
           expoClientID: WEB_CLIENT_ID,
           androidClientID:ANDROID_CLIENT_ID,
-          iOSClientID:IOS_CLIENT_ID
+          iOSClientID:IOS_CLIENT_ID,
+          googleApiKey: 'AIzaSyASc2PXUyjCvYdI-3dB1J4VycPWYJp_izI'
         }
       : data?.configuration
   

@@ -80,7 +80,7 @@ const styles = (props = null) =>
       ...alignment.PBmedium
     },
     addButton: {
-      backgroundColor: props !== null ? props.newheaderColor : 'transparent',
+      backgroundColor: '#FF8000',
       width: '100%',
       height: scale(40),
       borderRadius: 50,
