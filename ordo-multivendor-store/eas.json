@@ -7,7 +7,7 @@
       "ios": {
         "simulator": true
       },
-       "android": {
+      "android": {
         "buildType": "apk"
       }
     },
@@ -22,7 +22,6 @@
         "SENTRY_AUTH_TOKEN": "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"
       }
     },
-
     "production": {
       "channel": "production",
       "env": {
@@ -44,6 +43,7 @@
     }
   },
   "cli": {
-    "version": ">= 0.43.0"
+    "version": ">= 0.43.0",
+    "promptToConfigurePushNotifications": false
   }
 }
