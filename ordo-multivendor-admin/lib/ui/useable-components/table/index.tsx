@@ -14,7 +14,6 @@ import {
 import DataTableColumnSkeleton from '../custom-skeletons/datatable.column.skeleton';
 import { useTranslations } from 'next-intl';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { useEffect } from 'react';
 
 const Table = <T extends ITableExtends>({
   header,
