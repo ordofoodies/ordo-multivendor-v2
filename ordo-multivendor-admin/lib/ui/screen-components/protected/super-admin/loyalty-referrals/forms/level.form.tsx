@@ -197,7 +197,7 @@ export default function LevelForm() {
         setLoyaltyData({ levelId: '' });
       }}
       position="right"
-      className="w-full sm:w-[450px]"
+      className="w-full sm:w-[450px] dark:bg-dark-950 dark:text-white"
     >
       <Formik
         initialValues={initialValues}
@@ -270,7 +270,7 @@ export default function LevelForm() {
                 )}
 
                 <button
-                  className="float-end h-10 w-fit rounded-md border-gray-300 bg-black px-8 text-white"
+                  className="float-end h-10 w-fit rounded-md bg-gray-800 px-8 text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600"
                   disabled={isSubmitting}
                   type="submit"
                 >

@@ -55,11 +55,17 @@ const Table = <T extends ITableExtends>({
     if (onPageChange) {
       // Calculate page number (PrimeReact uses 0-based indexing for first)
       const page = Math.floor(event.first / event.rows) + 1;
+      console.log('Page change:', { page, rows: event.rows, first: event.first });
       onPageChange(page, event.rows);
     }
   };
 
   const isServerPaginated = Boolean(onPageChange && totalRecords !== undefined);
+
+  // Calculate if pagination should be shown
+  const shouldShowPagination = isServerPaginated
+    ? (totalRecords || 0) > rowsPerPage
+    : data.length > rowsPerPage;
 
   const rowClassName = (data: T) => {
     let className = '';
@@ -77,7 +83,7 @@ const Table = <T extends ITableExtends>({
   };
 
   // Prepare pagination props based on server pagination status
-  const paginationProps = isServerPaginated
+  const paginationProps = isServerPaginated && shouldShowPagination
     ? {
         lazy: true,
         first: (currentPage - 1) * rowsPerPage,
@@ -86,17 +92,13 @@ const Table = <T extends ITableExtends>({
       }
     : {};
 
-  useEffect(() => {
-    if (data?.length === 0 && currentPage > 1 && onPageChange) {
-      onPageChange(1, rowsPerPage);
-    }
-  }, [data, currentPage, onPageChange, rowsPerPage]);
+
 
   return (
     <>
       <DataTable
         header={header}
-        paginator
+        paginator={shouldShowPagination}
         rows={rowsPerPage}
         rowsPerPageOptions={[10, 15, 25, 50]}
         value={data}

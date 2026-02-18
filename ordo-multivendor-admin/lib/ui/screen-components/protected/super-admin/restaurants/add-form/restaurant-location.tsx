@@ -13,6 +13,7 @@ import {
 // Icons
 import CustomGoogleMapsLocationBounds from '@/lib/ui/useable-components/google-maps/location-bounds-restaurants';
 import { GoogleMapsContext } from '@/lib/context/global/google-maps.context';
+import CustomLoader from '@/lib/ui/useable-components/custom-progress-indicator';
 
 const initialValues: IVendorForm = {
   name: '',
@@ -36,6 +37,14 @@ export default function RestaurantLocation({
     ...initialValues,
   });
 
+  if (!isLoaded) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <CustomLoader />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full w-full items-center justify-start dark:text-white dark:bg-dark-950" >
       <div className="h-full w-full">
@@ -52,11 +61,9 @@ export default function RestaurantLocation({
                 return (
                   <Form onSubmit={handleSubmit}>
                     <div className="mb-2 space-y-3">
-                      {isLoaded && (
-                        <CustomGoogleMapsLocationBounds
-                          onStepChange={onStepChange}
-                        />
-                      )}
+                      <CustomGoogleMapsLocationBounds
+                        onStepChange={onStepChange}
+                      />
                     </div>
                   </Form>
                 );

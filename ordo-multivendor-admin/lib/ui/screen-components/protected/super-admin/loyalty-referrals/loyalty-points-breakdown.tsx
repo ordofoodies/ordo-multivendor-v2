@@ -23,7 +23,7 @@ import { useConfiguration } from '@/lib/hooks/useConfiguration';
 
 
 export default function LoyaltyAndReferralBreakdownSectionComponent() {
-  const { breakdownFormVisible, setBreakdownFormVisible, setLoyaltyData } =
+  const { breakdownFormVisible, setBreakdownFormVisible, setLoyaltyData, loyaltyType } =
     useLoyaltyContext();
   const { showToast } = useToast();
   const {CURRENCY_SYMBOL} = useConfiguration()
@@ -79,6 +79,11 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
       setDeletingId('');
     }
   };
+
+  // Hide for Driver Loyalty Program
+  if (loyaltyType === 'Driver Loyalty Program') {
+    return null;
+  }
 
   return (
     <>

@@ -36,7 +36,8 @@ export default function LoyaltyAndReferralHistoryComponent() {
         limit: rowsPerPage,
       },
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
   });
   
   // Process data for table
@@ -45,10 +46,15 @@ export default function LoyaltyAndReferralHistoryComponent() {
     return logs.filter(Boolean) as HistoryRow[];
   }, [data]);
 
+  const totalCount = data?.fetchReferralLoyaltyHistory?.totalCount || 0;
+
   // Pagination handler
   const handlePageChange = (page: number, rows: number) => {
+    console.log('handlePageChange called:', { page, rows });
     setCurrentPage(page);
     setRowsPerPage(rows);
+    
+    // Manually trigger refetch with new variables
     refetch({
       filter: {
         page,
@@ -132,7 +138,7 @@ export default function LoyaltyAndReferralHistoryComponent() {
         loading={loading}
         rowsPerPage={rowsPerPage}
         className="loyalty-history-table"
-        totalRecords={data?.fetchReferralLoyaltyHistory?.totalCount}
+        totalRecords={totalCount}
         onPageChange={handlePageChange}
         currentPage={currentPage}
       />

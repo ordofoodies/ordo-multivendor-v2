@@ -61,8 +61,7 @@ function LevelCard({ name, point, loading, onMenuClick }: LevelCardProps) {
 
 export default function LoyaltyAndReferralTierSystemComponent() {
   // Hooks
-  // Hooks
-  const { tierFormVisible, setTierFormVisible, setLoyaltyData } =
+  const { tierFormVisible, setTierFormVisible, setLoyaltyData, loyaltyType } =
     useLoyaltyContext();
   const { showToast } = useToast();
 
@@ -118,6 +117,11 @@ export default function LoyaltyAndReferralTierSystemComponent() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Hide for Driver Loyalty Program
+  if (loyaltyType === 'Driver Loyalty Program') {
+    return null;
+  }
 
   return (
     <>
