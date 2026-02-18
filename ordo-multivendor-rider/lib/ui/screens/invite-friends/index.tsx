@@ -18,9 +18,8 @@ export default function InviteFriendsScreen() {
   const { t } = useTranslation();
   const { dataProfile } = useUserContext();
 
-  // Generate referral code or link
+  // Generate referral code
   const referralCode =  dataProfile?.referralCode || "000000";
-  const referralLink = `https://yourapp.com/signup?ref=${referralCode}`;
 
   const handleCopyCode = async () => {
     try {
@@ -35,7 +34,7 @@ export default function InviteFriendsScreen() {
   const handleShareLink = async () => {
     try {
       await Share.share({
-        message: `${t("Join me on this amazing delivery platform!")} ${t("Use my referral code")}: ${referralCode}\n\n${referralLink}`,
+        message: `Download the Ördo Rider app through my referral code: ${referralCode}`,
         title: t("Invite Friends"),
       });
     } catch (error) {
@@ -84,7 +83,7 @@ export default function InviteFriendsScreen() {
             }}
           >
             <QRCode
-              value={referralLink}
+              value={referralCode}
               size={220}
               color="#000000"
               backgroundColor="#ffffff"
