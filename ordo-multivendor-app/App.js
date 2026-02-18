@@ -91,35 +91,28 @@ export default function App() {
   }, [systemTheme])
 
   // For Fonts, etc
-  useEffect(async () => {
+  useEffect(() => {
     const loadAppData = async () => {
-      // try {
-      //   await SplashScreen.preventAutoHideAsync()
-      // } catch (e) {
-      //   console.warn(e)
-      // }
-      // await i18n.initAsync()
       await Font.loadAsync({
         MuseoSans300: require('./src/assets/font/MuseoSans/MuseoSans300.ttf'),
         MuseoSans500: require('./src/assets/font/MuseoSans/MuseoSans500.ttf'),
         MuseoSans700: require('./src/assets/font/MuseoSans/MuseoSans700.ttf')
       })
-      // await permissionForPushNotificationsAsync()
       await getActiveLocation()
-      // get stored theme
-      // await getStoredTheme()
       setAppIsReady(true)
     }
 
-    // INITIALIZE BRANCH.IO (now happens AFTER ATT)
-    try {
-      const unsubscribe = await initializeBranch()
-      setBranchUnsubscribe(() => unsubscribe)
-    } catch (error) {
-      console.error('❌ Branch.io initialization failed:', error)
+    const initializeApp = async () => {
+      try {
+        const unsubscribe = await initializeBranch()
+        setBranchUnsubscribe(() => unsubscribe)
+      } catch (error) {
+        console.error('❌ Branch.io initialization failed:', error)
+      }
+      loadAppData()
     }
 
-    loadAppData()
+    initializeApp()
     const backHandler = BackHandler.addEventListener('hardwareBackPress', exitAlert)
 
     return () => {

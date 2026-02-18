@@ -14,10 +14,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     let isSubscribed = true
-    ;(async() => {
+    async function loadToken() {
       const token = await AsyncStorage.getItem('token')
       isSubscribed && setToken(token)
-    })()
+    }
+    loadToken()
     return () => {
       isSubscribed = false
     }

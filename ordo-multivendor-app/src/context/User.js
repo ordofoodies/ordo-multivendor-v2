@@ -63,15 +63,15 @@ export const UserProvider = (props) => {
   }, [errorProfile])
   useEffect(() => {
     let isSubscribed = true
-    ;(async () => {
+    async function loadCartData() {
       const restaurant = await AsyncStorage.getItem('restaurant')
-
       const cart = await AsyncStorage.getItem('cartItems')
       const savedCoupon = await AsyncStorage.getItem('coupon')
       isSubscribed && setRestaurant(restaurant || null)
       isSubscribed && setCart(cart ? JSON.parse(cart) : [])
       isSubscribed && setCoupon(savedCoupon ? JSON.parse(savedCoupon) : null)
-    })()
+    }
+    loadCartData()
     return () => {
       isSubscribed = false
     }

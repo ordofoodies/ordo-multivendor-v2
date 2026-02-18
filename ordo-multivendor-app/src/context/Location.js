@@ -30,7 +30,7 @@ export const LocationProvider = ({ children }) => {
   }, [location])
 
   useEffect(() => {
-    const getActiveLocation = async () => {
+    async function getActiveLocation() {
       try {
         const locationStr = await AsyncStorage.getItem('location')
         if (locationStr) {
@@ -44,10 +44,10 @@ export const LocationProvider = ({ children }) => {
     getActiveLocation()
 
     const unsubscribe = NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected) // Update connectivity status
+      setIsConnected(state.isConnected)
     })
 
-    return () => unsubscribe() // Clean up the listener
+    return () => unsubscribe()
   }, [])
 
   // show zones as cities
