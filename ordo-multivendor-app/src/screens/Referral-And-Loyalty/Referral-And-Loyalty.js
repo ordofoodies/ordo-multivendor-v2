@@ -33,7 +33,7 @@ function ReferralAndLoyaltyRewards(props) {
   })
   const { data: tiersData } = useQuery(FETCH_LOYALTY_TIERS, { fetchPolicy: 'cache-and-network' })
   const loyalty_configuration = data?.fetchLoyaltyConfiguration
-  const loyaltyActivity = loyaltyActivityData?.fetchReferralLoyaltyHistory
+  const loyaltyActivity = loyaltyActivityData?.fetchCustomerReferralHistory
   const loyaltyTiers = tiersData?.fetchLoyaltyTiers
 
   const styles = StyleSheet.create({

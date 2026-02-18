@@ -559,9 +559,9 @@ const styles = (props = null) =>
     },
     // Remove Button
     removeButton: {
-      backgroundColor: '#EF4444',
-      paddingHorizontal: 6,
-      paddingVertical: 3,
+      backgroundColor: '#FF8000',
+      paddingHorizontal: 8,
+      paddingVertical: 4,
       borderRadius: 6,
       alignSelf: 'flex-end'
     }

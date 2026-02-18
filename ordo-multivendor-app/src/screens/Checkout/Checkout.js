@@ -809,7 +809,7 @@ function Checkout(props) {
                   </TouchableOpacity>
                   
                   {/* Wallet Section */}
-                  {profile?.walletBalance > 0 && walletAmount === 0 && (
+                  {profile?.walletBalance > 0 && (
                     <TouchableOpacity
                       onPress={() => onModalOpen(walletModalRef)}
                       style={styles(currentTheme).deliveryTime}
@@ -822,7 +822,7 @@ function Checkout(props) {
                       <View style={styles(currentTheme).labelContainer}>
                         <View style={{ marginHorizontal: scale(5) }}>
                           <TextDefault textColor={currentTheme.newFontcolor} numberOfLines={1} H5 bolder isRTL>
-                            Use Wallet ({configuration.currencySymbol}{profile?.walletBalance?.toFixed(2)})
+                            {walletAmount > 0 ? `Wallet Applied (${configuration.currencySymbol}${(profile?.walletBalance - walletAmount).toFixed(2)})` : `Use Wallet (${configuration.currencySymbol}${profile?.walletBalance?.toFixed(2)})`}
                           </TextDefault>
                         </View>
                       </View>
