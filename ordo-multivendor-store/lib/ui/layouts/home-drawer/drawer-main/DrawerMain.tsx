@@ -86,7 +86,7 @@ export default function DrawerMain() {
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="bank-management"
         options={{
           drawerLabel: t("Bank Management"),
@@ -95,7 +95,7 @@ export default function DrawerMain() {
             <CardIcon color={color} height={size} width={size} />
           ),
         }}
-      />
+      /> */}
       <Drawer.Screen
         name="help"
         options={{

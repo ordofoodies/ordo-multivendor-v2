@@ -59,7 +59,7 @@ export default function CustomDrawerContent(
         }}
         scrollEnabled={true}
       >
-        {props.state.routes.map((route, index) => {
+        {props.state.routes.filter(route => !route.name.startsWith('bank-')).map((route, index) => {
           const isFocused = props.state.index === index;
           const { options } = props.descriptors[route.key];
           if (route.name === "profile") {

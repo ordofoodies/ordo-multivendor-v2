@@ -19,7 +19,7 @@ export default function DocumentsSection() {
   const { dataProfile } = useUserContext();
   return (
     <View className="flex flex-col h-[20%] w-full justify-between items-center">
-      <View
+      {/* <View
         className="flex flex-col gap-3 items-start justify-center px-5 w-full border-b-2 py-3"
         style={{ borderColor: appTheme.borderLineColor }}
       >
@@ -54,7 +54,7 @@ export default function DocumentsSection() {
               : t("Missing Data")}
           </Text>
         </View>
-      </View>
+      </View> */}
       <View>
         <Text
           className="font-bold m-3"
