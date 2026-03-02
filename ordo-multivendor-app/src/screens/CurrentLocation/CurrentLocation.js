@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { View, TouchableOpacity, Linking, Platform, StatusBar, ActivityIndicator, Text, StyleSheet, Alert } from 'react-native'
+import { View, TouchableOpacity, Platform, StatusBar, ActivityIndicator } from 'react-native'
 import { useLocation } from '../../ui/hooks'
-import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -39,7 +38,7 @@ export default function CurrentLocation() {
   const { getCurrentLocation, getLocationPermission } = useLocation()
   const [citiesModalVisible, setCitiesModalVisible] = useState(false)
   const [currentLocation, setCurrentLocation] = useState(null)
-  const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [permissionChecked, setPermissionChecked] = useState(false)
 
   const { getAddress } = useGeocoding()
 
@@ -47,30 +46,17 @@ export default function CurrentLocation() {
 
   const checkLocationPermission = async () => {
     setLoading(true)
-    const { status, canAskAgain } = await getLocationPermission()
+    const { status } = await getLocationPermission()
 
     if (status === 'granted') {
-      setLoading(false)
-      navigation.replace('Main')
-    } else if (status === 'denied') {
-      // Permission denied but can ask again
-      // Show the Allow Location screen
-    } else if (status === 'blocked') {
-      Alert.alert('Location Permission Blocked', 'Please enable location services in your device settings.', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Open Settings', onPress: () => Linking.openSettings() }
-      ])
+      // Permission granted, get location
       setLoading(false)
     } else {
-      if (status !== 'granted' && !canAskAgain) {
-        FlashMessage({
-          message: t('locationPermissionMessage'),
-          onPress: async () => {
-            await Linking.openSettings()
-          }
-        })
-        setLoading(false)
-        return
+      // iOS: Go to SelectLocation (Apple requirement)
+      // Android: Stay on current screen (original behavior)
+      setLoading(false)
+      if (Platform.OS === 'ios') {
+        navigation.replace('SelectLocation')
       }
     }
   }
@@ -138,50 +124,52 @@ export default function CurrentLocation() {
     console.log('calling getCurrentLocationOnStart', permissionState)
     setLoading(true)
 
-    // Handle permission request result
-    if (!permissionState) return
-
-    if (!permissionState?.granted) {
-      console.log('Location permission not granted')
-      return
-    }
-
-    // Permission is granted, continue with location logic
-    const { error, coords } = await getCurrentLocation()
-
-    if (error) {
-      // console.log("Location error:",message, error)
+    if (!permissionState) {
       setLoading(false)
       return
     }
 
-    // console.log("Fetched Location:", coords);
+    if (!permissionState?.granted) {
+      console.log('Location permission not granted')
+      setLoading(false)
+      setPermissionChecked(true)
+      // iOS: Navigate to SelectLocation (Apple requirement)
+      // Android: Stay on current screen (original behavior)
+      if (Platform.OS === 'ios') {
+        navigation.replace('SelectLocation')
+      }
+      return
+    }
+
+    // Permission is granted, get location
+    const { error, coords } = await getCurrentLocation()
+
+    if (error) {
+      setLoading(false)
+      // iOS: Navigate to SelectLocation on error
+      // Android: Stay on current screen
+      if (Platform.OS === 'ios') {
+        navigation.replace('SelectLocation')
+      }
+      return
+    }
+
     const userLocation = {
       latitude: coords.latitude,
       longitude: coords.longitude
     }
 
     setCurrentLocation(userLocation)
-    // console.log("Current Location before rendering Marker:", currentLocation);
     setLoading(false)
   }
 
   async function onRequestPermissionHandler() {
     const permission_response = await onRequestPermission()
-
     setPermissionState(permission_response)
 
-
-    // ❌ Permanently denied (cannot ask again)
-    if (!permission_response?.canAskAgain) {
-      // Optionally prompt user to open settings
-      if (Platform.OS === 'ios') {
-        Linking.openURL('app-settings:') // iOS deep link to app settings
-      } else {
-        Linking.openSettings() // Android
-      }
-
-      return
+    if (!permission_response?.granted) {
+      // Permission denied, go to manual selection
+      navigation.replace('SelectLocation')
     }
   }
 
@@ -205,17 +193,9 @@ export default function CurrentLocation() {
   }, [permissionState, permission])
 
   useEffect(() => {
+    if (permissionChecked) return
     checkCityMatch()
   }, [currentLocation, cities])
-
-  // Add a small delay to prevent flashing of permission screen
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitialLoading(false)
-    }, 1000) // Wait 1 second before showing permission screen
-
-    return () => clearTimeout(timer)
-  }, [])
 
   const initialRegion = {
     latitude: 16.10966,
@@ -227,15 +207,8 @@ export default function CurrentLocation() {
   const { isConnected: connect, setIsConnected: setConnect } = useNetworkStatus()
   if (!connect) return <ErrorView refetchFunctions={[]} />
 
-  return !currentLocation && !isInitialLoading ? (
-    <View style={[allowedLocationStyles.container, { backgroundColor: currentTheme.themeBackground }]}>
-      <Text style={allowedLocationStyles.title}>Enable Location Services</Text>
-      <Text style={allowedLocationStyles.description}>We need access to your location to show nearby restaurants and provide accurate delivery services.</Text>
-      <TouchableOpacity style={allowedLocationStyles.button} onPress={onRequestPermissionHandler}>
-        <Text style={allowedLocationStyles.buttonText}>Allow Location Access</Text>
-      </TouchableOpacity>
-    </View>
-  ) : (
+  // If permission is denied, show map with cities to choose from
+  return (
     <View
       style={[
         styles().flex,
@@ -318,42 +291,8 @@ export default function CurrentLocation() {
         </View>
       )}
 
-      {/* <ForceUpdate /> */}
-
+      <ForceUpdate/>
       <ModalDropdown theme={currentTheme} visible={citiesModalVisible} onItemPress={handleMarkerPress} onClose={() => setCitiesModalVisible(false)} />
     </View>
   )
 }
-
-const allowedLocationStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center'
-  },
-  description: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40,
-    color: '#666',
-    lineHeight: 24
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
-    borderRadius: 8
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600'
-  }
-})

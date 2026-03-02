@@ -63,10 +63,8 @@ import SearchScreen from '../screens/Search/SearchScreen'
 import UserContext from '../context/User'
 import { Easing, Platform } from 'react-native'
 import CategoryPage from '../components/SubCategoryPage/SubCategoryPage'
-// import HypCheckout from '../screens/Hyp/HypCheckout'
 import NewRestaurantDetailDesign from '../components/NewRestaurantDetailDesign/RestaurantDetailDesign'
 import { SLIDE_RIGHT_WITH_CURVE_ANIM, SLIDE_UP_RIGHT_ANIMATION, AIMATE_FROM_CENTER, SLIDE_UP_RIGHT_ANIMATION_FIXED_HEADER } from '../utils/constants'
-import * as LocationImport from 'expo-location'
 import QRAndReferral from '../screens/QR-And-Referral/QR-And-Referral'
 import ReferralAndLoyaltyRecentActivity from '../screens/Referral-And-Loyalty-Recent-Activity/Referral-And-Loyalty-Recent-Activity'
 import LoyaltyPoints from '../screens/Loyalty-Points/Loyalty-Points'
@@ -290,7 +288,7 @@ function BottomTabNavigator() {
 
 function AppContainer() {
   const client = useApolloClient()
-  const { permissionState, setPermissionState, location } = useContext(LocationContext)
+  const { location } = useContext(LocationContext)
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
 
   const [isLoadingPermission, setIsLoadingPermission] = React.useState(true)
@@ -318,10 +316,6 @@ function AppContainer() {
   // Handlers
   const init = async () => {
     try {
-      const permission_state = await LocationImport.getForegroundPermissionsAsync()
-      console.log({permission_state})
-
-      setPermissionState(permission_state)
       setIsLoadingPermission(false)
     } finally {
       setIsLoadingPermission(false)
@@ -343,7 +337,7 @@ function AppContainer() {
 
   console.log('-------------')
   console.log('-------------')
-  console.log({ permissionState, location })
+  console.log({ location })
 
   if (isLoadingPermission) return
 
@@ -354,10 +348,7 @@ function AppContainer() {
           navigationService.setGlobalRef(ref)
         }}
       >
-        {!permissionState?.granted || !location ? <LocationStack /> : <MainNavigator />}
-
-        {/* {<LocationStack />}
-        <MainNavigator /> */}
+        {!location ? <LocationStack /> : <MainNavigator />}
       </NavigationContainer>
     </SafeAreaProvider>
   )
