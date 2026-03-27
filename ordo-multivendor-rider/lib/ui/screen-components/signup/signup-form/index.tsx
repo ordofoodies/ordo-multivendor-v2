@@ -20,27 +20,29 @@ interface SignUpFormProps {
   zones: Zone[];
   zonesLoading: boolean;
   isSubmitting: boolean;
+  initialReferralCode?: string;
 }
-
-const initialValues: ISignUpInitialValues = {
-  name: "",
-  username: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  phone: "",
-  vehicleType: "",
-  zone: "",
-  referralCode: "",
-};
 
 export default function SignUpForm({
   onSubmit,
   zones,
   zonesLoading,
   isSubmitting,
+  initialReferralCode,
 }: SignUpFormProps) {
   const { t } = useTranslation();
+
+  const initialValues: ISignUpInitialValues = {
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    vehicleType: "",
+    zone: "",
+    referralCode: initialReferralCode ?? "",
+  };
 
   return (
     <Formik

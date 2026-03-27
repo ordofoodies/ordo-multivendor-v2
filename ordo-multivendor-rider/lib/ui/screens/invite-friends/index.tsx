@@ -19,7 +19,7 @@ export default function InviteFriendsScreen() {
   const { dataProfile } = useUserContext();
 
   // Generate referral code
-  const referralCode =  dataProfile?.referralCode || "000000";
+  const referralCode = dataProfile?.referralCode || "000000";
 
   const handleCopyCode = async () => {
     try {
@@ -33,8 +33,9 @@ export default function InviteFriendsScreen() {
 
   const handleShareLink = async () => {
     try {
+      const shareUrl = `https://ordo-rider-landing.vercel.app/invite?ref=${referralCode}`;
       await Share.share({
-        message: `Download the Ördo Rider app through my referral code: ${referralCode}`,
+        message: `Join me on ÖRDO Rider! Use my referral code ${referralCode} and we both earn $2.5. Download here: ${shareUrl}`,
         title: t("Invite Friends"),
       });
     } catch (error) {
@@ -83,7 +84,7 @@ export default function InviteFriendsScreen() {
             }}
           >
             <QRCode
-              value={referralCode}
+              value={`https://ordo-rider-landing.vercel.app/invite?ref=${referralCode}`}
               size={220}
               color="#000000"
               backgroundColor="#ffffff"

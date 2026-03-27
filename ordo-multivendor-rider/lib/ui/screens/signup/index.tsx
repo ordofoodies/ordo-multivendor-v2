@@ -31,7 +31,7 @@ const GET_ZONES = gql`
   }
 `;
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ referralCode }: { referralCode?: string }) {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const router = useRouter();
@@ -116,6 +116,7 @@ export default function SignUpScreen() {
               zones={zones}
               zonesLoading={zonesLoading}
               isSubmitting={signupLoading}
+              initialReferralCode={referralCode}
             />
 
             {/* Login Link */}

@@ -18,7 +18,7 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "plugins": [
-    "expo-router",
+      "expo-router",
       [
         "@sentry/react-native/expo",
         {
@@ -49,6 +49,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ordorider.app",
+      "associatedDomains": [
+        "applinks:ordo-rider-landing.vercel.app"
+      ],
       "config": {
         "googleMapsApiKey": "AIzaSyASc2PXUyjCvYdI-3dB1J4VycPWYJp_izI"
       },
