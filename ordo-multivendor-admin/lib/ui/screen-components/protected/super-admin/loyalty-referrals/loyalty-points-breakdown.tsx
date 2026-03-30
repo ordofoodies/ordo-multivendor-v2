@@ -21,7 +21,7 @@ import {
   useFetchLoyaltyBreakdownsQuery,
   useFetchRiderLoyaltyBreakdownsQuery,
 } from '@/lib/graphql-generated';
-import { ProgressSpinner as PS } from 'primereact/progressspinner';
+
 import useToast from '@/lib/hooks/useToast';
 import NoData from '@/lib/ui/useable-components/no-data';
 import DataTableColumnSkeleton from '@/lib/ui/useable-components/custom-skeletons/datatable.column.skeleton';
