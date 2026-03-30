@@ -83,6 +83,134 @@ export type Admin = {
   userId: Scalars['String']['output'];
 };
 
+export type AdminReferralNetworkDetails = {
+  __typename?: 'AdminReferralNetworkDetails';
+  levels: Array<Maybe<AdminReferralNetworkLevelGroup>>;
+  rewardUnit: Scalars['String']['output'];
+  totalEarnedRewards: Scalars['Float']['output'];
+  totalOrderCount: Scalars['Int']['output'];
+  totalReferralUsers: Scalars['Int']['output'];
+  user?: Maybe<AdminReferralNetworkUser>;
+};
+
+export type AdminReferralNetworkInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  selectedUserId?: InputMaybe<Scalars['String']['input']>;
+  selectedUserType?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AdminReferralNetworkLevelGroup = {
+  __typename?: 'AdminReferralNetworkLevelGroup';
+  level: Scalars['Int']['output'];
+  referrals: Array<Maybe<AdminReferralNetworkReferral>>;
+  rewardLabel: Scalars['String']['output'];
+  rewardUnit: Scalars['String']['output'];
+  totalEarnedRewards: Scalars['Float']['output'];
+  totalOrderCount: Scalars['Int']['output'];
+  totalUsers: Scalars['Int']['output'];
+  valuePerOrder: Scalars['Float']['output'];
+};
+
+export type AdminReferralNetworkLevelSummary = {
+  __typename?: 'AdminReferralNetworkLevelSummary';
+  level: Scalars['Int']['output'];
+  rewardLabel: Scalars['String']['output'];
+  rewardUnit: Scalars['String']['output'];
+  totalEarnedRewards: Scalars['Float']['output'];
+  totalOrderCount: Scalars['Int']['output'];
+  totalUsers: Scalars['Int']['output'];
+  valuePerOrder: Scalars['Float']['output'];
+};
+
+export type AdminReferralNetworkPaginatedLevelGroup = {
+  __typename?: 'AdminReferralNetworkPaginatedLevelGroup';
+  currentPage: Scalars['Int']['output'];
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  level: Scalars['Int']['output'];
+  referrals: Array<Maybe<AdminReferralNetworkReferral>>;
+  rewardLabel: Scalars['String']['output'];
+  rewardUnit: Scalars['String']['output'];
+  totalEarnedRewards: Scalars['Float']['output'];
+  totalOrderCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+  totalUsers: Scalars['Int']['output'];
+  valuePerOrder: Scalars['Float']['output'];
+};
+
+export type AdminReferralNetworkPagination = {
+  __typename?: 'AdminReferralNetworkPagination';
+  currentPage: Scalars['Int']['output'];
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPrevPage: Scalars['Boolean']['output'];
+  totalCount: Scalars['Int']['output'];
+  totalPages: Scalars['Int']['output'];
+};
+
+export type AdminReferralNetworkReferral = {
+  __typename?: 'AdminReferralNetworkReferral';
+  _id: Scalars['String']['output'];
+  earnedRewards: Scalars['Float']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  joinedAt: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  orderCount: Scalars['Int']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
+  rewardUnit: Scalars['String']['output'];
+  userType: Scalars['String']['output'];
+};
+
+export type AdminReferralNetworkResponse = {
+  __typename?: 'AdminReferralNetworkResponse';
+  details: AdminReferralNetworkDetails;
+  summary: AdminReferralNetworkSummary;
+  users: Array<Maybe<AdminReferralNetworkUser>>;
+  usersPagination: AdminReferralNetworkPagination;
+};
+
+export type AdminReferralNetworkSummary = {
+  __typename?: 'AdminReferralNetworkSummary';
+  level1Referrals: Scalars['Int']['output'];
+  level2Referrals: Scalars['Int']['output'];
+  level3Referrals: Scalars['Int']['output'];
+  totalUsers: Scalars['Int']['output'];
+};
+
+export type AdminReferralNetworkUser = {
+  __typename?: 'AdminReferralNetworkUser';
+  _id: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
+  currentBalance: Scalars['Float']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
+  rewardUnit: Scalars['String']['output'];
+  tierName?: Maybe<Scalars['String']['output']>;
+  totalEarnedRewards: Scalars['Float']['output'];
+  userType: Scalars['String']['output'];
+};
+
+export type AdminReferralNetworkUserDetailsInput = {
+  level?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  selectedUserId: Scalars['String']['input'];
+  selectedUserType?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AdminReferralNetworkUserDetailsResponse = {
+  __typename?: 'AdminReferralNetworkUserDetailsResponse';
+  levels: Array<Maybe<AdminReferralNetworkLevelSummary>>;
+  rewardUnit: Scalars['String']['output'];
+  selectedLevel: AdminReferralNetworkPaginatedLevelGroup;
+  totalEarnedRewards: Scalars['Float']['output'];
+  totalOrderCount: Scalars['Int']['output'];
+  totalReferralUsers: Scalars['Int']['output'];
+  user?: Maybe<AdminReferralNetworkUser>;
+};
+
 export type AllShopTypeResponse = {
   __typename?: 'AllShopTypeResponse';
   _id: Scalars['ID']['output'];
@@ -469,6 +597,9 @@ export type Coupon = {
   _id: Scalars['String']['output'];
   discount: Scalars['Float']['output'];
   enabled: Scalars['Boolean']['output'];
+  endDate?: Maybe<Scalars['String']['output']>;
+  lifeTimeActive?: Maybe<Scalars['Boolean']['output']>;
+  startDate?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
 };
 
@@ -476,6 +607,9 @@ export type CouponInput = {
   _id?: InputMaybe<Scalars['String']['input']>;
   discount: Scalars['Float']['input'];
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  lifeTimeActive?: InputMaybe<Scalars['Boolean']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
 };
 
@@ -941,7 +1075,7 @@ export type LoyaltyLevelInput = {
 
 export type LoyaltyReferralAnalytics = {
   __typename?: 'LoyaltyReferralAnalytics';
-  totalPointsDistributed?: Maybe<Scalars['Int']['output']>;
+  totalPointsDistributed?: Maybe<Scalars['Float']['output']>;
   totalReferralCashDistributed?: Maybe<Scalars['Float']['output']>;
   totalReferrals?: Maybe<Scalars['Int']['output']>;
 };
@@ -954,6 +1088,14 @@ export type LoyaltyReferralHistoryResponse = {
   hasPrevPage: Scalars['Boolean']['output'];
   totalCount: Scalars['Int']['output'];
   totalPages: Scalars['Int']['output'];
+};
+
+export type LoyaltyStatsOverview = {
+  __typename?: 'LoyaltyStatsOverview';
+  activeDriverReferrals: Scalars['Int']['output'];
+  totalLoyalCustomers: Scalars['Int']['output'];
+  totalPointsIssued: Scalars['Float']['output'];
+  totalPointsRedeemed: Scalars['Float']['output'];
 };
 
 export type LoyaltyTier = {
@@ -972,13 +1114,14 @@ export type LoyalyReferralHistory = {
   __typename?: 'LoyalyReferralHistory';
   _id: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
-  level: Scalars['Int']['output'];
+  level?: Maybe<Scalars['Int']['output']>;
+  rewardRole?: Maybe<Scalars['String']['output']>;
   source: Scalars['String']['output'];
   triggeredBy: Scalars['String']['output'];
   type: Scalars['String']['output'];
   user_name: Scalars['String']['output'];
   user_rank: Scalars['String']['output'];
-  value: Scalars['Int']['output'];
+  value: Scalars['Float']['output'];
 };
 
 export type Message = {
@@ -1029,10 +1172,12 @@ export type Mutation = {
   createMessage: Message;
   createOffer: Offer;
   createOptions: Restaurant;
+  createOrderLoyaltyLevel?: Maybe<OrderLoyaltyLevel>;
   createRestaurant: Restaurant;
   createRestaurantCoupon: Coupon;
   createReview: Restaurant;
   createRider: Rider;
+  createRiderLoyaltyBreakdown?: Maybe<RiderLoyaltyBreakdown>;
   createSection: Section;
   createShopType?: Maybe<ShopType>;
   createStaff: Staff;
@@ -1060,9 +1205,11 @@ export type Mutation = {
   deleteLoyaltyTier?: Maybe<LoyaltyTier>;
   deleteOffer?: Maybe<Scalars['Boolean']['output']>;
   deleteOption: Restaurant;
+  deleteOrderLoyaltyLevel?: Maybe<OrderLoyaltyLevel>;
   deleteRestaurant: Restaurant;
   deleteRestaurantCoupon: Scalars['String']['output'];
   deleteRider: Rider;
+  deleteRiderLoyaltyBreakdown?: Maybe<RiderLoyaltyBreakdown>;
   deleteSection?: Maybe<Scalars['Boolean']['output']>;
   deleteShopType?: Maybe<ShopType>;
   deleteStaff: Staff;
@@ -1156,6 +1303,7 @@ export type Mutation = {
   updateLoyaltyLevel?: Maybe<LoyaltyLevel>;
   updateLoyaltyTier?: Maybe<LoyaltyTier>;
   updateNotificationStatus: User;
+  updateOrderLoyaltyLevel?: Maybe<OrderLoyaltyLevel>;
   updateOrderStatus: Order;
   updateOrderStatusRider: Order;
   updatePaymentStatus: Order;
@@ -1164,6 +1312,7 @@ export type Mutation = {
   updateRiderBussinessDetails: Rider;
   updateRiderLicenseDetails: Rider;
   updateRiderLocation: Rider;
+  updateRiderLoyaltyBreakdown?: Maybe<RiderLoyaltyBreakdown>;
   updateRiderVehicleDetails: Rider;
   updateShopType?: Maybe<ShopType>;
   updateStatus: Order;
@@ -1341,6 +1490,11 @@ export type MutationCreateOptionsArgs = {
 };
 
 
+export type MutationCreateOrderLoyaltyLevelArgs = {
+  input: OrderLoyaltyLevelInput;
+};
+
+
 export type MutationCreateRestaurantArgs = {
   owner: Scalars['ID']['input'];
   restaurant: RestaurantInput;
@@ -1360,6 +1514,11 @@ export type MutationCreateReviewArgs = {
 
 export type MutationCreateRiderArgs = {
   riderInput: InputMaybe<RiderInput>;
+};
+
+
+export type MutationCreateRiderLoyaltyBreakdownArgs = {
+  input: RiderLoyaltyBreakdownInput;
 };
 
 
@@ -1504,6 +1663,11 @@ export type MutationDeleteOptionArgs = {
 };
 
 
+export type MutationDeleteOrderLoyaltyLevelArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteRestaurantArgs = {
   id: Scalars['String']['input'];
 };
@@ -1516,6 +1680,11 @@ export type MutationDeleteRestaurantCouponArgs = {
 
 
 export type MutationDeleteRiderArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteRiderLoyaltyBreakdownArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -2037,6 +2206,12 @@ export type MutationUpdateNotificationStatusArgs = {
 };
 
 
+export type MutationUpdateOrderLoyaltyLevelArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateOrderLoyaltyLevelInput;
+};
+
+
 export type MutationUpdateOrderStatusArgs = {
   id: Scalars['String']['input'];
   reason: InputMaybe<Scalars['String']['input']>;
@@ -2085,6 +2260,12 @@ export type MutationUpdateRiderLicenseDetailsArgs = {
 export type MutationUpdateRiderLocationArgs = {
   latitude: Scalars['String']['input'];
   longitude: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateRiderLoyaltyBreakdownArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateRiderLoyaltyBreakdownInput;
 };
 
 
@@ -2329,6 +2510,21 @@ export type OrderInput = {
   variation: Scalars['String']['input'];
 };
 
+export type OrderLoyaltyLevel = {
+  __typename?: 'OrderLoyaltyLevel';
+  _id: Scalars['String']['output'];
+  amount?: Maybe<Scalars['Float']['output']>;
+  name: Scalars['String']['output'];
+  points?: Maybe<Scalars['Float']['output']>;
+};
+
+export type OrderLoyaltyLevelInput = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  name: Scalars['String']['input'];
+  points?: InputMaybe<Scalars['Float']['input']>;
+  userType: Scalars['String']['input'];
+};
+
 export type OrderPagination = {
   __typename?: 'OrderPagination';
   currentPage: Scalars['Int']['output'];
@@ -2520,30 +2716,45 @@ export type Query = {
   banners: Array<Banner>;
   categories: Array<Category>;
   chat?: Maybe<Array<ChatMessageOutput>>;
+  commissionRate: CommissionRateResponsePaginated;
   configuration: Configuration;
   coupons: Array<Coupon>;
   cuisines: Array<Cuisine>;
   deliveredOrders: Array<Order>;
   earnings?: Maybe<EarningsResponse>;
+  fetchAdminReferralNetwork: AdminReferralNetworkResponse;
+  fetchAdminReferralNetworkUserDetails: AdminReferralNetworkUserDetailsResponse;
   fetchAllShopTypes?: Maybe<AllShopTypes>;
   fetchCategoryDetailsByStoreId?: Maybe<Array<Maybe<CategoryDetailsResponse>>>;
   fetchCategoryDetailsByStoreIdForMobile?: Maybe<Array<Maybe<CategoryDetailsResponseForMobile>>>;
+  fetchCustomerReferralHistory?: Maybe<Array<Maybe<LoyalyReferralHistory>>>;
+  fetchDriverReferralNetworkDetail?: Maybe<UserReferralNetworkDetail>;
+  fetchDriverReferralNetworkStats?: Maybe<ReferralNetworkStats>;
   fetchLoyaltyBreakdownById?: Maybe<LoyaltyBreakdown>;
   fetchLoyaltyBreakdowns?: Maybe<Array<Maybe<LoyaltyBreakdown>>>;
   fetchLoyaltyConfiguration?: Maybe<LoyaltyConfiguration>;
   fetchLoyaltyLevelById?: Maybe<LoyaltyLevel>;
   fetchLoyaltyLevelsByUserType?: Maybe<Array<Maybe<LoyaltyLevel>>>;
   fetchLoyaltyReferralAnalytics?: Maybe<LoyaltyReferralAnalytics>;
+  fetchLoyaltyStatsOverview: LoyaltyStatsOverview;
   fetchLoyaltyTierById?: Maybe<LoyaltyTier>;
   fetchLoyaltyTiers?: Maybe<Array<Maybe<LoyaltyTier>>>;
+  fetchOrderLoyaltyLevelById?: Maybe<OrderLoyaltyLevel>;
+  fetchOrderLoyaltyLevelsByUserType?: Maybe<Array<Maybe<OrderLoyaltyLevel>>>;
   fetchReferralLoyaltyHistory?: Maybe<LoyaltyReferralHistoryResponse>;
   fetchRiderActivityDetails?: Maybe<ActivityDetails>;
+  fetchRiderLoyaltyBreakdownById?: Maybe<RiderLoyaltyBreakdown>;
+  fetchRiderLoyaltyBreakdowns?: Maybe<Array<Maybe<RiderLoyaltyBreakdown>>>;
+  fetchRiderLoyaltyData?: Maybe<RiderLoyaltyData>;
+  fetchRiderLoyaltyHistory?: Maybe<Array<Maybe<LoyalyReferralHistory>>>;
   fetchRiderRecentActivity?: Maybe<RiderRecentActivityResponse>;
   fetchRiderReferralRewards?: Maybe<RiderReferralRewards>;
   fetchRiderRequests?: Maybe<Array<Maybe<Rider>>>;
   fetchShopTypeByUnique?: Maybe<ShopType>;
   fetchShopTypes?: Maybe<ShopTypePagination>;
   fetchUserLoyaltyData?: Maybe<UserLoyaltyData>;
+  fetchUserReferralNetworkDetail?: Maybe<UserReferralNetworkDetail>;
+  fetchUserReferralNetworkStats?: Maybe<ReferralNetworkStats>;
   fetchWalletBalance: Scalars['Float']['output'];
   fetchWalletTransactions: Array<WalletTransaction>;
   foodByCategory: Array<Food>;
@@ -2582,6 +2793,8 @@ export type Query = {
   getTicketMessages: TicketMessageResponse;
   getTicketUsers: PaginatedUsers;
   getTicketUsersWithLatest: PaginatedUsersWithLatestTicket;
+  getUsersActiveOrders?: Maybe<Array<Maybe<Order>>>;
+  getUsersPastOrders?: Maybe<Array<Maybe<Order>>>;
   getVendor?: Maybe<OwnerData>;
   getVendorDashboardGrowthDetailsByYear: VendorDashboardGrowthResponse;
   getVendorDashboardStatsCardDetails: VendorDashboardStatsCardResponse;
@@ -2634,6 +2847,8 @@ export type Query = {
   riderWithdrawRequestsHistory: RiderWithdrawRequestHistoryReponse;
   riders?: Maybe<Array<Rider>>;
   ridersByZone?: Maybe<Array<Rider>>;
+  searchReferralDrivers?: Maybe<ReferralNetworkDriversResponse>;
+  searchReferralUsers?: Maybe<ReferralNetworkUsersResponse>;
   sections?: Maybe<Array<Maybe<Section>>>;
   staff?: Maybe<Staff>;
   staffs?: Maybe<Array<Staff>>;
@@ -2700,6 +2915,12 @@ export type QueryChatArgs = {
 };
 
 
+export type QueryCommissionRateArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryDeliveredOrdersArgs = {
   offset: InputMaybe<Scalars['Int']['input']>;
 };
@@ -2716,6 +2937,16 @@ export type QueryEarningsArgs = {
 };
 
 
+export type QueryFetchAdminReferralNetworkArgs = {
+  input: InputMaybe<AdminReferralNetworkInput>;
+};
+
+
+export type QueryFetchAdminReferralNetworkUserDetailsArgs = {
+  input: AdminReferralNetworkUserDetailsInput;
+};
+
+
 export type QueryFetchCategoryDetailsByStoreIdArgs = {
   storeId: Scalars['String']['input'];
 };
@@ -2723,6 +2954,16 @@ export type QueryFetchCategoryDetailsByStoreIdArgs = {
 
 export type QueryFetchCategoryDetailsByStoreIdForMobileArgs = {
   storeId: Scalars['String']['input'];
+};
+
+
+export type QueryFetchCustomerReferralHistoryArgs = {
+  filter: InputMaybe<FetchLoyaltyReferralHistoryFilterInput>;
+};
+
+
+export type QueryFetchDriverReferralNetworkDetailArgs = {
+  driverId: Scalars['String']['input'];
 };
 
 
@@ -2746,6 +2987,16 @@ export type QueryFetchLoyaltyTierByIdArgs = {
 };
 
 
+export type QueryFetchOrderLoyaltyLevelByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFetchOrderLoyaltyLevelsByUserTypeArgs = {
+  userType: Scalars['String']['input'];
+};
+
+
 export type QueryFetchReferralLoyaltyHistoryArgs = {
   filter: InputMaybe<FetchLoyaltyReferralHistoryFilterInput>;
 };
@@ -2753,6 +3004,16 @@ export type QueryFetchReferralLoyaltyHistoryArgs = {
 
 export type QueryFetchRiderActivityDetailsArgs = {
   activityId: Scalars['String']['input'];
+};
+
+
+export type QueryFetchRiderLoyaltyBreakdownByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFetchRiderLoyaltyHistoryArgs = {
+  filter: InputMaybe<FetchLoyaltyReferralHistoryFilterInput>;
 };
 
 
@@ -2779,6 +3040,11 @@ export type QueryFetchShopTypeByUniqueArgs = {
 export type QueryFetchShopTypesArgs = {
   filter: InputMaybe<FetchShopTypeFilter>;
   pagination: InputMaybe<PaginationInput>;
+};
+
+
+export type QueryFetchUserReferralNetworkDetailArgs = {
+  userId: Scalars['String']['input'];
 };
 
 
@@ -2943,6 +3209,20 @@ export type QueryGetTicketUsersWithLatestArgs = {
 };
 
 
+export type QueryGetUsersActiveOrdersArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetUsersPastOrdersArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryGetVendorArgs = {
   id: Scalars['String']['input'];
 };
@@ -3103,6 +3383,12 @@ export type QueryRestaurantPreviewArgs = {
 };
 
 
+export type QueryRestaurantsArgs = {
+  limit: InputMaybe<Scalars['Int']['input']>;
+  page: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryRestaurantsPaginatedArgs = {
   limit: InputMaybe<Scalars['Int']['input']>;
   page: InputMaybe<Scalars['Int']['input']>;
@@ -3165,6 +3451,16 @@ export type QueryRiderWithdrawRequestsHistoryArgs = {
 
 export type QueryRidersByZoneArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QuerySearchReferralDriversArgs = {
+  filter: InputMaybe<ReferralNetworkSearchInput>;
+};
+
+
+export type QuerySearchReferralUsersArgs = {
+  filter: InputMaybe<ReferralNetworkSearchInput>;
 };
 
 
@@ -3267,6 +3563,65 @@ export type ReferralLevelDetails = {
   count: Scalars['Int']['output'];
   earnings: Scalars['Float']['output'];
   riders: Array<Maybe<RiderDetailInfo>>;
+};
+
+export type ReferralNetworkDriver = {
+  __typename?: 'ReferralNetworkDriver';
+  _id: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  tier?: Maybe<Scalars['String']['output']>;
+  totalPoints: Scalars['Float']['output'];
+};
+
+export type ReferralNetworkDriversResponse = {
+  __typename?: 'ReferralNetworkDriversResponse';
+  data: Array<ReferralNetworkDriver>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ReferralNetworkLevel = {
+  __typename?: 'ReferralNetworkLevel';
+  memberCount: Scalars['Int']['output'];
+  members: Array<ReferralNetworkMember>;
+  pointsPerActivity: Scalars['Float']['output'];
+};
+
+export type ReferralNetworkMember = {
+  __typename?: 'ReferralNetworkMember';
+  _id: Scalars['String']['output'];
+  activityCount: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  points: Scalars['Float']['output'];
+};
+
+export type ReferralNetworkSearchInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ReferralNetworkStats = {
+  __typename?: 'ReferralNetworkStats';
+  level1Count: Scalars['Int']['output'];
+  level2Count: Scalars['Int']['output'];
+  level3Count: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ReferralNetworkUser = {
+  __typename?: 'ReferralNetworkUser';
+  _id: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  tier?: Maybe<Scalars['String']['output']>;
+  totalPoints: Scalars['Float']['output'];
+};
+
+export type ReferralNetworkUsersResponse = {
+  __typename?: 'ReferralNetworkUsersResponse';
+  data: Array<ReferralNetworkUser>;
+  totalCount: Scalars['Int']['output'];
 };
 
 export type ReferralRewardsEarningsByLevel = {
@@ -3535,6 +3890,7 @@ export type Rider = {
   isActive: Scalars['Boolean']['output'];
   licenseDetails?: Maybe<LicenseDetails>;
   location?: Maybe<Point>;
+  loyaltyCashBalance?: Maybe<Scalars['Float']['output']>;
   madeBy?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];
@@ -3544,6 +3900,7 @@ export type Rider = {
   rejectionReason?: Maybe<Scalars['String']['output']>;
   riderRequestStatus?: Maybe<Scalars['String']['output']>;
   timeZone?: Maybe<Scalars['String']['output']>;
+  totalLoyaltyEarned?: Maybe<Scalars['Float']['output']>;
   totalWalletAmount?: Maybe<Scalars['Float']['output']>;
   updatedAt: Scalars['String']['output'];
   username: Scalars['String']['output'];
@@ -3650,6 +4007,28 @@ export type RiderInput = {
   vehicleDetails?: InputMaybe<VehicleDetailsInput>;
   vehicleType?: InputMaybe<Scalars['String']['input']>;
   zone: Scalars['String']['input'];
+};
+
+export type RiderLoyaltyBreakdown = {
+  __typename?: 'RiderLoyaltyBreakdown';
+  _id: Scalars['String']['output'];
+  amount: Scalars['Float']['output'];
+  max: Scalars['Float']['output'];
+  min: Scalars['Float']['output'];
+};
+
+export type RiderLoyaltyBreakdownInput = {
+  amount: Scalars['Float']['input'];
+  max: Scalars['Float']['input'];
+  min: Scalars['Float']['input'];
+};
+
+export type RiderLoyaltyData = {
+  __typename?: 'RiderLoyaltyData';
+  cashBalance?: Maybe<Scalars['Float']['output']>;
+  loyaltyCash?: Maybe<Scalars['Float']['output']>;
+  referralCash?: Maybe<Scalars['Float']['output']>;
+  totalEarnedCash?: Maybe<Scalars['Float']['output']>;
 };
 
 export type RiderOrders = {
@@ -4082,6 +4461,18 @@ export type UpdateLoyaltyTierInput = {
   points?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type UpdateOrderLoyaltyLevelInput = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  points?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type UpdateRiderLoyaltyBreakdownInput = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  max?: InputMaybe<Scalars['Float']['input']>;
+  min?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type UpdateShopTypeInput = {
   _id?: InputMaybe<Scalars['String']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
@@ -4156,11 +4547,23 @@ export type UserInput = {
 
 export type UserLoyaltyData = {
   __typename?: 'UserLoyaltyData';
-  loyaltyPoints?: Maybe<Scalars['Int']['output']>;
-  pointsBalance?: Maybe<Scalars['Int']['output']>;
-  referralPoints?: Maybe<Scalars['Int']['output']>;
+  loyaltyPoints?: Maybe<Scalars['Float']['output']>;
+  pointsBalance?: Maybe<Scalars['Float']['output']>;
+  referralPoints?: Maybe<Scalars['Float']['output']>;
   tier?: Maybe<LoyaltyTier>;
-  totalEarnedPoints?: Maybe<Scalars['Int']['output']>;
+  totalEarnedPoints?: Maybe<Scalars['Float']['output']>;
+};
+
+export type UserReferralNetworkDetail = {
+  __typename?: 'UserReferralNetworkDetail';
+  _id: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  level1: ReferralNetworkLevel;
+  level2: ReferralNetworkLevel;
+  level3: ReferralNetworkLevel;
+  name: Scalars['String']['output'];
+  tier?: Maybe<Scalars['String']['output']>;
+  totalPoints: Scalars['Float']['output'];
 };
 
 export type UserTier = {
@@ -4342,6 +4745,25 @@ export type ZoneInput = {
   title: Scalars['String']['input'];
 };
 
+export type CommissionRateResponse = {
+  __typename?: 'commissionRateResponse';
+  _id?: Maybe<Scalars['ID']['output']>;
+  commissionRate?: Maybe<Scalars['Float']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  orderId?: Maybe<Scalars['Int']['output']>;
+  orderPrefix?: Maybe<Scalars['String']['output']>;
+  unique_restaurant_id?: Maybe<Scalars['String']['output']>;
+};
+
+export type CommissionRateResponsePaginated = {
+  __typename?: 'commissionRateResponsePaginated';
+  currentPage?: Maybe<Scalars['Int']['output']>;
+  nextPage?: Maybe<Scalars['Boolean']['output']>;
+  prevPage?: Maybe<Scalars['Boolean']['output']>;
+  restaurant?: Maybe<Array<Maybe<CommissionRateResponse>>>;
+  totalPages?: Maybe<Scalars['Int']['output']>;
+};
+
 export type CreateAddonInput = {
   _id?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -4477,12 +4899,125 @@ export type DeleteLoyaltyBreakdownMutationVariables = Exact<{
 
 export type DeleteLoyaltyBreakdownMutation = { __typename?: 'Mutation', deleteLoyaltyBreakdown?: { __typename?: 'LoyaltyBreakdown', _id: string, min: number, max: number, bronze: number, silver: number, gold: number, platinum: number } | null | undefined };
 
+export type FetchRiderLoyaltyBreakdownByIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type FetchRiderLoyaltyBreakdownByIdQuery = { __typename?: 'Query', fetchRiderLoyaltyBreakdownById?: { __typename?: 'RiderLoyaltyBreakdown', _id: string, min: number, max: number, amount: number } | null | undefined };
+
+export type FetchRiderLoyaltyBreakdownsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchRiderLoyaltyBreakdownsQuery = { __typename?: 'Query', fetchRiderLoyaltyBreakdowns?: Array<{ __typename?: 'RiderLoyaltyBreakdown', _id: string, min: number, max: number, amount: number } | null | undefined> | null | undefined };
+
+export type CreateRiderLoyaltyBreakdownMutationVariables = Exact<{
+  input: RiderLoyaltyBreakdownInput;
+}>;
+
+
+export type CreateRiderLoyaltyBreakdownMutation = { __typename?: 'Mutation', createRiderLoyaltyBreakdown?: { __typename?: 'RiderLoyaltyBreakdown', _id: string, min: number, max: number, amount: number } | null | undefined };
+
+export type EditRiderLoyaltyBreakdownMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  input: UpdateRiderLoyaltyBreakdownInput;
+}>;
+
+
+export type EditRiderLoyaltyBreakdownMutation = { __typename?: 'Mutation', updateRiderLoyaltyBreakdown?: { __typename?: 'RiderLoyaltyBreakdown', _id: string, min: number, max: number, amount: number } | null | undefined };
+
+export type DeleteRiderLoyaltyBreakdownMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteRiderLoyaltyBreakdownMutation = { __typename?: 'Mutation', deleteRiderLoyaltyBreakdown?: { __typename?: 'RiderLoyaltyBreakdown', _id: string, min: number, max: number, amount: number } | null | undefined };
+
+export type FetchOrderLoyaltyLevelByIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type FetchOrderLoyaltyLevelByIdQuery = { __typename?: 'Query', fetchOrderLoyaltyLevelById?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+
+export type FetchOrderLoyaltyLevelsByUserTypeQueryVariables = Exact<{
+  userType: Scalars['String']['input'];
+}>;
+
+
+export type FetchOrderLoyaltyLevelsByUserTypeQuery = { __typename?: 'Query', fetchOrderLoyaltyLevelsByUserType?: Array<{ __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined> | null | undefined };
+
+export type CreateOrderLoyaltyLevelMutationVariables = Exact<{
+  input: OrderLoyaltyLevelInput;
+}>;
+
+
+export type CreateOrderLoyaltyLevelMutation = { __typename?: 'Mutation', createOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+
+export type EditOrderLoyaltyLevelMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  input: UpdateOrderLoyaltyLevelInput;
+}>;
+
+
+export type EditOrderLoyaltyLevelMutation = { __typename?: 'Mutation', updateOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+
+export type DeleteOrderLoyaltyLevelMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteOrderLoyaltyLevelMutation = { __typename?: 'Mutation', deleteOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+
+export type FetchUserReferralNetworkStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchUserReferralNetworkStatsQuery = { __typename?: 'Query', fetchUserReferralNetworkStats?: { __typename?: 'ReferralNetworkStats', totalCount: number, level1Count: number, level2Count: number, level3Count: number } | null | undefined };
+
+export type FetchDriverReferralNetworkStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchDriverReferralNetworkStatsQuery = { __typename?: 'Query', fetchDriverReferralNetworkStats?: { __typename?: 'ReferralNetworkStats', totalCount: number, level1Count: number, level2Count: number, level3Count: number } | null | undefined };
+
+export type SearchReferralUsersQueryVariables = Exact<{
+  filter: InputMaybe<ReferralNetworkSearchInput>;
+}>;
+
+
+export type SearchReferralUsersQuery = { __typename?: 'Query', searchReferralUsers?: { __typename?: 'ReferralNetworkUsersResponse', totalCount: number, data: Array<{ __typename?: 'ReferralNetworkUser', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number }> } | null | undefined };
+
+export type SearchReferralDriversQueryVariables = Exact<{
+  filter: InputMaybe<ReferralNetworkSearchInput>;
+}>;
+
+
+export type SearchReferralDriversQuery = { __typename?: 'Query', searchReferralDrivers?: { __typename?: 'ReferralNetworkDriversResponse', totalCount: number, data: Array<{ __typename?: 'ReferralNetworkDriver', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number }> } | null | undefined };
+
+export type FetchUserReferralNetworkDetailQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type FetchUserReferralNetworkDetailQuery = { __typename?: 'Query', fetchUserReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> } } | null | undefined };
+
+export type FetchDriverReferralNetworkDetailQueryVariables = Exact<{
+  driverId: Scalars['String']['input'];
+}>;
+
+
+export type FetchDriverReferralNetworkDetailQuery = { __typename?: 'Query', fetchDriverReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> } } | null | undefined };
+
+export type FetchLoyaltyStatsOverviewQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type FetchLoyaltyStatsOverviewQuery = { __typename?: 'Query', fetchLoyaltyStatsOverview: { __typename?: 'LoyaltyStatsOverview', totalLoyalCustomers: number, totalPointsIssued: number, totalPointsRedeemed: number, activeDriverReferrals: number } };
+
 export type FetchReferralLoyaltyHistoryQueryVariables = Exact<{
   filter: InputMaybe<FetchLoyaltyReferralHistoryFilterInput>;
 }>;
 
 
-export type FetchReferralLoyaltyHistoryQuery = { __typename?: 'Query', fetchReferralLoyaltyHistory?: { __typename?: 'LoyaltyReferralHistoryResponse', totalCount: number, totalPages: number, currentPage: number, hasNextPage: boolean, hasPrevPage: boolean, data: Array<{ __typename?: 'LoyalyReferralHistory', _id: string, user_name: string, user_rank: string, type: string, level: number, value: number, createdAt: string } | null | undefined> } | null | undefined };
+export type FetchReferralLoyaltyHistoryQuery = { __typename?: 'Query', fetchReferralLoyaltyHistory?: { __typename?: 'LoyaltyReferralHistoryResponse', totalCount: number, totalPages: number, currentPage: number, hasNextPage: boolean, hasPrevPage: boolean, data: Array<{ __typename?: 'LoyalyReferralHistory', _id: string, user_name: string, user_rank: string, type: string, level?: number | null | undefined, value: number, createdAt: string } | null | undefined> } | null | undefined };
 
 
 export const FetchLoyaltyConfiguraionDocument = gql`
@@ -5152,6 +5687,763 @@ export function useDeleteLoyaltyBreakdownMutation(baseOptions?: Apollo.MutationH
 export type DeleteLoyaltyBreakdownMutationHookResult = ReturnType<typeof useDeleteLoyaltyBreakdownMutation>;
 export type DeleteLoyaltyBreakdownMutationResult = Apollo.MutationResult<DeleteLoyaltyBreakdownMutation>;
 export type DeleteLoyaltyBreakdownMutationOptions = Apollo.BaseMutationOptions<DeleteLoyaltyBreakdownMutation, DeleteLoyaltyBreakdownMutationVariables>;
+export const FetchRiderLoyaltyBreakdownByIdDocument = gql`
+    query FetchRiderLoyaltyBreakdownById($id: String!) {
+  fetchRiderLoyaltyBreakdownById(id: $id) {
+    _id
+    min
+    max
+    amount
+  }
+}
+    `;
+
+/**
+ * __useFetchRiderLoyaltyBreakdownByIdQuery__
+ *
+ * To run a query within a React component, call `useFetchRiderLoyaltyBreakdownByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchRiderLoyaltyBreakdownByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchRiderLoyaltyBreakdownByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFetchRiderLoyaltyBreakdownByIdQuery(baseOptions: Apollo.QueryHookOptions<FetchRiderLoyaltyBreakdownByIdQuery, FetchRiderLoyaltyBreakdownByIdQueryVariables> & ({ variables: FetchRiderLoyaltyBreakdownByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchRiderLoyaltyBreakdownByIdQuery, FetchRiderLoyaltyBreakdownByIdQueryVariables>(FetchRiderLoyaltyBreakdownByIdDocument, options);
+      }
+export function useFetchRiderLoyaltyBreakdownByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchRiderLoyaltyBreakdownByIdQuery, FetchRiderLoyaltyBreakdownByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchRiderLoyaltyBreakdownByIdQuery, FetchRiderLoyaltyBreakdownByIdQueryVariables>(FetchRiderLoyaltyBreakdownByIdDocument, options);
+        }
+export function useFetchRiderLoyaltyBreakdownByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchRiderLoyaltyBreakdownByIdQuery, FetchRiderLoyaltyBreakdownByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchRiderLoyaltyBreakdownByIdQuery, FetchRiderLoyaltyBreakdownByIdQueryVariables>(FetchRiderLoyaltyBreakdownByIdDocument, options);
+        }
+export type FetchRiderLoyaltyBreakdownByIdQueryHookResult = ReturnType<typeof useFetchRiderLoyaltyBreakdownByIdQuery>;
+export type FetchRiderLoyaltyBreakdownByIdLazyQueryHookResult = ReturnType<typeof useFetchRiderLoyaltyBreakdownByIdLazyQuery>;
+export type FetchRiderLoyaltyBreakdownByIdSuspenseQueryHookResult = ReturnType<typeof useFetchRiderLoyaltyBreakdownByIdSuspenseQuery>;
+export type FetchRiderLoyaltyBreakdownByIdQueryResult = Apollo.QueryResult<FetchRiderLoyaltyBreakdownByIdQuery, FetchRiderLoyaltyBreakdownByIdQueryVariables>;
+export const FetchRiderLoyaltyBreakdownsDocument = gql`
+    query FetchRiderLoyaltyBreakdowns {
+  fetchRiderLoyaltyBreakdowns {
+    _id
+    min
+    max
+    amount
+  }
+}
+    `;
+
+/**
+ * __useFetchRiderLoyaltyBreakdownsQuery__
+ *
+ * To run a query within a React component, call `useFetchRiderLoyaltyBreakdownsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchRiderLoyaltyBreakdownsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchRiderLoyaltyBreakdownsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchRiderLoyaltyBreakdownsQuery(baseOptions?: Apollo.QueryHookOptions<FetchRiderLoyaltyBreakdownsQuery, FetchRiderLoyaltyBreakdownsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchRiderLoyaltyBreakdownsQuery, FetchRiderLoyaltyBreakdownsQueryVariables>(FetchRiderLoyaltyBreakdownsDocument, options);
+      }
+export function useFetchRiderLoyaltyBreakdownsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchRiderLoyaltyBreakdownsQuery, FetchRiderLoyaltyBreakdownsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchRiderLoyaltyBreakdownsQuery, FetchRiderLoyaltyBreakdownsQueryVariables>(FetchRiderLoyaltyBreakdownsDocument, options);
+        }
+export function useFetchRiderLoyaltyBreakdownsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchRiderLoyaltyBreakdownsQuery, FetchRiderLoyaltyBreakdownsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchRiderLoyaltyBreakdownsQuery, FetchRiderLoyaltyBreakdownsQueryVariables>(FetchRiderLoyaltyBreakdownsDocument, options);
+        }
+export type FetchRiderLoyaltyBreakdownsQueryHookResult = ReturnType<typeof useFetchRiderLoyaltyBreakdownsQuery>;
+export type FetchRiderLoyaltyBreakdownsLazyQueryHookResult = ReturnType<typeof useFetchRiderLoyaltyBreakdownsLazyQuery>;
+export type FetchRiderLoyaltyBreakdownsSuspenseQueryHookResult = ReturnType<typeof useFetchRiderLoyaltyBreakdownsSuspenseQuery>;
+export type FetchRiderLoyaltyBreakdownsQueryResult = Apollo.QueryResult<FetchRiderLoyaltyBreakdownsQuery, FetchRiderLoyaltyBreakdownsQueryVariables>;
+export const CreateRiderLoyaltyBreakdownDocument = gql`
+    mutation CreateRiderLoyaltyBreakdown($input: RiderLoyaltyBreakdownInput!) {
+  createRiderLoyaltyBreakdown(input: $input) {
+    _id
+    min
+    max
+    amount
+  }
+}
+    `;
+export type CreateRiderLoyaltyBreakdownMutationFn = Apollo.MutationFunction<CreateRiderLoyaltyBreakdownMutation, CreateRiderLoyaltyBreakdownMutationVariables>;
+
+/**
+ * __useCreateRiderLoyaltyBreakdownMutation__
+ *
+ * To run a mutation, you first call `useCreateRiderLoyaltyBreakdownMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRiderLoyaltyBreakdownMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRiderLoyaltyBreakdownMutation, { data, loading, error }] = useCreateRiderLoyaltyBreakdownMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateRiderLoyaltyBreakdownMutation(baseOptions?: Apollo.MutationHookOptions<CreateRiderLoyaltyBreakdownMutation, CreateRiderLoyaltyBreakdownMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateRiderLoyaltyBreakdownMutation, CreateRiderLoyaltyBreakdownMutationVariables>(CreateRiderLoyaltyBreakdownDocument, options);
+      }
+export type CreateRiderLoyaltyBreakdownMutationHookResult = ReturnType<typeof useCreateRiderLoyaltyBreakdownMutation>;
+export type CreateRiderLoyaltyBreakdownMutationResult = Apollo.MutationResult<CreateRiderLoyaltyBreakdownMutation>;
+export type CreateRiderLoyaltyBreakdownMutationOptions = Apollo.BaseMutationOptions<CreateRiderLoyaltyBreakdownMutation, CreateRiderLoyaltyBreakdownMutationVariables>;
+export const EditRiderLoyaltyBreakdownDocument = gql`
+    mutation EditRiderLoyaltyBreakdown($id: String!, $input: UpdateRiderLoyaltyBreakdownInput!) {
+  updateRiderLoyaltyBreakdown(id: $id, input: $input) {
+    _id
+    min
+    max
+    amount
+  }
+}
+    `;
+export type EditRiderLoyaltyBreakdownMutationFn = Apollo.MutationFunction<EditRiderLoyaltyBreakdownMutation, EditRiderLoyaltyBreakdownMutationVariables>;
+
+/**
+ * __useEditRiderLoyaltyBreakdownMutation__
+ *
+ * To run a mutation, you first call `useEditRiderLoyaltyBreakdownMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditRiderLoyaltyBreakdownMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editRiderLoyaltyBreakdownMutation, { data, loading, error }] = useEditRiderLoyaltyBreakdownMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditRiderLoyaltyBreakdownMutation(baseOptions?: Apollo.MutationHookOptions<EditRiderLoyaltyBreakdownMutation, EditRiderLoyaltyBreakdownMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditRiderLoyaltyBreakdownMutation, EditRiderLoyaltyBreakdownMutationVariables>(EditRiderLoyaltyBreakdownDocument, options);
+      }
+export type EditRiderLoyaltyBreakdownMutationHookResult = ReturnType<typeof useEditRiderLoyaltyBreakdownMutation>;
+export type EditRiderLoyaltyBreakdownMutationResult = Apollo.MutationResult<EditRiderLoyaltyBreakdownMutation>;
+export type EditRiderLoyaltyBreakdownMutationOptions = Apollo.BaseMutationOptions<EditRiderLoyaltyBreakdownMutation, EditRiderLoyaltyBreakdownMutationVariables>;
+export const DeleteRiderLoyaltyBreakdownDocument = gql`
+    mutation DeleteRiderLoyaltyBreakdown($id: String!) {
+  deleteRiderLoyaltyBreakdown(id: $id) {
+    _id
+    min
+    max
+    amount
+  }
+}
+    `;
+export type DeleteRiderLoyaltyBreakdownMutationFn = Apollo.MutationFunction<DeleteRiderLoyaltyBreakdownMutation, DeleteRiderLoyaltyBreakdownMutationVariables>;
+
+/**
+ * __useDeleteRiderLoyaltyBreakdownMutation__
+ *
+ * To run a mutation, you first call `useDeleteRiderLoyaltyBreakdownMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRiderLoyaltyBreakdownMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRiderLoyaltyBreakdownMutation, { data, loading, error }] = useDeleteRiderLoyaltyBreakdownMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteRiderLoyaltyBreakdownMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRiderLoyaltyBreakdownMutation, DeleteRiderLoyaltyBreakdownMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRiderLoyaltyBreakdownMutation, DeleteRiderLoyaltyBreakdownMutationVariables>(DeleteRiderLoyaltyBreakdownDocument, options);
+      }
+export type DeleteRiderLoyaltyBreakdownMutationHookResult = ReturnType<typeof useDeleteRiderLoyaltyBreakdownMutation>;
+export type DeleteRiderLoyaltyBreakdownMutationResult = Apollo.MutationResult<DeleteRiderLoyaltyBreakdownMutation>;
+export type DeleteRiderLoyaltyBreakdownMutationOptions = Apollo.BaseMutationOptions<DeleteRiderLoyaltyBreakdownMutation, DeleteRiderLoyaltyBreakdownMutationVariables>;
+export const FetchOrderLoyaltyLevelByIdDocument = gql`
+    query FetchOrderLoyaltyLevelById($id: String!) {
+  fetchOrderLoyaltyLevelById(id: $id) {
+    _id
+    name
+    points
+    amount
+  }
+}
+    `;
+
+/**
+ * __useFetchOrderLoyaltyLevelByIdQuery__
+ *
+ * To run a query within a React component, call `useFetchOrderLoyaltyLevelByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchOrderLoyaltyLevelByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchOrderLoyaltyLevelByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFetchOrderLoyaltyLevelByIdQuery(baseOptions: Apollo.QueryHookOptions<FetchOrderLoyaltyLevelByIdQuery, FetchOrderLoyaltyLevelByIdQueryVariables> & ({ variables: FetchOrderLoyaltyLevelByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchOrderLoyaltyLevelByIdQuery, FetchOrderLoyaltyLevelByIdQueryVariables>(FetchOrderLoyaltyLevelByIdDocument, options);
+      }
+export function useFetchOrderLoyaltyLevelByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchOrderLoyaltyLevelByIdQuery, FetchOrderLoyaltyLevelByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchOrderLoyaltyLevelByIdQuery, FetchOrderLoyaltyLevelByIdQueryVariables>(FetchOrderLoyaltyLevelByIdDocument, options);
+        }
+export function useFetchOrderLoyaltyLevelByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchOrderLoyaltyLevelByIdQuery, FetchOrderLoyaltyLevelByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchOrderLoyaltyLevelByIdQuery, FetchOrderLoyaltyLevelByIdQueryVariables>(FetchOrderLoyaltyLevelByIdDocument, options);
+        }
+export type FetchOrderLoyaltyLevelByIdQueryHookResult = ReturnType<typeof useFetchOrderLoyaltyLevelByIdQuery>;
+export type FetchOrderLoyaltyLevelByIdLazyQueryHookResult = ReturnType<typeof useFetchOrderLoyaltyLevelByIdLazyQuery>;
+export type FetchOrderLoyaltyLevelByIdSuspenseQueryHookResult = ReturnType<typeof useFetchOrderLoyaltyLevelByIdSuspenseQuery>;
+export type FetchOrderLoyaltyLevelByIdQueryResult = Apollo.QueryResult<FetchOrderLoyaltyLevelByIdQuery, FetchOrderLoyaltyLevelByIdQueryVariables>;
+export const FetchOrderLoyaltyLevelsByUserTypeDocument = gql`
+    query FetchOrderLoyaltyLevelsByUserType($userType: String!) {
+  fetchOrderLoyaltyLevelsByUserType(userType: $userType) {
+    _id
+    name
+    points
+    amount
+  }
+}
+    `;
+
+/**
+ * __useFetchOrderLoyaltyLevelsByUserTypeQuery__
+ *
+ * To run a query within a React component, call `useFetchOrderLoyaltyLevelsByUserTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchOrderLoyaltyLevelsByUserTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchOrderLoyaltyLevelsByUserTypeQuery({
+ *   variables: {
+ *      userType: // value for 'userType'
+ *   },
+ * });
+ */
+export function useFetchOrderLoyaltyLevelsByUserTypeQuery(baseOptions: Apollo.QueryHookOptions<FetchOrderLoyaltyLevelsByUserTypeQuery, FetchOrderLoyaltyLevelsByUserTypeQueryVariables> & ({ variables: FetchOrderLoyaltyLevelsByUserTypeQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchOrderLoyaltyLevelsByUserTypeQuery, FetchOrderLoyaltyLevelsByUserTypeQueryVariables>(FetchOrderLoyaltyLevelsByUserTypeDocument, options);
+      }
+export function useFetchOrderLoyaltyLevelsByUserTypeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchOrderLoyaltyLevelsByUserTypeQuery, FetchOrderLoyaltyLevelsByUserTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchOrderLoyaltyLevelsByUserTypeQuery, FetchOrderLoyaltyLevelsByUserTypeQueryVariables>(FetchOrderLoyaltyLevelsByUserTypeDocument, options);
+        }
+export function useFetchOrderLoyaltyLevelsByUserTypeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchOrderLoyaltyLevelsByUserTypeQuery, FetchOrderLoyaltyLevelsByUserTypeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchOrderLoyaltyLevelsByUserTypeQuery, FetchOrderLoyaltyLevelsByUserTypeQueryVariables>(FetchOrderLoyaltyLevelsByUserTypeDocument, options);
+        }
+export type FetchOrderLoyaltyLevelsByUserTypeQueryHookResult = ReturnType<typeof useFetchOrderLoyaltyLevelsByUserTypeQuery>;
+export type FetchOrderLoyaltyLevelsByUserTypeLazyQueryHookResult = ReturnType<typeof useFetchOrderLoyaltyLevelsByUserTypeLazyQuery>;
+export type FetchOrderLoyaltyLevelsByUserTypeSuspenseQueryHookResult = ReturnType<typeof useFetchOrderLoyaltyLevelsByUserTypeSuspenseQuery>;
+export type FetchOrderLoyaltyLevelsByUserTypeQueryResult = Apollo.QueryResult<FetchOrderLoyaltyLevelsByUserTypeQuery, FetchOrderLoyaltyLevelsByUserTypeQueryVariables>;
+export const CreateOrderLoyaltyLevelDocument = gql`
+    mutation CreateOrderLoyaltyLevel($input: OrderLoyaltyLevelInput!) {
+  createOrderLoyaltyLevel(input: $input) {
+    _id
+    name
+    points
+    amount
+  }
+}
+    `;
+export type CreateOrderLoyaltyLevelMutationFn = Apollo.MutationFunction<CreateOrderLoyaltyLevelMutation, CreateOrderLoyaltyLevelMutationVariables>;
+
+/**
+ * __useCreateOrderLoyaltyLevelMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderLoyaltyLevelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderLoyaltyLevelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderLoyaltyLevelMutation, { data, loading, error }] = useCreateOrderLoyaltyLevelMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateOrderLoyaltyLevelMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrderLoyaltyLevelMutation, CreateOrderLoyaltyLevelMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrderLoyaltyLevelMutation, CreateOrderLoyaltyLevelMutationVariables>(CreateOrderLoyaltyLevelDocument, options);
+      }
+export type CreateOrderLoyaltyLevelMutationHookResult = ReturnType<typeof useCreateOrderLoyaltyLevelMutation>;
+export type CreateOrderLoyaltyLevelMutationResult = Apollo.MutationResult<CreateOrderLoyaltyLevelMutation>;
+export type CreateOrderLoyaltyLevelMutationOptions = Apollo.BaseMutationOptions<CreateOrderLoyaltyLevelMutation, CreateOrderLoyaltyLevelMutationVariables>;
+export const EditOrderLoyaltyLevelDocument = gql`
+    mutation EditOrderLoyaltyLevel($id: String!, $input: UpdateOrderLoyaltyLevelInput!) {
+  updateOrderLoyaltyLevel(id: $id, input: $input) {
+    _id
+    name
+    points
+    amount
+  }
+}
+    `;
+export type EditOrderLoyaltyLevelMutationFn = Apollo.MutationFunction<EditOrderLoyaltyLevelMutation, EditOrderLoyaltyLevelMutationVariables>;
+
+/**
+ * __useEditOrderLoyaltyLevelMutation__
+ *
+ * To run a mutation, you first call `useEditOrderLoyaltyLevelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditOrderLoyaltyLevelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editOrderLoyaltyLevelMutation, { data, loading, error }] = useEditOrderLoyaltyLevelMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useEditOrderLoyaltyLevelMutation(baseOptions?: Apollo.MutationHookOptions<EditOrderLoyaltyLevelMutation, EditOrderLoyaltyLevelMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditOrderLoyaltyLevelMutation, EditOrderLoyaltyLevelMutationVariables>(EditOrderLoyaltyLevelDocument, options);
+      }
+export type EditOrderLoyaltyLevelMutationHookResult = ReturnType<typeof useEditOrderLoyaltyLevelMutation>;
+export type EditOrderLoyaltyLevelMutationResult = Apollo.MutationResult<EditOrderLoyaltyLevelMutation>;
+export type EditOrderLoyaltyLevelMutationOptions = Apollo.BaseMutationOptions<EditOrderLoyaltyLevelMutation, EditOrderLoyaltyLevelMutationVariables>;
+export const DeleteOrderLoyaltyLevelDocument = gql`
+    mutation DeleteOrderLoyaltyLevel($id: String!) {
+  deleteOrderLoyaltyLevel(id: $id) {
+    _id
+    name
+    points
+    amount
+  }
+}
+    `;
+export type DeleteOrderLoyaltyLevelMutationFn = Apollo.MutationFunction<DeleteOrderLoyaltyLevelMutation, DeleteOrderLoyaltyLevelMutationVariables>;
+
+/**
+ * __useDeleteOrderLoyaltyLevelMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderLoyaltyLevelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderLoyaltyLevelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteOrderLoyaltyLevelMutation, { data, loading, error }] = useDeleteOrderLoyaltyLevelMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteOrderLoyaltyLevelMutation(baseOptions?: Apollo.MutationHookOptions<DeleteOrderLoyaltyLevelMutation, DeleteOrderLoyaltyLevelMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteOrderLoyaltyLevelMutation, DeleteOrderLoyaltyLevelMutationVariables>(DeleteOrderLoyaltyLevelDocument, options);
+      }
+export type DeleteOrderLoyaltyLevelMutationHookResult = ReturnType<typeof useDeleteOrderLoyaltyLevelMutation>;
+export type DeleteOrderLoyaltyLevelMutationResult = Apollo.MutationResult<DeleteOrderLoyaltyLevelMutation>;
+export type DeleteOrderLoyaltyLevelMutationOptions = Apollo.BaseMutationOptions<DeleteOrderLoyaltyLevelMutation, DeleteOrderLoyaltyLevelMutationVariables>;
+export const FetchUserReferralNetworkStatsDocument = gql`
+    query FetchUserReferralNetworkStats {
+  fetchUserReferralNetworkStats {
+    totalCount
+    level1Count
+    level2Count
+    level3Count
+  }
+}
+    `;
+
+/**
+ * __useFetchUserReferralNetworkStatsQuery__
+ *
+ * To run a query within a React component, call `useFetchUserReferralNetworkStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchUserReferralNetworkStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchUserReferralNetworkStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchUserReferralNetworkStatsQuery(baseOptions?: Apollo.QueryHookOptions<FetchUserReferralNetworkStatsQuery, FetchUserReferralNetworkStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchUserReferralNetworkStatsQuery, FetchUserReferralNetworkStatsQueryVariables>(FetchUserReferralNetworkStatsDocument, options);
+      }
+export function useFetchUserReferralNetworkStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchUserReferralNetworkStatsQuery, FetchUserReferralNetworkStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchUserReferralNetworkStatsQuery, FetchUserReferralNetworkStatsQueryVariables>(FetchUserReferralNetworkStatsDocument, options);
+        }
+export function useFetchUserReferralNetworkStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchUserReferralNetworkStatsQuery, FetchUserReferralNetworkStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchUserReferralNetworkStatsQuery, FetchUserReferralNetworkStatsQueryVariables>(FetchUserReferralNetworkStatsDocument, options);
+        }
+export type FetchUserReferralNetworkStatsQueryHookResult = ReturnType<typeof useFetchUserReferralNetworkStatsQuery>;
+export type FetchUserReferralNetworkStatsLazyQueryHookResult = ReturnType<typeof useFetchUserReferralNetworkStatsLazyQuery>;
+export type FetchUserReferralNetworkStatsSuspenseQueryHookResult = ReturnType<typeof useFetchUserReferralNetworkStatsSuspenseQuery>;
+export type FetchUserReferralNetworkStatsQueryResult = Apollo.QueryResult<FetchUserReferralNetworkStatsQuery, FetchUserReferralNetworkStatsQueryVariables>;
+export const FetchDriverReferralNetworkStatsDocument = gql`
+    query FetchDriverReferralNetworkStats {
+  fetchDriverReferralNetworkStats {
+    totalCount
+    level1Count
+    level2Count
+    level3Count
+  }
+}
+    `;
+
+/**
+ * __useFetchDriverReferralNetworkStatsQuery__
+ *
+ * To run a query within a React component, call `useFetchDriverReferralNetworkStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchDriverReferralNetworkStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchDriverReferralNetworkStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchDriverReferralNetworkStatsQuery(baseOptions?: Apollo.QueryHookOptions<FetchDriverReferralNetworkStatsQuery, FetchDriverReferralNetworkStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchDriverReferralNetworkStatsQuery, FetchDriverReferralNetworkStatsQueryVariables>(FetchDriverReferralNetworkStatsDocument, options);
+      }
+export function useFetchDriverReferralNetworkStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchDriverReferralNetworkStatsQuery, FetchDriverReferralNetworkStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchDriverReferralNetworkStatsQuery, FetchDriverReferralNetworkStatsQueryVariables>(FetchDriverReferralNetworkStatsDocument, options);
+        }
+export function useFetchDriverReferralNetworkStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchDriverReferralNetworkStatsQuery, FetchDriverReferralNetworkStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchDriverReferralNetworkStatsQuery, FetchDriverReferralNetworkStatsQueryVariables>(FetchDriverReferralNetworkStatsDocument, options);
+        }
+export type FetchDriverReferralNetworkStatsQueryHookResult = ReturnType<typeof useFetchDriverReferralNetworkStatsQuery>;
+export type FetchDriverReferralNetworkStatsLazyQueryHookResult = ReturnType<typeof useFetchDriverReferralNetworkStatsLazyQuery>;
+export type FetchDriverReferralNetworkStatsSuspenseQueryHookResult = ReturnType<typeof useFetchDriverReferralNetworkStatsSuspenseQuery>;
+export type FetchDriverReferralNetworkStatsQueryResult = Apollo.QueryResult<FetchDriverReferralNetworkStatsQuery, FetchDriverReferralNetworkStatsQueryVariables>;
+export const SearchReferralUsersDocument = gql`
+    query SearchReferralUsers($filter: ReferralNetworkSearchInput) {
+  searchReferralUsers(filter: $filter) {
+    data {
+      _id
+      name
+      email
+      tier
+      totalPoints
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useSearchReferralUsersQuery__
+ *
+ * To run a query within a React component, call `useSearchReferralUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchReferralUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchReferralUsersQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useSearchReferralUsersQuery(baseOptions?: Apollo.QueryHookOptions<SearchReferralUsersQuery, SearchReferralUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchReferralUsersQuery, SearchReferralUsersQueryVariables>(SearchReferralUsersDocument, options);
+      }
+export function useSearchReferralUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchReferralUsersQuery, SearchReferralUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchReferralUsersQuery, SearchReferralUsersQueryVariables>(SearchReferralUsersDocument, options);
+        }
+export function useSearchReferralUsersSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchReferralUsersQuery, SearchReferralUsersQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchReferralUsersQuery, SearchReferralUsersQueryVariables>(SearchReferralUsersDocument, options);
+        }
+export type SearchReferralUsersQueryHookResult = ReturnType<typeof useSearchReferralUsersQuery>;
+export type SearchReferralUsersLazyQueryHookResult = ReturnType<typeof useSearchReferralUsersLazyQuery>;
+export type SearchReferralUsersSuspenseQueryHookResult = ReturnType<typeof useSearchReferralUsersSuspenseQuery>;
+export type SearchReferralUsersQueryResult = Apollo.QueryResult<SearchReferralUsersQuery, SearchReferralUsersQueryVariables>;
+export const SearchReferralDriversDocument = gql`
+    query SearchReferralDrivers($filter: ReferralNetworkSearchInput) {
+  searchReferralDrivers(filter: $filter) {
+    data {
+      _id
+      name
+      email
+      tier
+      totalPoints
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useSearchReferralDriversQuery__
+ *
+ * To run a query within a React component, call `useSearchReferralDriversQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSearchReferralDriversQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSearchReferralDriversQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useSearchReferralDriversQuery(baseOptions?: Apollo.QueryHookOptions<SearchReferralDriversQuery, SearchReferralDriversQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SearchReferralDriversQuery, SearchReferralDriversQueryVariables>(SearchReferralDriversDocument, options);
+      }
+export function useSearchReferralDriversLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SearchReferralDriversQuery, SearchReferralDriversQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SearchReferralDriversQuery, SearchReferralDriversQueryVariables>(SearchReferralDriversDocument, options);
+        }
+export function useSearchReferralDriversSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SearchReferralDriversQuery, SearchReferralDriversQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SearchReferralDriversQuery, SearchReferralDriversQueryVariables>(SearchReferralDriversDocument, options);
+        }
+export type SearchReferralDriversQueryHookResult = ReturnType<typeof useSearchReferralDriversQuery>;
+export type SearchReferralDriversLazyQueryHookResult = ReturnType<typeof useSearchReferralDriversLazyQuery>;
+export type SearchReferralDriversSuspenseQueryHookResult = ReturnType<typeof useSearchReferralDriversSuspenseQuery>;
+export type SearchReferralDriversQueryResult = Apollo.QueryResult<SearchReferralDriversQuery, SearchReferralDriversQueryVariables>;
+export const FetchUserReferralNetworkDetailDocument = gql`
+    query FetchUserReferralNetworkDetail($userId: String!) {
+  fetchUserReferralNetworkDetail(userId: $userId) {
+    _id
+    name
+    email
+    tier
+    totalPoints
+    level1 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level2 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level3 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFetchUserReferralNetworkDetailQuery__
+ *
+ * To run a query within a React component, call `useFetchUserReferralNetworkDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchUserReferralNetworkDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchUserReferralNetworkDetailQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useFetchUserReferralNetworkDetailQuery(baseOptions: Apollo.QueryHookOptions<FetchUserReferralNetworkDetailQuery, FetchUserReferralNetworkDetailQueryVariables> & ({ variables: FetchUserReferralNetworkDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchUserReferralNetworkDetailQuery, FetchUserReferralNetworkDetailQueryVariables>(FetchUserReferralNetworkDetailDocument, options);
+      }
+export function useFetchUserReferralNetworkDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchUserReferralNetworkDetailQuery, FetchUserReferralNetworkDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchUserReferralNetworkDetailQuery, FetchUserReferralNetworkDetailQueryVariables>(FetchUserReferralNetworkDetailDocument, options);
+        }
+export function useFetchUserReferralNetworkDetailSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchUserReferralNetworkDetailQuery, FetchUserReferralNetworkDetailQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchUserReferralNetworkDetailQuery, FetchUserReferralNetworkDetailQueryVariables>(FetchUserReferralNetworkDetailDocument, options);
+        }
+export type FetchUserReferralNetworkDetailQueryHookResult = ReturnType<typeof useFetchUserReferralNetworkDetailQuery>;
+export type FetchUserReferralNetworkDetailLazyQueryHookResult = ReturnType<typeof useFetchUserReferralNetworkDetailLazyQuery>;
+export type FetchUserReferralNetworkDetailSuspenseQueryHookResult = ReturnType<typeof useFetchUserReferralNetworkDetailSuspenseQuery>;
+export type FetchUserReferralNetworkDetailQueryResult = Apollo.QueryResult<FetchUserReferralNetworkDetailQuery, FetchUserReferralNetworkDetailQueryVariables>;
+export const FetchDriverReferralNetworkDetailDocument = gql`
+    query FetchDriverReferralNetworkDetail($driverId: String!) {
+  fetchDriverReferralNetworkDetail(driverId: $driverId) {
+    _id
+    name
+    email
+    tier
+    totalPoints
+    level1 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level2 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level3 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFetchDriverReferralNetworkDetailQuery__
+ *
+ * To run a query within a React component, call `useFetchDriverReferralNetworkDetailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchDriverReferralNetworkDetailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchDriverReferralNetworkDetailQuery({
+ *   variables: {
+ *      driverId: // value for 'driverId'
+ *   },
+ * });
+ */
+export function useFetchDriverReferralNetworkDetailQuery(baseOptions: Apollo.QueryHookOptions<FetchDriverReferralNetworkDetailQuery, FetchDriverReferralNetworkDetailQueryVariables> & ({ variables: FetchDriverReferralNetworkDetailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchDriverReferralNetworkDetailQuery, FetchDriverReferralNetworkDetailQueryVariables>(FetchDriverReferralNetworkDetailDocument, options);
+      }
+export function useFetchDriverReferralNetworkDetailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchDriverReferralNetworkDetailQuery, FetchDriverReferralNetworkDetailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchDriverReferralNetworkDetailQuery, FetchDriverReferralNetworkDetailQueryVariables>(FetchDriverReferralNetworkDetailDocument, options);
+        }
+export function useFetchDriverReferralNetworkDetailSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchDriverReferralNetworkDetailQuery, FetchDriverReferralNetworkDetailQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchDriverReferralNetworkDetailQuery, FetchDriverReferralNetworkDetailQueryVariables>(FetchDriverReferralNetworkDetailDocument, options);
+        }
+export type FetchDriverReferralNetworkDetailQueryHookResult = ReturnType<typeof useFetchDriverReferralNetworkDetailQuery>;
+export type FetchDriverReferralNetworkDetailLazyQueryHookResult = ReturnType<typeof useFetchDriverReferralNetworkDetailLazyQuery>;
+export type FetchDriverReferralNetworkDetailSuspenseQueryHookResult = ReturnType<typeof useFetchDriverReferralNetworkDetailSuspenseQuery>;
+export type FetchDriverReferralNetworkDetailQueryResult = Apollo.QueryResult<FetchDriverReferralNetworkDetailQuery, FetchDriverReferralNetworkDetailQueryVariables>;
+export const FetchLoyaltyStatsOverviewDocument = gql`
+    query FetchLoyaltyStatsOverview {
+  fetchLoyaltyStatsOverview {
+    totalLoyalCustomers
+    totalPointsIssued
+    totalPointsRedeemed
+    activeDriverReferrals
+  }
+}
+    `;
+
+/**
+ * __useFetchLoyaltyStatsOverviewQuery__
+ *
+ * To run a query within a React component, call `useFetchLoyaltyStatsOverviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchLoyaltyStatsOverviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchLoyaltyStatsOverviewQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchLoyaltyStatsOverviewQuery(baseOptions?: Apollo.QueryHookOptions<FetchLoyaltyStatsOverviewQuery, FetchLoyaltyStatsOverviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchLoyaltyStatsOverviewQuery, FetchLoyaltyStatsOverviewQueryVariables>(FetchLoyaltyStatsOverviewDocument, options);
+      }
+export function useFetchLoyaltyStatsOverviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchLoyaltyStatsOverviewQuery, FetchLoyaltyStatsOverviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchLoyaltyStatsOverviewQuery, FetchLoyaltyStatsOverviewQueryVariables>(FetchLoyaltyStatsOverviewDocument, options);
+        }
+export function useFetchLoyaltyStatsOverviewSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchLoyaltyStatsOverviewQuery, FetchLoyaltyStatsOverviewQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchLoyaltyStatsOverviewQuery, FetchLoyaltyStatsOverviewQueryVariables>(FetchLoyaltyStatsOverviewDocument, options);
+        }
+export type FetchLoyaltyStatsOverviewQueryHookResult = ReturnType<typeof useFetchLoyaltyStatsOverviewQuery>;
+export type FetchLoyaltyStatsOverviewLazyQueryHookResult = ReturnType<typeof useFetchLoyaltyStatsOverviewLazyQuery>;
+export type FetchLoyaltyStatsOverviewSuspenseQueryHookResult = ReturnType<typeof useFetchLoyaltyStatsOverviewSuspenseQuery>;
+export type FetchLoyaltyStatsOverviewQueryResult = Apollo.QueryResult<FetchLoyaltyStatsOverviewQuery, FetchLoyaltyStatsOverviewQueryVariables>;
 export const FetchReferralLoyaltyHistoryDocument = gql`
     query FetchReferralLoyaltyHistory($filter: FetchLoyaltyReferralHistoryFilterInput) {
   fetchReferralLoyaltyHistory(filter: $filter) {

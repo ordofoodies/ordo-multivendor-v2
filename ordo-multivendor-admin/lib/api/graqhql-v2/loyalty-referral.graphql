@@ -172,6 +172,241 @@ mutation DeleteLoyaltyBreakdown($id: String!) {
   }
 }
 
+############################
+# Rider Loyalty Breakdown
+############################
+query FetchRiderLoyaltyBreakdownById($id: String!) {
+  fetchRiderLoyaltyBreakdownById(id: $id) {
+    _id
+    min
+    max
+    amount
+  }
+}
+
+query FetchRiderLoyaltyBreakdowns {
+  fetchRiderLoyaltyBreakdowns {
+    _id
+    min
+    max
+    amount
+  }
+}
+
+mutation CreateRiderLoyaltyBreakdown($input: RiderLoyaltyBreakdownInput!) {
+  createRiderLoyaltyBreakdown(input: $input) {
+    _id
+    min
+    max
+    amount
+  }
+}
+
+mutation EditRiderLoyaltyBreakdown($id: String!, $input: UpdateRiderLoyaltyBreakdownInput!) {
+  updateRiderLoyaltyBreakdown(id: $id, input: $input) {
+    _id
+    min
+    max
+    amount
+  }
+}
+
+mutation DeleteRiderLoyaltyBreakdown($id: String!) {
+  deleteRiderLoyaltyBreakdown(id: $id) {
+    _id
+    min
+    max
+    amount
+  }
+}
+
+############################
+# Order Loyalty Level (Upline Rewards)
+############################
+query FetchOrderLoyaltyLevelById($id: String!) {
+  fetchOrderLoyaltyLevelById(id: $id) {
+    _id
+    name
+    points
+    amount
+  }
+}
+
+query FetchOrderLoyaltyLevelsByUserType($userType: String!) {
+  fetchOrderLoyaltyLevelsByUserType(userType: $userType) {
+    _id
+    name
+    points
+    amount
+  }
+}
+
+mutation CreateOrderLoyaltyLevel($input: OrderLoyaltyLevelInput!) {
+  createOrderLoyaltyLevel(input: $input) {
+    _id
+    name
+    points
+    amount
+  }
+}
+
+mutation EditOrderLoyaltyLevel($id: String!, $input: UpdateOrderLoyaltyLevelInput!) {
+  updateOrderLoyaltyLevel(id: $id, input: $input) {
+    _id
+    name
+    points
+    amount
+  }
+}
+
+mutation DeleteOrderLoyaltyLevel($id: String!) {
+  deleteOrderLoyaltyLevel(id: $id) {
+    _id
+    name
+    points
+    amount
+  }
+}
+
+################
+# Referral Network
+################
+query FetchUserReferralNetworkStats {
+  fetchUserReferralNetworkStats {
+    totalCount
+    level1Count
+    level2Count
+    level3Count
+  }
+}
+
+query FetchDriverReferralNetworkStats {
+  fetchDriverReferralNetworkStats {
+    totalCount
+    level1Count
+    level2Count
+    level3Count
+  }
+}
+
+query SearchReferralUsers($filter: ReferralNetworkSearchInput) {
+  searchReferralUsers(filter: $filter) {
+    data {
+      _id
+      name
+      email
+      tier
+      totalPoints
+    }
+    totalCount
+  }
+}
+
+query SearchReferralDrivers($filter: ReferralNetworkSearchInput) {
+  searchReferralDrivers(filter: $filter) {
+    data {
+      _id
+      name
+      email
+      tier
+      totalPoints
+    }
+    totalCount
+  }
+}
+
+query FetchUserReferralNetworkDetail($userId: String!) {
+  fetchUserReferralNetworkDetail(userId: $userId) {
+    _id
+    name
+    email
+    tier
+    totalPoints
+    level1 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level2 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level3 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+  }
+}
+
+query FetchDriverReferralNetworkDetail($driverId: String!) {
+  fetchDriverReferralNetworkDetail(driverId: $driverId) {
+    _id
+    name
+    email
+    tier
+    totalPoints
+    level1 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level2 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+    level3 {
+      pointsPerActivity
+      memberCount
+      members {
+        _id
+        name
+        activityCount
+        points
+      }
+    }
+  }
+}
+
+################
+# Stats Overview
+################
+query FetchLoyaltyStatsOverview {
+  fetchLoyaltyStatsOverview {
+    totalLoyalCustomers
+    totalPointsIssued
+    totalPointsRedeemed
+    activeDriverReferrals
+  }
+}
+
 ################
 # History
 ################

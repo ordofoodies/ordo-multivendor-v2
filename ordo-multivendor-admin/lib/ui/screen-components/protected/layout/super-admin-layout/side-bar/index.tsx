@@ -187,10 +187,16 @@ export default function MakeSidebar() {
           route: '/audit-logs',
           isParent: false,
         },
-           {
+        {
           text: 'Loyalty and Referrals',
           label: t('Loyalty and Referrals'),
           route: '/management/loyalty-referrals',
+          isParent: false,
+        },
+        {
+          text: 'Referral Network',
+          label: t('Referral Network'),
+          route: '/management/referral-network',
           isParent: false,
         },
       ]),

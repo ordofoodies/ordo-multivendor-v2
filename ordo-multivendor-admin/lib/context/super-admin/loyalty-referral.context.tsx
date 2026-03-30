@@ -11,6 +11,8 @@ interface ILoyaltyData {
   levelId?: string;
   tierId?: string;
   breakdownId?: string;
+  riderBreakdownId?: string;
+  orderLevelId?: string;
 }
 
 interface ILoyaltyContext {
@@ -24,6 +26,10 @@ interface ILoyaltyContext {
   setTierFormVisible: (status: boolean) => void;
   breakdownFormVisible: boolean;
   setBreakdownFormVisible: (status: boolean) => void;
+  riderBreakdownFormVisible: boolean;
+  setRiderBreakdownFormVisible: (status: boolean) => void;
+  orderLevelFormVisible: boolean;
+  setOrderLevelFormVisible: (status: boolean) => void;
 }
 
 export const LoyaltyContext = createContext<ILoyaltyContext>(
@@ -39,6 +45,10 @@ export const LoyaltyProvider = ({ children }: ILoyaltyProviderProps) => {
   const [tierFormVisible, setTierFormVisible] = useState<boolean>(false);
   const [breakdownFormVisible, setBreakdownFormVisible] =
     useState<boolean>(false);
+  const [riderBreakdownFormVisible, setRiderBreakdownFormVisible] =
+    useState<boolean>(false);
+  const [orderLevelFormVisible, setOrderLevelFormVisible] =
+    useState<boolean>(false);
 
   const value: ILoyaltyContext = {
     loyaltyData,
@@ -51,6 +61,10 @@ export const LoyaltyProvider = ({ children }: ILoyaltyProviderProps) => {
     setTierFormVisible,
     breakdownFormVisible,
     setBreakdownFormVisible,
+    riderBreakdownFormVisible,
+    setRiderBreakdownFormVisible,
+    orderLevelFormVisible,
+    setOrderLevelFormVisible,
   };
 
   return (

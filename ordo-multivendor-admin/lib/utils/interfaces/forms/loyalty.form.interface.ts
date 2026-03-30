@@ -24,6 +24,17 @@ export interface IBreakdownForm {
   platinum: number;
 }
 
+export interface IRiderBreakdownForm {
+  min: number;
+  max: number;
+  amount: number;
+}
+
+export interface IOrderLevelForm {
+  type: IDropdownSelectItem | null;
+  value: number;
+}
+
 // Error
 export interface ILevelError {
   type: string[];

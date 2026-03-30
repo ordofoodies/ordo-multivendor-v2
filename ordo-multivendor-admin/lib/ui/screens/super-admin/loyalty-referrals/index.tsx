@@ -4,6 +4,7 @@ import LoyaltyAndReferralTierSystemComponent from '@/lib/ui/screen-components/pr
 import LoyaltyAndReferralHistoryComponent from '@/lib/ui/screen-components/protected/super-admin/loyalty-referrals/loyalty-and-referral-history';
 import LoyaltyAndReferralBreakdownSectionComponent from '@/lib/ui/screen-components/protected/super-admin/loyalty-referrals/loyalty-points-breakdown';
 import LoyaltyAndReferralStatsCardComponent from '@/lib/ui/screen-components/protected/super-admin/loyalty-referrals/stats-cards.component';
+import UplineOrderReferralRewardsComponent from '@/lib/ui/screen-components/protected/super-admin/loyalty-referrals/upline-order-referral-rewards';
 
 export default function LoyaltyAndReferralScreen() {
   return (
@@ -11,6 +12,7 @@ export default function LoyaltyAndReferralScreen() {
       <LoyaltyAndReferralHeader />
       <LoyaltyAndReferralStatsCardComponent />
       <LoyaltyAndReferralCustomerReferralSystemComponent />
+      <UplineOrderReferralRewardsComponent />
       <LoyaltyAndReferralTierSystemComponent />
       <LoyaltyAndReferralBreakdownSectionComponent />
       <LoyaltyAndReferralHistoryComponent />

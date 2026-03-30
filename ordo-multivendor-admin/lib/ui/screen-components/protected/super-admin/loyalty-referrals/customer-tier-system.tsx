@@ -75,6 +75,8 @@ export default function LoyaltyAndReferralTierSystemComponent() {
   const [deleteLoyaltyTier, { loading: deletingTier }] =
     useDeleteLoyaltyTierMutation();
 
+  const tiers = data?.fetchLoyaltyTiers ?? [];
+
   // Handlers
   const handleDeleteTier = async (id: string) => {
     try {
@@ -118,10 +120,7 @@ export default function LoyaltyAndReferralTierSystemComponent() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Hide for Driver Loyalty Program
-  if (loyaltyType === 'Driver Loyalty Program') {
-    return null;
-  }
+  if (loyaltyType === 'Driver Loyalty Program') return null;
 
   return (
     <>
@@ -131,10 +130,10 @@ export default function LoyaltyAndReferralTierSystemComponent() {
           <div className="flex justify-between items-start mb-8">
             <div>
               <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
-                Tier System
+                Customer Tier System
               </h1>
               <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
-                Set tier thresholds for customer/driver against their earned points
+                Set tier thresholds for customers against their earned points
               </p>
             </div>
             <button
@@ -156,11 +155,10 @@ export default function LoyaltyAndReferralTierSystemComponent() {
                   <DashboardStatsCardSkeleton key={index} />
                 ))}
               </>
-            ) : !data?.fetchLoyaltyTiers ||
-              data?.fetchLoyaltyTiers?.length === 0 ? (
+            ) : tiers.length === 0 ? (
               <NoData />
             ) : (
-              data?.fetchLoyaltyTiers?.map((tier) => {
+              tiers.map((tier) => {
                 if (!tier) return;
 
                 return (
@@ -174,7 +172,6 @@ export default function LoyaltyAndReferralTierSystemComponent() {
                       }
                     />
 
-                    {/* Dropdown Menu */}
                     {openMenu === tier._id && (
                       <div className="absolute top-14 right-2 bg-background dark:bg-dark-900 border border-border dark:border-dark-600 rounded-lg shadow-lg z-10 w-40">
                         <button

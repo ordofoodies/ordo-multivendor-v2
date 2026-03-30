@@ -51,6 +51,10 @@ export const ROUTES = [
     text: 'Staff',
     route: '/general/staff',
   },
+  {
+    text: 'Referral Network',
+    route: '/management/referral-network',
+  },
 ];
 
 export const DEFAULT_ROUTES = {
