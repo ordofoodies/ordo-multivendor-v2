@@ -14,7 +14,7 @@ import BronzeIcon from '../../assets/SVG/bronze'
 import SilverIcon from '../../assets/SVG/silver'
 import GoldIcon from '../../assets/SVG/gold'
 import PlatinumIcon from '../../assets/SVG/platinum'
-import { GET_USER_LOYALTY_DATA, GET_REFERRAL_DATA_BY_LEVELS, FETCH_LOYALTY_TIERS } from '../../apollo/queries'
+import { GET_USER_LOYALTY_DATA, GET_REFERRAL_DATA_BY_LEVELS, FETCH_LOYALTY_TIERS, FETCH_USER_REFERRAL_LEVEL_COUNTS } from '../../apollo/queries'
 import UserContext from '../../context/User'
 
 function LoyaltyPoints(props) {
@@ -30,6 +30,8 @@ function LoyaltyPoints(props) {
     skip: !userProfile?._id
   })
   const { data: tiersData, loading: tiersLoading } = useQuery(FETCH_LOYALTY_TIERS)
+  const { data: levelCountsData } = useQuery(FETCH_USER_REFERRAL_LEVEL_COUNTS, { fetchPolicy: 'cache-and-network' })
+  const levelCounts = levelCountsData?.fetchUserReferralLevelCounts
 
   const styles = StyleSheet.create({
     container: {
@@ -111,6 +113,36 @@ function LoyaltyPoints(props) {
       fontSize: 12,
       color: isDark ? '#9CA3AF' : '#6B7280',
       textAlign: 'center'
+    },
+    levelCountsRow: {
+      flexDirection: 'row',
+      gap: 8,
+      marginTop: 12
+    },
+    levelCountCard: {
+      flex: 1,
+      backgroundColor: isDark ? '#374151' : '#F9FAFB',
+      borderRadius: 10,
+      paddingVertical: 10,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: isDark ? '#4B5563' : '#E5E7EB'
+    },
+    levelCountLabel: {
+      fontSize: 10,
+      fontWeight: '600',
+      color: isDark ? '#9CA3AF' : '#6B7280',
+      marginBottom: 3
+    },
+    levelCountValue: {
+      fontSize: 18,
+      fontWeight: '800',
+      color: currentTheme.primary
+    },
+    levelCountSub: {
+      fontSize: 9,
+      color: isDark ? '#6B7280' : '#9CA3AF',
+      marginTop: 1
     },
     referralSection: {
       marginBottom: 20,
@@ -284,7 +316,7 @@ function LoyaltyPoints(props) {
   useLayoutEffect(() => {
     props?.navigation.setOptions({
       headerRight: null,
-      headerTitle: 'Loyalty Points',
+      headerTitle: 'Ördo Rewards',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.fontMainColor,
@@ -354,23 +386,26 @@ function LoyaltyPoints(props) {
     }
     
     if (referralData?.fetchReferralLoyaltyHistory) {
-      const transactions = referralData.fetchReferralLoyaltyHistory
-      const referralTransactions = transactions.filter(t => t.type === 'Referral' && t.source === 'signup')
+      const transactions = referralData.fetchReferralLoyaltyHistory?.data || []
+      const referralTransactions = transactions.filter(t => t.type === 'Referral' && t.source === 'signup' && t.level)
       const groupedReferrals = {
         level1: referralTransactions.filter(t => t.level === 1).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
-          points: t.value
+          points: t.value,
+          date: new Date(parseInt(t.createdAt)).toLocaleDateString()
         })),
         level2: referralTransactions.filter(t => t.level === 2).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
-          points: t.value
+          points: t.value,
+          date: new Date(parseInt(t.createdAt)).toLocaleDateString()
         })),
         level3: referralTransactions.filter(t => t.level === 3).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
-          points: t.value
+          points: t.value,
+          date: new Date(parseInt(t.createdAt)).toLocaleDateString()
         }))
       }
       setReferralsByLevel(groupedReferrals)
@@ -446,6 +481,22 @@ function LoyaltyPoints(props) {
             <View style={[styles.pointsRow, styles.pointsRowLast]}>
               <Text style={styles.exchangeText}>Exchange Rate: {pointsData.exchangeRate} points = $1</Text>
             </View>
+
+            <View style={styles.dottedBar} />
+
+            <View style={styles.levelCountsRow}>
+              {[
+                { label: 'Level 1', count: levelCounts?.level1Count ?? 0 },
+                { label: 'Level 2', count: levelCounts?.level2Count ?? 0 },
+                { label: 'Level 3', count: levelCounts?.level3Count ?? 0 }
+              ].map((item) => (
+                <View key={item.label} style={styles.levelCountCard}>
+                  <Text style={styles.levelCountLabel}>{item.label}</Text>
+                  <Text style={styles.levelCountValue}>{item.count}</Text>
+                  <Text style={styles.levelCountSub}>referrals</Text>
+                </View>
+              ))}
+            </View>
           </View>
         </View>
 
@@ -504,6 +555,7 @@ function LoyaltyPoints(props) {
                     <View key={item.id} style={styles.listItem}>
                       <View style={styles.listItemLeft}>
                         <Text style={styles.listItemName}>{item.name}</Text>
+                        <Text style={styles.listItemDate}>{item.date}</Text>
                       </View>
                       <Text style={styles.listItemPoints}>+{item.points} pts</Text>
                     </View>

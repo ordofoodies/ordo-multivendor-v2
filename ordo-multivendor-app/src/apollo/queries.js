@@ -1235,16 +1235,19 @@ export const GET_USER_LOYALTY_DATA = gql`
 
 export const GET_REFERRAL_DATA_BY_LEVELS = gql`
   query GetReferralDataByLevels($userId: String!) {
-    fetchReferralLoyaltyHistory(filter: { userId: $userId }) {
-      _id
-      user_name
-      user_rank
-      type
-      source
-      level
-      value
-      triggeredBy
-      createdAt
+    fetchReferralLoyaltyHistory(filter: { userId: $userId, limit: 200 }) {
+      data {
+        _id
+        user_name
+        user_rank
+        type
+        source
+        level
+        rewardRole
+        value
+        triggeredBy
+        createdAt
+      }
     }
   }
 `
@@ -1259,15 +1262,53 @@ export const FETCH_LOYALTY_TIERS = gql`
   }
 `
 
+export const FETCH_USER_REFERRAL_LEVEL_COUNTS = gql`
+  query FetchUserReferralLevelCounts {
+    fetchUserReferralLevelCounts {
+      level1Count
+      level2Count
+      level3Count
+    }
+  }
+`
+
+export const FETCH_USER_RESIDUAL_LOYALTY_DATA = gql`
+  query FetchUserResidualLoyaltyData {
+    fetchUserResidualLoyaltyData {
+      residualPointsBalance
+      totalResidualEarnedPoints
+    }
+  }
+`
+
+export const FETCH_USER_RESIDUAL_TRANSACTIONS = gql`
+  query FetchUserResidualTransactions {
+    fetchUserResidualTransactions {
+      _id
+      value
+      level
+      residualStatus
+      completionWindow
+      requiredCompletedOrders
+      eligibleFrom
+      eligibleUntil
+      triggeredBy
+      createdAt
+    }
+  }
+`
+
 export const GET_LOYALTY_POINTS_BREAKDOWN = gql`
   query GetLoyaltyPointsBreakdown($userId: String!) {
     fetchReferralLoyaltyHistory(filter: { userId: $userId }) {
-      _id
-      type
-      source
-      level
-      value
-      createdAt
+      data {
+        _id
+        type
+        source
+        level
+        value
+        createdAt
+      }
     }
   }
 `

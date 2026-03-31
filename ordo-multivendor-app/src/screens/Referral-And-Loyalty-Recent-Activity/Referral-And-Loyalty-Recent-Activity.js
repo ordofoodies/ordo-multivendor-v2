@@ -22,17 +22,12 @@ function ReferralAndLoyaltyRecentActivity(props) {
   const { data, loading, error } = useQuery(FETCH_LOYALTY_REFERRAL_HISTORY, {
     variables: {
       filter: {
-        userId: profile?._id
+        userId: profile?._id,
+        limit: 50
       }
     },
     fetchPolicy: 'cache-and-network',
-    skip: !profile?._id,
-    onError: (error) => {
-      console.log('FETCH_LOYALTY_REFERRAL_HISTORY Error:', error)
-    },
-    onCompleted: (data) => {
-      console.log('FETCH_LOYALTY_REFERRAL_HISTORY Data:', data)
-    }
+    skip: !profile?._id
   })
 
   const styles = StyleSheet.create({
@@ -153,29 +148,27 @@ function ReferralAndLoyaltyRecentActivity(props) {
   })
 
   useEffect(() => {
-    if (data?.fetchCustomerReferralHistory && Array.isArray(data.fetchCustomerReferralHistory)) {
+    const raw = data?.fetchCustomerReferralHistory
+    if (raw && Array.isArray(raw)) {
       try {
-        const formattedActivities = data.fetchCustomerReferralHistory
+        const formattedActivities = raw
           .filter(activity => activity && activity._id && activity.value && activity.createdAt)
-          .sort((a, b) => new Date(parseInt(b.createdAt)) - new Date(parseInt(a.createdAt)))
           .map(activity => ({
             id: activity._id,
             title: `+${activity.value} pts from ${activity.source === 'signup' ? 'referral' : activity.source || 'activity'}`,
-            description: activity.source === 'signup' 
-              ? `${activity.triggeredBy || 'Someone'} signed up using ${activity.level === 1 ? "your" : `level ${activity.level || 1}`} referral`
+            description: activity.source === 'signup'
+              ? `${activity.triggeredBy || 'Someone'} signed up using ${activity.level === 1 ? 'your' : `level ${activity.level || 1}`} referral`
               : activity.type || 'Activity completed',
             points: activity.value,
             time: new Date(parseInt(activity.createdAt)).toLocaleDateString(),
-            icon: activity.source === 'signup' ? 'share' : 'shopping',
-            isNegative: false,
-            source: activity.source || 'unknown'
+            source: activity.source || 'unknown',
+            level: activity.level
           }))
         setActivities(formattedActivities)
       } catch (err) {
-        console.error('Error processing activities:', err)
         setActivities([])
       }
-    } else if (data?.fetchCustomerReferralHistory === null) {
+    } else if (data) {
       setActivities([])
     }
   }, [data])

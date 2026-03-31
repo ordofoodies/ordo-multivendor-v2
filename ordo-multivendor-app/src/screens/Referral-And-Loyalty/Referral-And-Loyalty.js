@@ -10,7 +10,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import navigationService from '../../routes/navigationService'
 import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@apollo/client'
-import { FETCH_LOYALTY_CONFIGURATIon, FETCH_LOYALTY_REFERRAL_HISTORY, FETCH_LOYALTY_TIERS } from '../../apollo/queries'
+import { FETCH_LOYALTY_CONFIGURATIon, FETCH_LOYALTY_REFERRAL_HISTORY, FETCH_USER_REFERRAL_LEVEL_COUNTS, FETCH_USER_RESIDUAL_LOYALTY_DATA } from '../../apollo/queries'
 import { useUserContext } from '../../context/User'
 import { toTitleCase } from '../../utils/string-transformer'
 import { getReferralIcon } from '../../utils/loyalty-helper'
@@ -26,15 +26,19 @@ function ReferralAndLoyaltyRewards(props) {
   const { data: loyaltyActivityData } = useQuery(FETCH_LOYALTY_REFERRAL_HISTORY, {
     variables: {
       filter: {
-        userId: profile?._id
+        userId: profile?._id,
+        limit: 5
       }
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    skip: !profile?._id
   })
-  const { data: tiersData } = useQuery(FETCH_LOYALTY_TIERS, { fetchPolicy: 'cache-and-network' })
+  const { data: levelCountsData } = useQuery(FETCH_USER_REFERRAL_LEVEL_COUNTS, { fetchPolicy: 'cache-and-network' })
+  const { data: residualData } = useQuery(FETCH_USER_RESIDUAL_LOYALTY_DATA, { fetchPolicy: 'cache-and-network' })
   const loyalty_configuration = data?.fetchLoyaltyConfiguration
-  const loyaltyActivity = loyaltyActivityData?.fetchCustomerReferralHistory
-  const loyaltyTiers = tiersData?.fetchLoyaltyTiers
+  const loyaltyActivity = loyaltyActivityData?.fetchCustomerReferralHistory || []
+  const levelCounts = levelCountsData?.fetchUserReferralLevelCounts
+  const residualBalance = residualData?.fetchUserResidualLoyaltyData?.residualPointsBalance || 0
 
   const styles = StyleSheet.create({
     container: {
@@ -291,6 +295,41 @@ function ReferralAndLoyaltyRewards(props) {
       fontSize: 10,
       color: isDark ? '#9CA3AF' : '#6B7280'
     },
+    residualCard: {
+      flexDirection: 'row',
+      backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+      borderRadius: 12,
+      padding: 12,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderWidth: 1,
+      borderColor: isDark ? '#374151' : '#E5E7EB',
+      marginBottom: 4
+    },
+    residualContent: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12
+    },
+    residualIcon: {
+      width: 36,
+      height: 36,
+      backgroundColor: isDark ? '#374151' : '#FEF3C7',
+      borderRadius: 10,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    residualLabel: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: currentTheme.fontMainColor,
+      marginBottom: 2
+    },
+    residualDesc: {
+      fontSize: 12,
+      color: isDark ? '#9CA3AF' : '#6B7280'
+    },
     avatarGroup: {
       flexDirection: 'row',
       alignItems: 'center'
@@ -377,7 +416,7 @@ function ReferralAndLoyaltyRewards(props) {
   useLayoutEffect(() => {
     props?.navigation.setOptions({
       headerRight: null,
-      headerTitle: 'Loyalty Rewards',
+      headerTitle: 'Ördo Rewards',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.fontMainColor,
@@ -424,7 +463,7 @@ function ReferralAndLoyaltyRewards(props) {
         <View style={styles.loyaltyCardFirstChild}>
           <View style={styles.cardHeader}>
             <View style={styles.cardLeft}>
-              <Text style={styles.cardTitle}>Loyalty Points</Text>
+              <Text style={styles.cardTitle}>Ördo Rewards</Text>
               <View style={styles.tier}>
                 <Text>{getReferralIcon(profile?.tier?.current_tier_name)}</Text>
                 <Text style={styles.tierText}>{toTitleCase(profile?.tier?.current_tier_name)}</Text>
@@ -448,7 +487,7 @@ function ReferralAndLoyaltyRewards(props) {
           </View>
 
           <Text style={styles.totalEarnedText}>
-            Total earned: {(profile?.tier?.total_earned_points || profile?.tier?.current_earned_points || 0).toLocaleString()} points
+            Total earned: {(profile?.tier?.current_earned_points || 0).toLocaleString()} points
           </Text>
 
           {(() => {
@@ -456,15 +495,6 @@ function ReferralAndLoyaltyRewards(props) {
             const nextTierPoints = profile?.tier?.next_tier_points
             const nextTierName = profile?.tier?.next_tier_name
             const currentTierName = profile?.tier?.current_tier_name?.toLowerCase()
-            
-            // Debug logging
-            console.log('Tier Debug:', {
-              currentTierName,
-              currentPoints,
-              nextTierPoints,
-              nextTierName,
-              isMaxTier: currentTierName === 'platinum'
-            })
             
             // Hide progress bar if user has reached maximum tier or no next tier
             if (!nextTierPoints || !nextTierName || currentPoints >= nextTierPoints) {
@@ -507,6 +537,23 @@ function ReferralAndLoyaltyRewards(props) {
       </View>
 
       <View style={styles.section}>
+        <TouchableOpacity onPress={() => navigation.navigate('ResidualPoints')}>
+          <View style={styles.residualCard}>
+            <View style={styles.residualContent}>
+              <View style={styles.residualIcon}>
+                <Feather name='lock' size={16} color='#D97706' />
+              </View>
+              <View style={styles.referText}>
+                <Text style={styles.residualLabel}>Residual Points</Text>
+                <Text style={styles.residualDesc}>{residualBalance.toLocaleString()} pts pending — released when order threshold met</Text>
+              </View>
+            </View>
+            <Feather name='chevron-right' size={16} color={isDark ? '#9CA3AF' : '#6B7280'} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.section}>
         <TouchableOpacity onPress={() => navigation.navigate('QRAndReferral')}>
           <View style={styles.referCard}>
             <View style={styles.referContent}>
@@ -515,7 +562,7 @@ function ReferralAndLoyaltyRewards(props) {
               </View>
               <View style={styles.referText}>
                 <Text style={styles.referLabel}>Refer & Earn Points</Text>
-                <Text style={styles.referDesc}>Invite or scan qr code to earn points</Text>
+                <Text style={styles.referDesc}>Invite your friends and always earn points on all their orders.</Text>
               </View>
             </View>
             <Feather name='chevron-right' size={16} color={isDark ? '#9CA3AF' : '#6B7280'} />

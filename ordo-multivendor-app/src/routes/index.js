@@ -70,6 +70,7 @@ import ReferralAndLoyaltyRecentActivity from '../screens/Referral-And-Loyalty-Re
 import LoyaltyPoints from '../screens/Loyalty-Points/Loyalty-Points'
 import Wallet from '../screens/Wallet/Wallet'
 import ReferralCodeEntry from '../screens/ReferralCodeEntry/ReferralCodeEntry'
+import ResidualPoints from '../screens/ResidualPoints/ResidualPoints'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -160,6 +161,7 @@ function MainNavigator() {
       <NavigationStack.Screen name='ReferralAndLoyaltyRecentActivity' component={ReferralAndLoyaltyRecentActivity} />
       <NavigationStack.Screen name='Wallet' component={Wallet} />
       <NavigationStack.Screen name='ReferralCodeEntry' component={ReferralCodeEntry} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='ResidualPoints' component={ResidualPoints} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
       <NavigationStack.Screen name='About' component={About} options={{ header: () => null, ...SLIDE_RIGHT_WITH_CURVE_ANIM }} />
       <NavigationStack.Screen name='Reviews' component={Reviews} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />

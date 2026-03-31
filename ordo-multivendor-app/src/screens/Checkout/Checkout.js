@@ -63,13 +63,13 @@ function Checkout(props) {
   const Analytics = analytics()
   useFocusEffect(
     useCallback(() => {
-      // Alert.alert( "Server is currently unavailable. Please try again later.");
       console.log('Server is currently unavailable. Please try again later.')
+      refetchProfile()
     }, [])
   )
 
   const configuration = useContext(ConfigurationContext)
-  const { isLoggedIn, profile, clearCart, restaurant: cartRestaurant, cart, cartCount, updateCart, isPickup, setIsPickup, instructions, coupon, setCoupon } = useContext(UserContext)
+  const { isLoggedIn, profile, clearCart, restaurant: cartRestaurant, cart, cartCount, updateCart, isPickup, setIsPickup, instructions, coupon, setCoupon, refetchProfile } = useContext(UserContext)
 
   const themeContext = useContext(ThemeContext)
   const { location } = useContext(LocationContext)
