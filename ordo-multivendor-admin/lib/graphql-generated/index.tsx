@@ -2514,14 +2514,18 @@ export type OrderLoyaltyLevel = {
   __typename?: 'OrderLoyaltyLevel';
   _id: Scalars['String']['output'];
   amount?: Maybe<Scalars['Float']['output']>;
+  completionWindow?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   points?: Maybe<Scalars['Float']['output']>;
+  requiredCompletedOrders?: Maybe<Scalars['Int']['output']>;
 };
 
 export type OrderLoyaltyLevelInput = {
   amount?: InputMaybe<Scalars['Float']['input']>;
+  completionWindow: Scalars['String']['input'];
   name: Scalars['String']['input'];
   points?: InputMaybe<Scalars['Float']['input']>;
+  requiredCompletedOrders: Scalars['Int']['input'];
   userType: Scalars['String']['input'];
 };
 
@@ -2750,11 +2754,13 @@ export type Query = {
   fetchRiderRecentActivity?: Maybe<RiderRecentActivityResponse>;
   fetchRiderReferralRewards?: Maybe<RiderReferralRewards>;
   fetchRiderRequests?: Maybe<Array<Maybe<Rider>>>;
+  fetchRiderResidualLoyaltyData?: Maybe<RiderResidualLoyaltyData>;
   fetchShopTypeByUnique?: Maybe<ShopType>;
   fetchShopTypes?: Maybe<ShopTypePagination>;
   fetchUserLoyaltyData?: Maybe<UserLoyaltyData>;
   fetchUserReferralNetworkDetail?: Maybe<UserReferralNetworkDetail>;
   fetchUserReferralNetworkStats?: Maybe<ReferralNetworkStats>;
+  fetchUserResidualLoyaltyData?: Maybe<UserResidualLoyaltyData>;
   fetchWalletBalance: Scalars['Float']['output'];
   fetchWalletTransactions: Array<WalletTransaction>;
   foodByCategory: Array<Food>;
@@ -3591,7 +3597,10 @@ export type ReferralNetworkMember = {
   __typename?: 'ReferralNetworkMember';
   _id: Scalars['String']['output'];
   activityCount: Scalars['Int']['output'];
+  createdAt?: Maybe<Scalars['String']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
   points: Scalars['Float']['output'];
 };
 
@@ -4054,6 +4063,12 @@ export type RiderReferralRewards = {
   totalWithdrawn: Scalars['Float']['output'];
 };
 
+export type RiderResidualLoyaltyData = {
+  __typename?: 'RiderResidualLoyaltyData';
+  residualCashBalance?: Maybe<Scalars['Float']['output']>;
+  totalResidualCashEarned?: Maybe<Scalars['Float']['output']>;
+};
+
 export type RiderWithdrawRequestHistory = {
   __typename?: 'RiderWithdrawRequestHistory';
   _id?: Maybe<Scalars['String']['output']>;
@@ -4463,8 +4478,10 @@ export type UpdateLoyaltyTierInput = {
 
 export type UpdateOrderLoyaltyLevelInput = {
   amount?: InputMaybe<Scalars['Float']['input']>;
+  completionWindow?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   points?: InputMaybe<Scalars['Float']['input']>;
+  requiredCompletedOrders?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type UpdateRiderLoyaltyBreakdownInput = {
@@ -4564,6 +4581,12 @@ export type UserReferralNetworkDetail = {
   name: Scalars['String']['output'];
   tier?: Maybe<Scalars['String']['output']>;
   totalPoints: Scalars['Float']['output'];
+};
+
+export type UserResidualLoyaltyData = {
+  __typename?: 'UserResidualLoyaltyData';
+  residualPointsBalance?: Maybe<Scalars['Float']['output']>;
+  totalResidualEarnedPoints?: Maybe<Scalars['Float']['output']>;
 };
 
 export type UserTier = {
@@ -4938,21 +4961,21 @@ export type FetchOrderLoyaltyLevelByIdQueryVariables = Exact<{
 }>;
 
 
-export type FetchOrderLoyaltyLevelByIdQuery = { __typename?: 'Query', fetchOrderLoyaltyLevelById?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+export type FetchOrderLoyaltyLevelByIdQuery = { __typename?: 'Query', fetchOrderLoyaltyLevelById?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined, completionWindow?: string | null | undefined, requiredCompletedOrders?: number | null | undefined } | null | undefined };
 
 export type FetchOrderLoyaltyLevelsByUserTypeQueryVariables = Exact<{
   userType: Scalars['String']['input'];
 }>;
 
 
-export type FetchOrderLoyaltyLevelsByUserTypeQuery = { __typename?: 'Query', fetchOrderLoyaltyLevelsByUserType?: Array<{ __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined> | null | undefined };
+export type FetchOrderLoyaltyLevelsByUserTypeQuery = { __typename?: 'Query', fetchOrderLoyaltyLevelsByUserType?: Array<{ __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined, completionWindow?: string | null | undefined, requiredCompletedOrders?: number | null | undefined } | null | undefined> | null | undefined };
 
 export type CreateOrderLoyaltyLevelMutationVariables = Exact<{
   input: OrderLoyaltyLevelInput;
 }>;
 
 
-export type CreateOrderLoyaltyLevelMutation = { __typename?: 'Mutation', createOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+export type CreateOrderLoyaltyLevelMutation = { __typename?: 'Mutation', createOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined, completionWindow?: string | null | undefined, requiredCompletedOrders?: number | null | undefined } | null | undefined };
 
 export type EditOrderLoyaltyLevelMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -4960,14 +4983,14 @@ export type EditOrderLoyaltyLevelMutationVariables = Exact<{
 }>;
 
 
-export type EditOrderLoyaltyLevelMutation = { __typename?: 'Mutation', updateOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+export type EditOrderLoyaltyLevelMutation = { __typename?: 'Mutation', updateOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined, completionWindow?: string | null | undefined, requiredCompletedOrders?: number | null | undefined } | null | undefined };
 
 export type DeleteOrderLoyaltyLevelMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
-export type DeleteOrderLoyaltyLevelMutation = { __typename?: 'Mutation', deleteOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined } | null | undefined };
+export type DeleteOrderLoyaltyLevelMutation = { __typename?: 'Mutation', deleteOrderLoyaltyLevel?: { __typename?: 'OrderLoyaltyLevel', _id: string, name: string, points?: number | null | undefined, amount?: number | null | undefined, completionWindow?: string | null | undefined, requiredCompletedOrders?: number | null | undefined } | null | undefined };
 
 export type FetchUserReferralNetworkStatsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4998,14 +5021,14 @@ export type FetchUserReferralNetworkDetailQueryVariables = Exact<{
 }>;
 
 
-export type FetchUserReferralNetworkDetailQuery = { __typename?: 'Query', fetchUserReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> } } | null | undefined };
+export type FetchUserReferralNetworkDetailQuery = { __typename?: 'Query', fetchUserReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> } } | null | undefined };
 
 export type FetchDriverReferralNetworkDetailQueryVariables = Exact<{
   driverId: Scalars['String']['input'];
 }>;
 
 
-export type FetchDriverReferralNetworkDetailQuery = { __typename?: 'Query', fetchDriverReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, activityCount: number, points: number }> } } | null | undefined };
+export type FetchDriverReferralNetworkDetailQuery = { __typename?: 'Query', fetchDriverReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> } } | null | undefined };
 
 export type FetchLoyaltyStatsOverviewQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5888,6 +5911,8 @@ export const FetchOrderLoyaltyLevelByIdDocument = gql`
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
     `;
@@ -5931,6 +5956,8 @@ export const FetchOrderLoyaltyLevelsByUserTypeDocument = gql`
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
     `;
@@ -5974,6 +6001,8 @@ export const CreateOrderLoyaltyLevelDocument = gql`
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
     `;
@@ -6010,6 +6039,8 @@ export const EditOrderLoyaltyLevelDocument = gql`
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
     `;
@@ -6047,6 +6078,8 @@ export const DeleteOrderLoyaltyLevelDocument = gql`
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
     `;
@@ -6268,6 +6301,9 @@ export const FetchUserReferralNetworkDetailDocument = gql`
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -6278,6 +6314,9 @@ export const FetchUserReferralNetworkDetailDocument = gql`
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -6288,6 +6327,9 @@ export const FetchUserReferralNetworkDetailDocument = gql`
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -6342,6 +6384,9 @@ export const FetchDriverReferralNetworkDetailDocument = gql`
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -6352,6 +6397,9 @@ export const FetchDriverReferralNetworkDetailDocument = gql`
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -6362,6 +6410,9 @@ export const FetchDriverReferralNetworkDetailDocument = gql`
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }

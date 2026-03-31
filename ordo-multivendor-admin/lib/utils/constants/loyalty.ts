@@ -10,3 +10,8 @@ export const LOYALTY_TIER = [
   { label: 'Gold', code: 'gold' },
   { label: 'Platinum', code: 'platinum' },
 ];
+
+export const COMPLETION_WINDOW_OPTIONS = [
+  { label: 'Week (7 days)', code: 'WEEK' },
+  { label: 'Month (30 days)', code: 'MONTH' },
+];

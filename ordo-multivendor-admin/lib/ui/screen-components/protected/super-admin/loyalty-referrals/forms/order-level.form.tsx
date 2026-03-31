@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { IOrderLevelForm } from '@/lib/utils/interfaces/forms/loyalty.form.interface';
 import { IDropdownSelectItem } from '@/lib/utils/interfaces';
 import { OrderLevelSchema } from '@/lib/utils/schema/level';
-import { LOYALTY_LEVELS } from '@/lib/utils/constants';
+import { COMPLETION_WINDOW_OPTIONS, LOYALTY_LEVELS } from '@/lib/utils/constants';
 import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
 import { useConfiguration } from '@/lib/hooks/useConfiguration';
 import useToast from '@/lib/hooks/useToast';
@@ -21,7 +21,7 @@ import {
   useFetchOrderLoyaltyLevelByIdLazyQuery,
 } from '@/lib/graphql-generated';
 
-const initialData: IOrderLevelForm = { type: null, value: 0 };
+const initialData: IOrderLevelForm = { type: null, value: 0, completionWindow: null, requiredCompletedOrders: 1 };
 
 export default function OrderLevelForm() {
   const t = useTranslations();
@@ -54,6 +54,8 @@ export default function OrderLevelForm() {
         setInitialValues({
           type: LOYALTY_LEVELS.find((l) => l.code === level.name) as IDropdownSelectItem,
           value: (isCustomer ? level.points : level.amount) ?? 0,
+          completionWindow: COMPLETION_WINDOW_OPTIONS.find((w) => w.code === level.completionWindow) as IDropdownSelectItem ?? null,
+          requiredCompletedOrders: level.requiredCompletedOrders ?? 1,
         });
       }
     });
@@ -68,14 +70,32 @@ export default function OrderLevelForm() {
 
       const { orderLevelId } = loyaltyData || {};
       const refetch = [{ query: FetchOrderLoyaltyLevelsByUserTypeDocument, variables: { userType } }];
+      if (!values.completionWindow?.code) {
+        showToast({ type: 'warn', title: 'Missing Fields', message: 'Select a completion window' });
+        return;
+      }
+
       const input = {
         name: values.type.code,
         userType,
+        completionWindow: values.completionWindow.code,
+        requiredCompletedOrders: values.requiredCompletedOrders,
         ...(isCustomer ? { points: values.value } : { amount: values.value }),
       };
 
       if (orderLevelId) {
-        await update({ variables: { id: orderLevelId, input: { name: values.type.code, ...(isCustomer ? { points: values.value } : { amount: values.value }) } }, refetchQueries: refetch });
+        await update({
+          variables: {
+            id: orderLevelId,
+            input: {
+              name: values.type.code,
+              completionWindow: values.completionWindow.code,
+              requiredCompletedOrders: values.requiredCompletedOrders,
+              ...(isCustomer ? { points: values.value } : { amount: values.value }),
+            },
+          },
+          refetchQueries: refetch,
+        });
       } else {
         await create({ variables: { input }, refetchQueries: refetch });
       }
@@ -120,6 +140,25 @@ export default function OrderLevelForm() {
                 name="value"
                 showLabel
                 value={values.value}
+                onChange={setFieldValue}
+                isLoading={loading}
+              />
+              <CustomDropdownComponent
+                name="completionWindow"
+                placeholder="Select Completion Window"
+                selectedItem={values.completionWindow}
+                setSelectedItem={setFieldValue}
+                options={COMPLETION_WINDOW_OPTIONS}
+                showLabel
+                loading={loading}
+              />
+              <CustomNumberField
+                min={1}
+                max={9999}
+                placeholder="Required completed orders"
+                name="requiredCompletedOrders"
+                showLabel
+                value={values.requiredCompletedOrders}
                 onChange={setFieldValue}
                 isLoading={loading}
               />

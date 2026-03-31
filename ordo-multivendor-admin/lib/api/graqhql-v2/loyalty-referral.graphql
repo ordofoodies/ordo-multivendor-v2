@@ -229,6 +229,8 @@ query FetchOrderLoyaltyLevelById($id: String!) {
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
 
@@ -238,6 +240,8 @@ query FetchOrderLoyaltyLevelsByUserType($userType: String!) {
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
 
@@ -247,6 +251,8 @@ mutation CreateOrderLoyaltyLevel($input: OrderLoyaltyLevelInput!) {
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
 
@@ -256,6 +262,8 @@ mutation EditOrderLoyaltyLevel($id: String!, $input: UpdateOrderLoyaltyLevelInpu
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
 
@@ -265,6 +273,8 @@ mutation DeleteOrderLoyaltyLevel($id: String!) {
     name
     points
     amount
+    completionWindow
+    requiredCompletedOrders
   }
 }
 
@@ -328,6 +338,9 @@ query FetchUserReferralNetworkDetail($userId: String!) {
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -338,6 +351,9 @@ query FetchUserReferralNetworkDetail($userId: String!) {
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -348,6 +364,9 @@ query FetchUserReferralNetworkDetail($userId: String!) {
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -368,6 +387,9 @@ query FetchDriverReferralNetworkDetail($driverId: String!) {
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -378,6 +400,9 @@ query FetchDriverReferralNetworkDetail($driverId: String!) {
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }
@@ -388,6 +413,9 @@ query FetchDriverReferralNetworkDetail($driverId: String!) {
       members {
         _id
         name
+        email
+        phone
+        createdAt
         activityCount
         points
       }

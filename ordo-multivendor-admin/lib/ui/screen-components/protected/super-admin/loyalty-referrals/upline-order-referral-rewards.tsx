@@ -120,6 +120,14 @@ export default function UplineOrderReferralRewardsComponent() {
                       {value ?? 0} {isCustomer ? 'pts' : CURRENCY_SYMBOL}
                       <span className="text-sm font-normal text-muted-foreground ml-1">/ order</span>
                     </div>
+                    <div className="mt-3 flex flex-col gap-1">
+                      <span className="text-xs text-muted-foreground">
+                        Window: <span className="font-medium text-foreground dark:text-white">{level.completionWindow ?? '—'}</span>
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        Required orders: <span className="font-medium text-foreground dark:text-white">{level.requiredCompletedOrders ?? '—'}</span>
+                      </span>
+                    </div>
                   </div>
 
                   {openMenu === level._id && (

@@ -78,6 +78,33 @@ function SummaryBar({ stats, loading, isDriver }: { stats?: ReferralNetworkStats
 
 // ── ReferralLevelPanel ────────────────────────────────────────────────────────
 
+function MemberCard({ member, isDriver, entryLabel }: {
+  member: { _id: string; name: string; email?: string | null; phone?: string | null; createdAt?: string | null; activityCount: number; points: number };
+  isDriver: boolean;
+  entryLabel: string;
+}) {
+  const initials = member.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+  const joinedDate = member.createdAt ? new Date(member.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : null;
+
+  return (
+    <div className="bg-white dark:bg-dark-900 border border-border rounded-xl p-3 flex items-start gap-3">
+      <div className="w-9 h-9 rounded-full bg-[#FFF2E6] dark:bg-dark-600 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-[#FF8000]">
+        {initials || <FontAwesomeIcon icon={isDriver ? faTruck : faUser} className="text-[#FF8000] text-xs" />}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-foreground dark:text-white truncate">{member.name}</p>
+        {member.email && <p className="text-xs text-muted-foreground truncate">{member.email}</p>}
+        {member.phone && <p className="text-xs text-muted-foreground">{member.phone}</p>}
+        {joinedDate && <p className="text-xs text-muted-foreground mt-0.5">Joined {joinedDate}</p>}
+      </div>
+      <div className="flex flex-col items-end gap-1 flex-shrink-0 text-xs">
+        <span className="font-semibold text-[#FF8000]">+{member.points} pts</span>
+        <span className="text-muted-foreground">{member.activityCount} {entryLabel}</span>
+      </div>
+    </div>
+  );
+}
+
 function ReferralLevelPanel({ detail, isDriver }: { detail: UserReferralNetworkDetail; isDriver: boolean }) {
   const entryLabel = isDriver ? 'deliveries' : 'orders';
 
@@ -112,9 +139,7 @@ function ReferralLevelPanel({ detail, isDriver }: { detail: UserReferralNetworkD
             <div className="flex justify-between items-center mb-3">
               <div>
                 <span className="font-semibold text-foreground dark:text-white text-sm">{label} Referrals</span>
-                <span className="ml-2 text-xs text-muted-foreground">
-                  ({level.pointsPerActivity} pts/{entryLabel})
-                </span>
+
               </div>
               <span className="text-xs font-medium bg-white dark:bg-dark-900 border border-border rounded-full px-2 py-0.5">
                 {level.memberCount} {isDriver ? 'drivers' : 'users'}
@@ -124,15 +149,9 @@ function ReferralLevelPanel({ detail, isDriver }: { detail: UserReferralNetworkD
             {level.members.length === 0 ? (
               <p className="text-xs text-muted-foreground italic">No referrals at this level</p>
             ) : (
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {level.members.map((member) => (
-                  <div key={member._id} className="flex justify-between items-center bg-white dark:bg-dark-900 rounded-lg px-3 py-2 text-sm">
-                    <span className="text-foreground dark:text-white">{member.name}</span>
-                    <div className="flex gap-3 text-xs text-muted-foreground">
-                      <span>{member.activityCount} {entryLabel}</span>
-                      <span className="font-medium text-[#FF8000]">+{member.points} pts</span>
-                    </div>
-                  </div>
+                  <MemberCard key={member._id} member={member} isDriver={isDriver} entryLabel={entryLabel} />
                 ))}
               </div>
             )}

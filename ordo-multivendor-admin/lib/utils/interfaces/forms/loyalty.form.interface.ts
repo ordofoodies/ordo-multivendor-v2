@@ -33,6 +33,8 @@ export interface IRiderBreakdownForm {
 export interface IOrderLevelForm {
   type: IDropdownSelectItem | null;
   value: number;
+  completionWindow: IDropdownSelectItem | null;
+  requiredCompletedOrders: number;
 }
 
 // Error
