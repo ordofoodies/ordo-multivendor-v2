@@ -79,28 +79,52 @@ function SummaryBar({ stats, loading, isDriver }: { stats?: ReferralNetworkStats
 // ── ReferralLevelPanel ────────────────────────────────────────────────────────
 
 function MemberCard({ member, isDriver, entryLabel }: {
-  member: { _id: string; name: string; email?: string | null; phone?: string | null; createdAt?: string | null; activityCount: number; points: number };
+  member: { _id: string; name: string; email?: string | null; phone?: string | null; createdAt?: string | null; activityCount: number; points: number; releasedRewards?: number | null; pendingRewards?: number | null; expiredRewards?: number | null };
   isDriver: boolean;
   entryLabel: string;
 }) {
   const initials = member.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
   const joinedDate = member.createdAt ? new Date(member.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : null;
+  const unit = isDriver ? '$' : 'pts';
+  const released = member.releasedRewards ?? 0;
+  const pending = member.pendingRewards ?? 0;
+  const expired = member.expiredRewards ?? 0;
+  const hasResidual = released > 0 || pending > 0 || expired > 0;
 
   return (
-    <div className="bg-white dark:bg-dark-900 border border-border rounded-xl p-3 flex items-start gap-3">
-      <div className="w-9 h-9 rounded-full bg-[#FFF2E6] dark:bg-dark-600 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-[#FF8000]">
-        {initials || <FontAwesomeIcon icon={isDriver ? faTruck : faUser} className="text-[#FF8000] text-xs" />}
+    <div className="bg-white dark:bg-dark-900 border border-border rounded-xl p-3 flex flex-col gap-2">
+      <div className="flex items-start gap-3">
+        <div className="w-9 h-9 rounded-full bg-[#FFF2E6] dark:bg-dark-600 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-[#FF8000]">
+          {initials || <FontAwesomeIcon icon={isDriver ? faTruck : faUser} className="text-[#FF8000] text-xs" />}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground dark:text-white truncate">{member.name}</p>
+          {member.email && <p className="text-xs text-muted-foreground truncate">{member.email}</p>}
+          {member.phone && <p className="text-xs text-muted-foreground">{member.phone}</p>}
+          {joinedDate && <p className="text-xs text-muted-foreground mt-0.5">Joined {joinedDate}</p>}
+        </div>
+        <div className="flex flex-col items-end gap-1 flex-shrink-0 text-xs">
+          <span className="font-semibold text-[#FF8000]">+{member.points} {unit}</span>
+          <span className="text-muted-foreground">{member.activityCount} {entryLabel}</span>
+        </div>
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground dark:text-white truncate">{member.name}</p>
-        {member.email && <p className="text-xs text-muted-foreground truncate">{member.email}</p>}
-        {member.phone && <p className="text-xs text-muted-foreground">{member.phone}</p>}
-        {joinedDate && <p className="text-xs text-muted-foreground mt-0.5">Joined {joinedDate}</p>}
-      </div>
-      <div className="flex flex-col items-end gap-1 flex-shrink-0 text-xs">
-        <span className="font-semibold text-[#FF8000]">+{member.points} pts</span>
-        <span className="text-muted-foreground">{member.activityCount} {entryLabel}</span>
-      </div>
+
+      {hasResidual && (
+        <div className="border-t border-border pt-2 grid grid-cols-3 gap-1 text-xs">
+          <div className="flex flex-col items-center">
+            <span className="text-green-600 font-semibold">{released} {unit}</span>
+            <span className="text-muted-foreground">Released</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-amber-500 font-semibold">{pending} {unit}</span>
+            <span className="text-muted-foreground">Pending</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-red-400 font-semibold">{expired} {unit}</span>
+            <span className="text-muted-foreground">Expired</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

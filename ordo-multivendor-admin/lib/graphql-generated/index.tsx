@@ -2758,9 +2758,11 @@ export type Query = {
   fetchShopTypeByUnique?: Maybe<ShopType>;
   fetchShopTypes?: Maybe<ShopTypePagination>;
   fetchUserLoyaltyData?: Maybe<UserLoyaltyData>;
+  fetchUserReferralLevelCounts?: Maybe<UserReferralLevelCounts>;
   fetchUserReferralNetworkDetail?: Maybe<UserReferralNetworkDetail>;
   fetchUserReferralNetworkStats?: Maybe<ReferralNetworkStats>;
   fetchUserResidualLoyaltyData?: Maybe<UserResidualLoyaltyData>;
+  fetchUserResidualTransactions: Array<ResidualTransaction>;
   fetchWalletBalance: Scalars['Float']['output'];
   fetchWalletTransactions: Array<WalletTransaction>;
   foodByCategory: Array<Food>;
@@ -3599,9 +3601,12 @@ export type ReferralNetworkMember = {
   activityCount: Scalars['Int']['output'];
   createdAt?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
+  expiredRewards: Scalars['Float']['output'];
   name: Scalars['String']['output'];
+  pendingRewards: Scalars['Float']['output'];
   phone?: Maybe<Scalars['String']['output']>;
   points: Scalars['Float']['output'];
+  releasedRewards: Scalars['Float']['output'];
 };
 
 export type ReferralNetworkSearchInput = {
@@ -3638,6 +3643,20 @@ export type ReferralRewardsEarningsByLevel = {
   level1: EarningsByLevel;
   level2: EarningsByLevel;
   level3: EarningsByLevel;
+};
+
+export type ResidualTransaction = {
+  __typename?: 'ResidualTransaction';
+  _id: Scalars['String']['output'];
+  completionWindow?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  eligibleFrom?: Maybe<Scalars['String']['output']>;
+  eligibleUntil?: Maybe<Scalars['String']['output']>;
+  level?: Maybe<Scalars['Int']['output']>;
+  requiredCompletedOrders?: Maybe<Scalars['Int']['output']>;
+  residualStatus: Scalars['String']['output'];
+  triggeredBy: Scalars['String']['output'];
+  value: Scalars['Float']['output'];
 };
 
 export type ResponseCouponDetails = {
@@ -4571,6 +4590,13 @@ export type UserLoyaltyData = {
   totalEarnedPoints?: Maybe<Scalars['Float']['output']>;
 };
 
+export type UserReferralLevelCounts = {
+  __typename?: 'UserReferralLevelCounts';
+  level1Count: Scalars['Int']['output'];
+  level2Count: Scalars['Int']['output'];
+  level3Count: Scalars['Int']['output'];
+};
+
 export type UserReferralNetworkDetail = {
   __typename?: 'UserReferralNetworkDetail';
   _id: Scalars['String']['output'];
@@ -5021,14 +5047,14 @@ export type FetchUserReferralNetworkDetailQueryVariables = Exact<{
 }>;
 
 
-export type FetchUserReferralNetworkDetailQuery = { __typename?: 'Query', fetchUserReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> } } | null | undefined };
+export type FetchUserReferralNetworkDetailQuery = { __typename?: 'Query', fetchUserReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number, releasedRewards: number, pendingRewards: number, expiredRewards: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number, releasedRewards: number, pendingRewards: number, expiredRewards: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number, releasedRewards: number, pendingRewards: number, expiredRewards: number }> } } | null | undefined };
 
 export type FetchDriverReferralNetworkDetailQueryVariables = Exact<{
   driverId: Scalars['String']['input'];
 }>;
 
 
-export type FetchDriverReferralNetworkDetailQuery = { __typename?: 'Query', fetchDriverReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number }> } } | null | undefined };
+export type FetchDriverReferralNetworkDetailQuery = { __typename?: 'Query', fetchDriverReferralNetworkDetail?: { __typename?: 'UserReferralNetworkDetail', _id: string, name: string, email: string, tier?: string | null | undefined, totalPoints: number, level1: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number, releasedRewards: number, pendingRewards: number, expiredRewards: number }> }, level2: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number, releasedRewards: number, pendingRewards: number, expiredRewards: number }> }, level3: { __typename?: 'ReferralNetworkLevel', pointsPerActivity: number, memberCount: number, members: Array<{ __typename?: 'ReferralNetworkMember', _id: string, name: string, email?: string | null | undefined, phone?: string | null | undefined, createdAt?: string | null | undefined, activityCount: number, points: number, releasedRewards: number, pendingRewards: number, expiredRewards: number }> } } | null | undefined };
 
 export type FetchLoyaltyStatsOverviewQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6306,6 +6332,9 @@ export const FetchUserReferralNetworkDetailDocument = gql`
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level2 {
@@ -6319,6 +6348,9 @@ export const FetchUserReferralNetworkDetailDocument = gql`
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level3 {
@@ -6332,6 +6364,9 @@ export const FetchUserReferralNetworkDetailDocument = gql`
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
   }
@@ -6389,6 +6424,9 @@ export const FetchDriverReferralNetworkDetailDocument = gql`
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level2 {
@@ -6402,6 +6440,9 @@ export const FetchDriverReferralNetworkDetailDocument = gql`
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level3 {
@@ -6415,6 +6456,9 @@ export const FetchDriverReferralNetworkDetailDocument = gql`
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
   }

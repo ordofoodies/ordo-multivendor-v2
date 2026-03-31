@@ -343,6 +343,9 @@ query FetchUserReferralNetworkDetail($userId: String!) {
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level2 {
@@ -356,6 +359,9 @@ query FetchUserReferralNetworkDetail($userId: String!) {
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level3 {
@@ -369,6 +375,9 @@ query FetchUserReferralNetworkDetail($userId: String!) {
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
   }
@@ -392,6 +401,9 @@ query FetchDriverReferralNetworkDetail($driverId: String!) {
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level2 {
@@ -405,6 +417,9 @@ query FetchDriverReferralNetworkDetail($driverId: String!) {
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
     level3 {
@@ -418,6 +433,9 @@ query FetchDriverReferralNetworkDetail($driverId: String!) {
         createdAt
         activityCount
         points
+        releasedRewards
+        pendingRewards
+        expiredRewards
       }
     }
   }
