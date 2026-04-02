@@ -11,7 +11,7 @@ export default function EarningsScreen() {
   // Hooks
   const { appTheme } = useApptheme();
   return (
-    <SafeAreaView style={{ backgroundColor: appTheme.screenBackground }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: appTheme.screenBackground }}>
       <EarningsMain />
     </SafeAreaView>
   );

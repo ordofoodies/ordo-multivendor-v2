@@ -35,7 +35,7 @@ export default function InviteFriendsScreen() {
     try {
       const shareUrl = `https://ordo-rider-landing.vercel.app/invite?ref=${referralCode}`;
       await Share.share({
-        message: `Join me on ÖRDO Rider! Use my referral code ${referralCode} and we both earn $2.5. Download here: ${shareUrl}`,
+        message: `Join me on ÖRDO Rider! Use my referral code ${referralCode} and always generate income on all my deliveries. Download here: ${shareUrl}`,
         title: t("Invite Friends"),
       });
     } catch (error) {
@@ -104,7 +104,7 @@ export default function InviteFriendsScreen() {
             className="text-sm text-center mb-8 px-4"
             style={{ color: appTheme.fontSecondColor, lineHeight: 20 }}
           >
-            {t("You and your friend each get $2.5 when they join using your code or QR and place their first order.")}
+            {t("Invite your fellow delivery drivers and always generate income on all their deliveries.")}
           </Text>
 
           {/* Action Buttons */}

@@ -1,6 +1,5 @@
 import { gql } from "@apollo/client";
 
-// Requirement 1: Recent Activity + See More
 export const FETCH_RIDER_RECENT_ACTIVITY = gql`
   query FetchRiderRecentActivity(
     $startDate: String
@@ -39,7 +38,6 @@ export const FETCH_RIDER_RECENT_ACTIVITY = gql`
   }
 `;
 
-// Requirement 2: Single Activity Details
 export const FETCH_RIDER_ACTIVITY_DETAILS = gql`
   query FetchRiderActivityDetails($activityId: String!) {
     fetchRiderActivityDetails(activityId: $activityId) {
@@ -86,7 +84,6 @@ export const FETCH_RIDER_ACTIVITY_DETAILS = gql`
   }
 `;
 
-// Requirement 2b: Multiple Activity Details (for date-based grouping)
 export const FETCH_RIDER_ACTIVITIES_BY_DATE = gql`
   query FetchRiderActivitiesByDate(
     $startDate: String!
@@ -123,7 +120,6 @@ export const FETCH_RIDER_ACTIVITIES_BY_DATE = gql`
   }
 `;
 
-// Requirement 3: Referral Rewards
 export const FETCH_RIDER_REFERRAL_REWARDS = gql`
   query FetchRiderReferralRewards($level: Int) {
     fetchRiderReferralRewards(level: $level) {
@@ -153,6 +149,68 @@ export const FETCH_RIDER_REFERRAL_REWARDS = gql`
         earnedAmount
         status
       }
+    }
+  }
+`;
+
+export const FETCH_RIDER_LOYALTY_HISTORY = gql`
+  query FetchRiderLoyaltyHistory {
+    fetchRiderLoyaltyHistory {
+      _id
+      type
+      source
+      level
+      rewardRole
+      value
+      triggeredBy
+      createdAt
+    }
+  }
+`;
+
+export const FETCH_RIDER_LOYALTY_DATA = gql`
+  query FetchRiderLoyaltyData {
+    fetchRiderLoyaltyData {
+      totalEarnedCash
+      cashBalance
+      loyaltyCash
+      referralCash
+    }
+  }
+`;
+
+export const FETCH_RIDER_RESIDUAL_LOYALTY_DATA = gql`
+  query FetchRiderResidualLoyaltyData {
+    fetchRiderResidualLoyaltyData {
+      residualCashBalance
+      totalResidualCashEarned
+    }
+  }
+`;
+
+export const FETCH_RIDER_RESIDUAL_TRANSACTIONS = gql`
+  query FetchRiderResidualTransactions {
+    fetchRiderResidualTransactions {
+      _id
+      value
+      level
+      residualStatus
+      completionWindow
+      requiredCompletedOrders
+      eligibleFrom
+      eligibleUntil
+      triggeredBy
+      createdAt
+    }
+  }
+`;
+
+export const FETCH_DRIVER_REFERRAL_LEVEL_COUNTS = gql`
+  query FetchDriverReferralLevelCounts {
+    fetchDriverReferralLevelCounts {
+      level1Count
+      level2Count
+      level3Count
     }
   }
 `;

@@ -2,64 +2,51 @@ import { useApptheme } from "@/lib/context/global/theme.context";
 import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 
+export type EarningsTab = "deliveries" | "referrals" | "upline";
+
 interface EarningsTabsProps {
-  activeTab: "deliveries" | "referrals";
-  onTabChange: (tab: "deliveries" | "referrals") => void;
+  activeTab: EarningsTab;
+  onTabChange: (tab: EarningsTab) => void;
 }
+
+const TABS: { key: EarningsTab; label: string }[] = [
+  { key: "deliveries", label: "Deliveries" },
+  { key: "referrals", label: "Referrals & Loyalty" },
+  { key: "upline", label: "Residual Points" },
+];
 
 export default function EarningsTabs({ activeTab, onTabChange }: EarningsTabsProps) {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
 
   return (
-    <View className="flex-row px-5 pt-4 pb-2">
-      {/* Deliveries Tab */}
-      <TouchableOpacity
-        onPress={() => onTabChange("deliveries")}
-        className="flex-1"
-      >
-        <Text
-          className="text-base font-semibold text-center pb-3"
-          style={{
-            color: activeTab === "deliveries" ? appTheme.primary : appTheme.fontSecondColor,
-          }}
+    <View className="flex-row px-3 pt-4 pb-0">
+      {TABS.map((tab) => (
+        <TouchableOpacity
+          key={tab.key}
+          onPress={() => onTabChange(tab.key)}
+          className="flex-1"
         >
-          {t("Deliveries")}
-        </Text>
-        {activeTab === "deliveries" && (
-          <View
+          <Text
+            className="text-xs font-semibold text-center pb-3"
             style={{
-              height: 3,
-              backgroundColor: appTheme.primary,
-              borderRadius: 2,
+              color: activeTab === tab.key ? appTheme.primary : appTheme.fontSecondColor,
             }}
-          />
-        )}
-      </TouchableOpacity>
-
-      {/* Referrals Tab */}
-      <TouchableOpacity
-        onPress={() => onTabChange("referrals")}
-        className="flex-1"
-      >
-        <Text
-          className="text-base font-semibold text-center pb-3"
-          style={{
-            color: activeTab === "referrals" ? appTheme.primary : appTheme.fontSecondColor,
-          }}
-        >
-          {t("Referrals")}
-        </Text>
-        {activeTab === "referrals" && (
-          <View
-            style={{
-              height: 3,
-              backgroundColor: appTheme.primary,
-              borderRadius: 2,
-            }}
-          />
-        )}
-      </TouchableOpacity>
+            numberOfLines={1}
+          >
+            {t(tab.label)}
+          </Text>
+          {activeTab === tab.key && (
+            <View
+              style={{
+                height: 3,
+                backgroundColor: appTheme.primary,
+                borderRadius: 2,
+              }}
+            />
+          )}
+        </TouchableOpacity>
+      ))}
     </View>
   );
 }

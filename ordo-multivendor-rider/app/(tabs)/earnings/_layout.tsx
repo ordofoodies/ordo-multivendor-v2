@@ -21,6 +21,7 @@ export default function StackLayout() {
     <>
       <View style={{paddingTop: top+10, flex: 1, backgroundColor: appTheme.themeBackground}}>
         <Stack
+          style={{ flex: 1 }}
           screenOptions={{
             headerTitle:
               pathname.includes("/referrals-list") ?
@@ -31,7 +32,7 @@ export default function StackLayout() {
                 t("Earnings Summary")
               : pathname.includes("/earnings-order-details") ?
                 t("Deliveries")
-              : t("Earnings"),
+              : t("Earnings & Rewards"),
 
             headerTitleAlign: "center",
             headerShadowVisible: false,

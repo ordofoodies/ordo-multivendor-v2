@@ -12,7 +12,7 @@ export interface IReferralEarnings {
   date: string;
   totalEarningsSum: number;
   totalReferrals: number;
-  referralsArray: IReferral[];
+  referralsArray: IReferral[] | IRecentActivityItem[];
 }
 
 export interface IReferralEarningsGraph {
@@ -28,8 +28,6 @@ export interface IReferralSummary {
   totalEarnings: number;
   dateRange: string;
 }
-
-// API Response Interfaces
 
 export interface IRecentActivityItem {
   _id: string;
@@ -114,4 +112,51 @@ export interface IReferralRewardsResponse {
     };
     referralDetails: IReferralDetail[];
   };
+}
+
+export interface IRiderLoyaltyData {
+  totalEarnedCash: number;
+  cashBalance: number;
+  loyaltyCash: number;
+  referralCash: number;
+}
+
+export interface IRiderLoyaltyDataResponse {
+  fetchRiderLoyaltyData: IRiderLoyaltyData;
+}
+
+export interface IRiderResidualLoyaltyData {
+  residualCashBalance: number;
+  totalResidualCashEarned: number;
+}
+
+export interface IRiderResidualLoyaltyDataResponse {
+  fetchRiderResidualLoyaltyData: IRiderResidualLoyaltyData;
+}
+
+export interface IResidualTransaction {
+  _id: string;
+  value: number;
+  level: number;
+  residualStatus: string;
+  completionWindow: string;
+  requiredCompletedOrders: number;
+  eligibleFrom: string | null;
+  eligibleUntil: string | null;
+  triggeredBy: string;
+  createdAt: string;
+}
+
+export interface IRiderResidualTransactionsResponse {
+  fetchRiderResidualTransactions: IResidualTransaction[];
+}
+
+export interface IDriverReferralLevelCounts {
+  level1Count: number;
+  level2Count: number;
+  level3Count: number;
+}
+
+export interface IDriverReferralLevelCountsResponse {
+  fetchDriverReferralLevelCounts: IDriverReferralLevelCounts;
 }
