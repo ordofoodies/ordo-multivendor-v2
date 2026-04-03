@@ -3,7 +3,7 @@
     "name": "ÖRDO Business",
     "slug": "ordo-business",
     "description": "ÖRDO Business is a food delivery management app for restaurant owners and delivery partners. Manage orders, track deliveries, and grow your food business with our comprehensive restaurant management solution.",
-    "version": "1.0.6",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./lib/assets/images/icon.png",
     "assetBundlePatterns": [
@@ -51,7 +51,7 @@
       }
     },
     "android": {
-      "versionCode": 6,
+      "versionCode": 8,
       "googleServicesFile": "./google-services.json",
       "permissions": [
         "BLUETOOTH",
