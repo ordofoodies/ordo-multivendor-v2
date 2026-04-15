@@ -579,13 +579,13 @@ export const currenciesSymbol = [
   },
   {
     currency: 'ARS',
-    label: '$',
-    code: '$',
+    label: 'AR$',
+    code: 'AR$',
   },
   {
     currency: 'AUD',
-    label: '$',
-    code: '$',
+    label: 'A$',
+    code: 'A$',
   },
   {
     currency: 'AWG',
@@ -604,8 +604,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'BBD',
-    label: '$',
-    code: '$',
+    label: 'Bds$',
+    code: 'Bds$',
   },
   {
     currency: 'BDT',
@@ -624,13 +624,13 @@ export const currenciesSymbol = [
   },
   {
     currency: 'BMD',
-    label: '$',
-    code: '$',
+    label: 'BD$',
+    code: 'BD$',
   },
   {
     currency: 'BND',
-    label: '$',
-    code: '$',
+    label: 'B$',
+    code: 'B$',
   },
   {
     currency: 'BOB',
@@ -644,8 +644,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'BSD',
-    label: '$',
-    code: '$',
+    label: 'B$',
+    code: 'B$',
   },
   {
     currency: 'BWP',
@@ -654,13 +654,13 @@ export const currenciesSymbol = [
   },
   {
     currency: 'BZD',
-    label: '$',
-    code: '$',
+    label: 'BZ$',
+    code: 'BZ$',
   },
   {
     currency: 'CAD',
-    label: '$',
-    code: '$',
+    label: 'CA$',
+    code: 'CA$',
   },
   {
     currency: 'CDF',
@@ -674,8 +674,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'CLP',
-    label: '$',
-    code: '$',
+    label: 'CL$',
+    code: 'CL$',
   },
   {
     currency: 'CNY',
@@ -684,8 +684,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'COP',
-    label: '$',
-    code: '$',
+    label: 'COL$',
+    code: 'COL$',
   },
   {
     currency: 'CRC',
@@ -694,8 +694,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'CVE',
-    label: '$',
-    code: '$',
+    label: 'Esc',
+    code: 'Esc',
   },
   {
     currency: 'CZK',
@@ -714,8 +714,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'DOP',
-    label: '$',
-    code: '$',
+    label: 'RD$',
+    code: 'RD$',
   },
   {
     currency: 'DZD',
@@ -739,8 +739,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'FJD',
-    label: '$',
-    code: '$',
+    label: 'FJ$',
+    code: 'FJ$',
   },
   {
     currency: 'FKP',
@@ -779,13 +779,13 @@ export const currenciesSymbol = [
   },
   {
     currency: 'GYD',
-    label: '$',
-    code: '$',
+    label: 'G$',
+    code: 'G$',
   },
   {
     currency: 'HKD',
-    label: '$',
-    code: '$',
+    label: 'HK$',
+    code: 'HK$',
   },
   {
     currency: 'HNL',
@@ -814,8 +814,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'ILS',
-    label: 'ع.د',
-    code: 'ع.د',
+    label: '₪',
+    code: '₪',
   },
   {
     currency: 'INR',
@@ -829,8 +829,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'JMD',
-    label: '$',
-    code: '$',
+    label: 'J$',
+    code: 'J$',
   },
   {
     currency: 'JPY',
@@ -864,8 +864,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'KYD',
-    label: '$',
-    code: '$',
+    label: 'CI$',
+    code: 'CI$',
   },
   {
     currency: 'KZT',
@@ -889,8 +889,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'LRD',
-    label: '$',
-    code: '$',
+    label: 'L$',
+    code: 'L$',
   },
   {
     currency: 'LSL',
@@ -954,8 +954,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'MXN',
-    label: '$',
-    code: '$',
+    label: 'MX$',
+    code: 'MX$',
   },
   {
     currency: 'MYR',
@@ -969,8 +969,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'NAD',
-    label: '$',
-    code: '$',
+    label: 'N$',
+    code: 'N$',
   },
   {
     currency: 'NGN',
@@ -994,8 +994,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'NZD',
-    label: '$',
-    code: '$',
+    label: 'NZ$',
+    code: 'NZ$',
   },
   {
     currency: 'PAB',
@@ -1064,8 +1064,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'SBD',
-    label: '$',
-    code: '$',
+    label: 'SI$',
+    code: 'SI$',
   },
   {
     currency: 'SCR',
@@ -1079,8 +1079,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'SGD',
-    label: '$',
-    code: '$',
+    label: 'S$',
+    code: 'S$',
   },
   {
     currency: 'SHP',
@@ -1099,8 +1099,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'SRD',
-    label: '$',
-    code: '$',
+    label: 'SR$',
+    code: 'SR$',
   },
   {
     currency: 'STD',
@@ -1134,13 +1134,13 @@ export const currenciesSymbol = [
   },
   {
     currency: 'TTD',
-    label: '$',
-    code: '$',
+    label: 'TT$',
+    code: 'TT$',
   },
   {
     currency: 'TWD',
-    label: '$',
-    code: '$',
+    label: 'NT$',
+    code: 'NT$',
   },
   {
     currency: 'TZS',
@@ -1159,8 +1159,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'UYU',
-    label: '$',
-    code: '$',
+    label: 'UY$',
+    code: 'UY$',
   },
   {
     currency: 'UZS',
@@ -1189,8 +1189,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'XCD',
-    label: '$',
-    code: '$',
+    label: 'EC$',
+    code: 'EC$',
   },
   {
     currency: 'XOF',
@@ -1209,8 +1209,8 @@ export const currenciesSymbol = [
   },
   {
     currency: 'ZAR',
-    label: 'Rs',
-    code: 'Rs',
+    label: 'R',
+    code: 'R',
   },
   {
     currency: 'ZMW',
