@@ -51,7 +51,7 @@ export default function TierForm() {
       if (!tier) return;
       setInitialValues({
         name: tier.name,
-        points: tier.points,
+        points: tier.points ?? 0,
         requiredDirectDownlines: tier.requiredDirectDownlines ?? 0,
         weeklyOrderQuota: tier.weeklyOrderQuota ?? null,
       });
@@ -173,7 +173,7 @@ export default function TierForm() {
                 name="weeklyOrderQuota"
                 showLabel={true}
                 value={values.weeklyOrderQuota ?? 0}
-                onChange={(name: string, val: number) =>
+                onChange={(name: string, val: number | null) =>
                   setFieldValue(name, val === 0 ? null : val)
                 }
                 isLoading={loading}

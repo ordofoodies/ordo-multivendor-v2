@@ -176,7 +176,7 @@ export default function LoyaltyAndReferralTierSystemComponent() {
                   <div key={tier._id} className="relative">
                     <LevelCard
                       name={toTextCase(tier.name || '', 'title')}
-                      point={tier.points}
+                      point={tier.points ?? 0}
                       requiredDirectDownlines={tier.requiredDirectDownlines}
                       weeklyOrderQuota={tier.weeklyOrderQuota}
                       isRider={isRider}
