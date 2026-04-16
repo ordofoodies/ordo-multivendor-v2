@@ -196,8 +196,10 @@ export const LevelErrors: ILevelError = {
 };
 
 export const TierErrors: ITierError = {
-  type: ['Required'],
-  value: ['Required'],
+  name: ['Required'],
+  points: ['Required'],
+  requiredDirectDownlines: ['Required'],
+  weeklyOrderQuota: [],
 };
 
 export const BreakdownErrors: IBreakdownError = {

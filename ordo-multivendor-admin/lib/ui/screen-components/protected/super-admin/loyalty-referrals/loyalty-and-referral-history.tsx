@@ -13,6 +13,7 @@ interface HistoryRow {
   type: string;
   level: number;
   value: number;
+  rewardRole: string;
   createdAt: string;
 }
 
@@ -23,10 +24,13 @@ interface TableColumn {
   hidden?: boolean;
 }
 
+type SourceFilter = 'all' | 'direct' | 'residual';
+
 export default function LoyaltyAndReferralHistoryComponent() {
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
 
   // API
   const { data, loading, refetch } = useFetchReferralLoyaltyHistoryQuery({
@@ -43,8 +47,11 @@ export default function LoyaltyAndReferralHistoryComponent() {
   // Process data for table
   const tableData = useMemo(() => {
     const logs = data?.fetchReferralLoyaltyHistory?.data || [];
-    return logs.filter(Boolean) as HistoryRow[];
-  }, [data]);
+    const rows = logs.filter(Boolean) as HistoryRow[];
+    if (sourceFilter === 'direct') return rows.filter(r => r.rewardRole === 'SELF');
+    if (sourceFilter === 'residual') return rows.filter(r => r.rewardRole !== 'SELF');
+    return rows;
+  }, [data, sourceFilter]);
 
   const totalCount = data?.fetchReferralLoyaltyHistory?.totalCount || 0;
 
@@ -80,6 +87,24 @@ export default function LoyaltyAndReferralHistoryComponent() {
           {toTextCase(rowData.user_rank, 'title')}
         </span>
       ),
+    },
+    {
+      propertyName: 'rewardRole',
+      headerName: 'Source',
+      body: (rowData: HistoryRow) => {
+        const isDirect = rowData.rewardRole === 'SELF';
+        return (
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+              isDirect
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300'
+                : 'bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300'
+            }`}
+          >
+            {isDirect ? 'Direct' : 'Residual'}
+          </span>
+        );
+      },
     },
     {
       propertyName: 'value',
@@ -124,11 +149,26 @@ export default function LoyaltyAndReferralHistoryComponent() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold text-foreground mb-1">
-            Referral and Loyalty History
+            Invite &amp; Earn History
           </h2>
           <p className="text-muted-foreground text-sm">
-            Customer loyalty and referral activity history.
+            Customer loyalty and invitation activity history.
           </p>
+        </div>
+        <div className="flex bg-[#F4F4F5] dark:bg-dark-600 rounded-lg p-1 gap-1">
+          {(['all', 'direct', 'residual'] as SourceFilter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setSourceFilter(f)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${
+                sourceFilter === f
+                  ? 'bg-white dark:bg-dark-900 text-foreground dark:text-white shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {f === 'all' ? 'All' : f === 'direct' ? 'Direct' : 'Residual'}
+            </button>
+          ))}
         </div>
       </div>
 

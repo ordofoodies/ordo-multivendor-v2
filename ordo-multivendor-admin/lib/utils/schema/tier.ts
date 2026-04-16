@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
-import { IDropdownSelectItem } from '../interfaces';
-
 
 export const TierSchema = Yup.object({
-  type: Yup.mixed<IDropdownSelectItem>().required('Required'),
-  value: Yup.number().min(0).max(99999).required('Required'),
+  name: Yup.string().trim().required('Required'),
+  points: Yup.number().min(0).max(9999999).required('Required'),
+  requiredDirectDownlines: Yup.number().min(0).max(9999).required('Required'),
+  weeklyOrderQuota: Yup.number().min(0).max(9999).nullable(),
 });

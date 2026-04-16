@@ -188,14 +188,14 @@ export default function MakeSidebar() {
           isParent: false,
         },
         {
-          text: 'Loyalty and Referrals',
-          label: t('Loyalty and Referrals'),
+          text: 'Loyalty and Invitations',
+          label: t('Loyalty and Invitations'),
           route: '/management/loyalty-referrals',
           isParent: false,
         },
         {
-          text: 'Referral Network',
-          label: t('Referral Network'),
+          text: 'My Foodie Network',
+          label: t('My Foodie Network'),
           route: '/management/referral-network',
           isParent: false,
         },

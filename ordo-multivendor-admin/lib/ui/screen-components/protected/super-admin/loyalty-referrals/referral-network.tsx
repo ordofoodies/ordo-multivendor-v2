@@ -22,6 +22,7 @@ import {
   type ReferralNetworkStats,
 } from '@/lib/graphql-generated';
 import useDebounce from '@/lib/hooks/useDebounce';
+import { useConfiguration } from '@/lib/hooks/useConfiguration';
 import { Skeleton } from 'primereact/skeleton';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -58,10 +59,10 @@ function SummaryBar({ stats, loading, isDriver }: { stats?: ReferralNetworkStats
   if (loading) return <SummaryBarSkeleton />;
 
   const items = [
-    { label: isDriver ? 'Total Drivers' : 'Total Users', value: stats?.totalCount ?? 0, color: 'text-foreground' },
-    { label: 'Level 1 Referrals', value: stats?.level1Count ?? 0, color: 'text-blue-600' },
-    { label: 'Level 2 Referrals', value: stats?.level2Count ?? 0, color: 'text-green-600' },
-    { label: 'Level 3 Referrals', value: stats?.level3Count ?? 0, color: 'text-orange-600' },
+    { label: isDriver ? 'Total Riders' : 'Total Users', value: stats?.totalCount ?? 0, color: 'text-foreground' },
+    { label: 'Level 1 Downlines', value: stats?.level1Count ?? 0, color: 'text-blue-600' },
+    { label: 'Level 2 Downlines', value: stats?.level2Count ?? 0, color: 'text-green-600' },
+    { label: 'Level 3 Downlines', value: stats?.level3Count ?? 0, color: 'text-orange-600' },
   ];
 
   return (
@@ -78,14 +79,14 @@ function SummaryBar({ stats, loading, isDriver }: { stats?: ReferralNetworkStats
 
 // ── ReferralLevelPanel ────────────────────────────────────────────────────────
 
-function MemberCard({ member, isDriver, entryLabel }: {
+function MemberCard({ member, isDriver, currencySymbol }: {
   member: { _id: string; name: string; email?: string | null; phone?: string | null; createdAt?: string | null; activityCount: number; points: number; releasedRewards?: number | null; pendingRewards?: number | null; expiredRewards?: number | null };
   isDriver: boolean;
-  entryLabel: string;
+  currencySymbol: string;
 }) {
   const initials = member.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
   const joinedDate = member.createdAt ? new Date(member.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : null;
-  const unit = isDriver ? '$' : 'pts';
+  const unit = isDriver ? currencySymbol : 'pts';
   const released = member.releasedRewards ?? 0;
   const pending = member.pendingRewards ?? 0;
   const expired = member.expiredRewards ?? 0;
@@ -103,13 +104,9 @@ function MemberCard({ member, isDriver, entryLabel }: {
           {member.phone && <p className="text-xs text-muted-foreground">{member.phone}</p>}
           {joinedDate && <p className="text-xs text-muted-foreground mt-0.5">Joined {joinedDate}</p>}
         </div>
-        <div className="flex flex-col items-end gap-1 flex-shrink-0 text-xs">
-          <span className="font-semibold text-[#FF8000]">+{member.points} {unit}</span>
-          <span className="text-muted-foreground">{member.activityCount} {entryLabel}</span>
-        </div>
       </div>
 
-      {hasResidual && (
+      {hasResidual ? (
         <div className="border-t border-border pt-2 grid grid-cols-3 gap-1 text-xs">
           <div className="flex flex-col items-center">
             <span className="text-green-600 font-semibold">{released} {unit}</span>
@@ -124,13 +121,14 @@ function MemberCard({ member, isDriver, entryLabel }: {
             <span className="text-muted-foreground">Expired</span>
           </div>
         </div>
+      ) : (
+        <p className="text-xs text-muted-foreground border-t border-border pt-2">No order rewards yet</p>
       )}
     </div>
   );
 }
 
-function ReferralLevelPanel({ detail, isDriver }: { detail: UserReferralNetworkDetail; isDriver: boolean }) {
-  const entryLabel = isDriver ? 'deliveries' : 'orders';
+function ReferralLevelPanel({ detail, isDriver, currencySymbol }: { detail: UserReferralNetworkDetail; isDriver: boolean; currencySymbol: string }) {
 
   return (
     <div className="space-y-4">
@@ -150,9 +148,19 @@ function ReferralLevelPanel({ detail, isDriver }: { detail: UserReferralNetworkD
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Total Points:{' '}
+        {isDriver ? 'Direct Earnings:' : 'Direct Points:'}{' '}
         <span className="font-semibold text-foreground dark:text-white">
-          {detail.totalPoints.toLocaleString()} pts
+          {isDriver
+            ? `${currencySymbol}${detail.directPoints.toLocaleString()}`
+            : `${detail.directPoints.toLocaleString()} pts`}
+        </span>
+      </p>
+      <p className="text-sm text-muted-foreground">
+        {isDriver ? 'Residual Earnings:' : 'Residual Points:'}{' '}
+        <span className="font-semibold text-amber-600 dark:text-amber-400">
+          {isDriver
+            ? `${currencySymbol}${detail.residualPoints.toLocaleString()}`
+            : `${detail.residualPoints.toLocaleString()} pts`}
         </span>
       </p>
 
@@ -162,20 +170,20 @@ function ReferralLevelPanel({ detail, isDriver }: { detail: UserReferralNetworkD
           <div key={key} className={`border-l-4 rounded-r-xl p-4 ${color}`}>
             <div className="flex justify-between items-center mb-3">
               <div>
-                <span className="font-semibold text-foreground dark:text-white text-sm">{label} Referrals</span>
+                <span className="font-semibold text-foreground dark:text-white text-sm">{label} Downlines</span>
 
               </div>
               <span className="text-xs font-medium bg-white dark:bg-dark-900 border border-border rounded-full px-2 py-0.5">
-                {level.memberCount} {isDriver ? 'drivers' : 'users'}
+                {level.memberCount} {isDriver ? 'riders' : 'users'}
               </span>
             </div>
 
             {level.members.length === 0 ? (
-              <p className="text-xs text-muted-foreground italic">No referrals at this level</p>
+              <p className="text-xs text-muted-foreground italic">No invitations at this level</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {level.members.map((member) => (
-                  <MemberCard key={member._id} member={member} isDriver={isDriver} entryLabel={entryLabel} />
+                  <MemberCard key={member._id} member={member} isDriver={isDriver} currencySymbol={currencySymbol} />
                 ))}
               </div>
             )}
@@ -236,6 +244,8 @@ type ListItem = ReferralNetworkUser | ReferralNetworkDriver;
 const PAGE_LIMIT = 20;
 
 function NetworkPanel({ isDriver, stats, statsLoading }: { isDriver: boolean; stats?: ReferralNetworkStats | null; statsLoading: boolean }) {
+  const { CURRENCY_SYMBOL } = useConfiguration();
+  const currencySymbol = CURRENCY_SYMBOL || '$';
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -326,7 +336,7 @@ function NetworkPanel({ isDriver, stats, statsLoading }: { isDriver: boolean; st
             <FontAwesomeIcon icon={faSearch} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm" />
             <input
               type="text"
-              placeholder={isDriver ? 'Search drivers...' : 'Search users...'}
+              placeholder={isDriver ? 'Search riders...' : 'Search users...'}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-lg bg-background text-foreground dark:bg-dark-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#FF8000]"
@@ -345,7 +355,7 @@ function NetworkPanel({ isDriver, stats, statsLoading }: { isDriver: boolean; st
               </div>
             ) : list.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-6">
-                No {isDriver ? 'drivers' : 'users'} found
+                No {isDriver ? 'riders' : 'users'} found
               </p>
             ) : (
               <>
@@ -396,11 +406,11 @@ function NetworkPanel({ isDriver, stats, statsLoading }: { isDriver: boolean; st
           {isLoadingDetail ? (
             <DetailPanelSkeleton />
           ) : detail ? (
-            <ReferralLevelPanel detail={detail} isDriver={isDriver} />
+            <ReferralLevelPanel detail={detail} isDriver={isDriver} currencySymbol={currencySymbol} />
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-center py-16 text-muted-foreground">
               <FontAwesomeIcon icon={isDriver ? faTruck : faUser} className="text-4xl mb-3 opacity-20" />
-              <p className="text-sm">Select a {isDriver ? 'driver' : 'user'} to view their referral network</p>
+              <p className="text-sm">Select a {isDriver ? 'rider' : 'user'} to view their invitation network</p>
             </div>
           )}
         </div>
@@ -424,7 +434,7 @@ export default function ReferralNetworkComponent() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="font-inter font-semibold text-2xl leading-8 text-foreground dark:text-white mb-1">
-            Referral Network
+            My Foodie Network
           </h1>
           <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7">
             Search to view referral levels and earned rewards.
@@ -443,7 +453,7 @@ export default function ReferralNetworkComponent() {
               }`}
             >
               <FontAwesomeIcon icon={tab === 'driver' ? faTruck : faUser} className="text-xs" />
-              {tab === 'user' ? 'User Referral Network' : 'Driver Referral Network'}
+              {tab === 'user' ? 'User Foodie Network' : 'Rider Foodie Network'}
             </button>
           ))}
         </div>

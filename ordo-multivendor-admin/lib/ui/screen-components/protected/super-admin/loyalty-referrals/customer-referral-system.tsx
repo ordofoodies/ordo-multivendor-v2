@@ -147,10 +147,10 @@ export default function LoyaltyAndReferralCustomerReferralSystemComponent() {
           <div className="flex justify-between items-start mb-8">
             <div>
               <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
-                {loyaltyType === "Customer Loyalty Program" ? "Customer" : "Driver"} Referral System
+                {loyaltyType === "Customer Loyalty Program" ? "Customer" : "Rider"} Invite & Earn System
               </h1>
               <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
-                Set rewards thresholds levels for {loyaltyType === "Customer Loyalty Program" ? " customer" : " driver"} referrals.
+                Set rewards thresholds levels for {loyaltyType === "Customer Loyalty Program" ? " customer" : " rider"} invitations.
               </p>
             </div>
             <button

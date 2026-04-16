@@ -70,7 +70,7 @@ export default function LoyaltyAndReferralHeader() {
       {/* Header with Title and Tabs */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <HeaderText text="Loyalty and Referrals" />
+          <HeaderText text="Loyalty and Invitations" />
 
           <div className="flex gap-2">
             <div className="flex items-center gap-2 bg-gray-100 dark:bg-dark-600 p-2 rounded">
@@ -108,7 +108,7 @@ export default function LoyaltyAndReferralHeader() {
               )}
             </div>
             <CustomTab
-              options={['Customer Loyalty Program', 'Driver Loyalty Program']}
+              options={['Customer Loyalty Program', 'Rider Loyalty Program']}
               selectedTab={loyaltyType}
               setSelectedTab={(tab) => setLoyaltyType(tab as LoyaltyType)}
             />

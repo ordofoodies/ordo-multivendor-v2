@@ -52,7 +52,7 @@ export const ROUTES = [
     route: '/general/staff',
   },
   {
-    text: 'Referral Network',
+    text: 'My Foodie Network',
     route: '/management/referral-network',
   },
 ];

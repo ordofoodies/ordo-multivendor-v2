@@ -11,7 +11,6 @@ export default function LoyaltyAndReferralScreen() {
     <div className="screen-container">
       <LoyaltyAndReferralHeader />
       <LoyaltyAndReferralStatsCardComponent />
-      <LoyaltyAndReferralCustomerReferralSystemComponent />
       <UplineOrderReferralRewardsComponent />
       <LoyaltyAndReferralTierSystemComponent />
       <LoyaltyAndReferralBreakdownSectionComponent />

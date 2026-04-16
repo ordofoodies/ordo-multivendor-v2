@@ -12,9 +12,9 @@ import TierForm from './forms/tier.form';
 import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
 import useToast from '@/lib/hooks/useToast';
 import {
-  FetchLoyaltyTiersDocument,
+  FetchLoyaltyTiersByUserTypeDocument,
   useDeleteLoyaltyTierMutation,
-  useFetchLoyaltyTiersQuery,
+  useFetchLoyaltyTiersByUserTypeQuery,
 } from '@/lib/graphql-generated';
 import DashboardStatsCardSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.stats.card.skeleton';
 import NoData from '@/lib/ui/useable-components/no-data';
@@ -24,11 +24,13 @@ import { toTextCase } from '@/lib/utils/methods';
 interface LevelCardProps {
   name: string;
   point: number;
+  requiredDirectDownlines?: number | null;
+  weeklyOrderQuota?: number | null;
   loading?: boolean;
   onMenuClick: () => void;
 }
 
-function LevelCard({ name, point, loading, onMenuClick }: LevelCardProps) {
+function LevelCard({ name, point, requiredDirectDownlines, weeklyOrderQuota, loading, onMenuClick, isRider }: LevelCardProps & { isRider: boolean }) {
   return (
     <div className="bg-[#F9FAFB] dark:bg-dark-900 border border-[#E4E4E7] dark:border-dark-600 rounded-2xl p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
@@ -52,9 +54,21 @@ function LevelCard({ name, point, loading, onMenuClick }: LevelCardProps) {
         )}
       </div>
 
-      <div className="text-4xl text-foreground dark:text-white font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
-        {point}
-      </div>
+      {!isRider && (
+        <div className="text-4xl text-foreground dark:text-white font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
+          {point ?? 0} pts
+        </div>
+      )}
+      {(requiredDirectDownlines != null && requiredDirectDownlines > 0) && (
+        <p className="text-xs text-muted-foreground mt-2">
+          <span className="font-semibold text-foreground dark:text-white">{requiredDirectDownlines}</span> direct downlines to reach this level
+        </p>
+      )}
+      {(weeklyOrderQuota != null && weeklyOrderQuota > 0) && (
+        <p className="text-xs text-muted-foreground mt-1">
+          <span className="font-semibold text-foreground dark:text-white">{weeklyOrderQuota}</span> {isRider ? 'deliveries/week' : 'orders/week'} to unlock residual income
+        </p>
+      )}
     </div>
   );
 }
@@ -70,12 +84,15 @@ export default function LoyaltyAndReferralTierSystemComponent() {
   const [deletingId, setDeletingId] = useState('');
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const isRider = loyaltyType === 'Rider Loyalty Program';
+  const userType = isRider ? 'driver' : 'customer';
+
   // API
-  const { data, loading } = useFetchLoyaltyTiersQuery();
+  const { data, loading } = useFetchLoyaltyTiersByUserTypeQuery({ variables: { userType } });
   const [deleteLoyaltyTier, { loading: deletingTier }] =
     useDeleteLoyaltyTierMutation();
 
-  const tiers = data?.fetchLoyaltyTiers ?? [];
+  const tiers = data?.fetchLoyaltyTiersByUserType ?? [];
 
   // Handlers
   const handleDeleteTier = async (id: string) => {
@@ -83,14 +100,8 @@ export default function LoyaltyAndReferralTierSystemComponent() {
       setDeletingId(id);
       setOpenMenu(null);
       await deleteLoyaltyTier({
-        variables: {
-          id,
-        },
-        refetchQueries: [
-          {
-            query: FetchLoyaltyTiersDocument,
-          },
-        ],
+        variables: { id },
+        refetchQueries: [{ query: FetchLoyaltyTiersByUserTypeDocument, variables: { userType } }],
       });
 
       showToast({
@@ -120,8 +131,6 @@ export default function LoyaltyAndReferralTierSystemComponent() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  if (loyaltyType === 'Driver Loyalty Program') return null;
-
   return (
     <>
       <div className="m-3 p-6 pb-2 bg-background border border-border rounded-2xl">
@@ -130,10 +139,12 @@ export default function LoyaltyAndReferralTierSystemComponent() {
           <div className="flex justify-between items-start mb-8">
             <div>
               <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
-                Customer Tier System
+                {isRider ? 'Rider' : 'Customer'} Success Levels
               </h1>
               <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
-                Set tier thresholds for customers against their earned points
+                {isRider
+                  ? 'Set success levels for riders — required downlines and weekly delivery quota to unlock residual income.'
+                  : 'Set tier thresholds for customers against their earned points.'}
               </p>
             </div>
             <button
@@ -166,6 +177,9 @@ export default function LoyaltyAndReferralTierSystemComponent() {
                     <LevelCard
                       name={toTextCase(tier.name || '', 'title')}
                       point={tier.points}
+                      requiredDirectDownlines={tier.requiredDirectDownlines}
+                      weeklyOrderQuota={tier.weeklyOrderQuota}
+                      isRider={isRider}
                       loading={deletingTier && tier?._id === deletingId}
                       onMenuClick={() =>
                         setOpenMenu(openMenu === tier._id ? null : tier._id)

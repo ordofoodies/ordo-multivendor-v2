@@ -1,1 +1,1 @@
-export type LoyaltyType = 'Customer Loyalty Program' | 'Driver Loyalty Program';
+export type LoyaltyType = 'Customer Loyalty Program' | 'Rider Loyalty Program';

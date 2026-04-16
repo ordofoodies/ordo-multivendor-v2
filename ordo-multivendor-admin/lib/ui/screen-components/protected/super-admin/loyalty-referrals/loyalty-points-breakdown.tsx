@@ -39,7 +39,7 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
   const { showToast } = useToast();
   const { CURRENCY_SYMBOL } = useConfiguration();
 
-  const isDriver = loyaltyType === 'Driver Loyalty Program';
+  const isDriver = loyaltyType === 'Rider Loyalty Program';
 
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState('');
@@ -95,7 +95,7 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-2xl font-bold text-foreground mb-1">
-              {isDriver ? 'Driver' : 'Customer'} Loyalty{isDriver ? ' Earnings' : ' Points'} Breakdown
+              {isDriver ? 'Rider' : 'Customer'} Loyalty{isDriver ? ' Earnings' : ' Points'} Breakdown
             </h2>
             <p className="text-muted-foreground text-sm">
               {isDriver
@@ -121,7 +121,7 @@ export default function LoyaltyAndReferralBreakdownSectionComponent() {
               <thead>
                 <tr className="border-b border-border dark:border-dark-600 bg-[#F4F4F5] dark:bg-dark-600">
                   <th className="text-[#71717A] dark:text-gray-300 text-left px-6 py-4 font-inter font-medium text-sm">
-                    Earnings Range ({CURRENCY_SYMBOL})
+                    Delivery Earnings Range ({CURRENCY_SYMBOL})
                   </th>
                   <th className="text-[#71717A] dark:text-gray-300 text-left px-6 py-4 font-inter font-medium text-sm">
                     Reward Amount ({CURRENCY_SYMBOL})

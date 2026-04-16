@@ -11,8 +11,10 @@ export interface ILevelForm {
 }
 
 export interface ITierForm {
-  type: IDropdownSelectItem | null;
-  value: number;
+  name: string;
+  points: number;
+  requiredDirectDownlines: number;
+  weeklyOrderQuota: number | null;
 }
 
 export interface IBreakdownForm {
@@ -44,8 +46,10 @@ export interface ILevelError {
 }
 
 export interface ITierError {
-  type: string[];
-  value: string[];
+  name: string[];
+  points: string[];
+  requiredDirectDownlines: string[];
+  weeklyOrderQuota: string[];
 }
 
 export interface IBreakdownError {

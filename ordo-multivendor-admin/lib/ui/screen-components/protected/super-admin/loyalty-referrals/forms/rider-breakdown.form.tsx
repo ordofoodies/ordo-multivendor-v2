@@ -85,7 +85,7 @@ export default function RiderBreakdownForm() {
                 prefix={CURRENCY_SYMBOL + ' '}
                 min={0}
                 max={999999}
-                placeholder={`Min earnings (${CURRENCY_SYMBOL})`}
+                placeholder={`Min delivery earnings (${CURRENCY_SYMBOL})`}
                 name="min"
                 showLabel
                 value={values.min}
@@ -96,7 +96,7 @@ export default function RiderBreakdownForm() {
                 prefix={CURRENCY_SYMBOL + ' '}
                 min={0}
                 max={999999}
-                placeholder={`Max earnings (${CURRENCY_SYMBOL})`}
+                placeholder={`Max delivery earnings (${CURRENCY_SYMBOL})`}
                 name="max"
                 showLabel
                 value={values.max}

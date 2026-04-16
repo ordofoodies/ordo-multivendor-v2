@@ -68,7 +68,7 @@ export default function UplineOrderReferralRewardsComponent() {
         <div className="flex justify-between items-start mb-8">
           <div>
             <h1 className="md:text-2xl text-foreground mb-2 font-inter font-semibold text-2xl leading-8 tracking-normal">
-              {isCustomer ? 'Customer' : 'Driver'} Upline Order Rewards
+              {isCustomer ? 'Customer' : 'Rider'} Upline Order Rewards
             </h1>
             <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
               {isCustomer
@@ -118,14 +118,14 @@ export default function UplineOrderReferralRewardsComponent() {
                     </div>
                     <div className="text-foreground dark:text-white font-inter font-semibold text-[30px] leading-[36px]">
                       {value ?? 0} {isCustomer ? 'pts' : CURRENCY_SYMBOL}
-                      <span className="text-sm font-normal text-muted-foreground ml-1">/ order</span>
+                      <span className="text-sm font-normal text-muted-foreground ml-1">{isCustomer ? '/ order' : '/ delivery'}</span>
                     </div>
                     <div className="mt-3 flex flex-col gap-1">
                       <span className="text-xs text-muted-foreground">
                         Window: <span className="font-medium text-foreground dark:text-white">{level.completionWindow ?? '—'}</span>
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        Required orders: <span className="font-medium text-foreground dark:text-white">{level.requiredCompletedOrders ?? '—'}</span>
+                        {isCustomer ? 'Required orders:' : 'Required deliveries:'} <span className="font-medium text-foreground dark:text-white">{level.requiredCompletedOrders ?? '—'}</span>
                       </span>
                     </div>
                   </div>

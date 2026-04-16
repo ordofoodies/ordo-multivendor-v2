@@ -71,6 +71,8 @@ query FetchLoyaltyTierById($id: String!) {
     _id
     name
     points
+    requiredDirectDownlines
+    weeklyOrderQuota
   }
 }
 
@@ -78,7 +80,21 @@ query FetchLoyaltyTiers {
   fetchLoyaltyTiers {
     _id
     name
+    userType
     points
+    requiredDirectDownlines
+    weeklyOrderQuota
+  }
+}
+
+query FetchLoyaltyTiersByUserType($userType: String!) {
+  fetchLoyaltyTiersByUserType(userType: $userType) {
+    _id
+    name
+    userType
+    points
+    requiredDirectDownlines
+    weeklyOrderQuota
   }
 }
 
@@ -86,7 +102,10 @@ mutation CreateLoyaltyTier($input: LoyaltyTierInput!) {
   createLoyaltyTier(input: $input) {
     _id
     name
+    userType
     points
+    requiredDirectDownlines
+    weeklyOrderQuota
   }
 }
 
@@ -95,6 +114,8 @@ mutation EditLoyaltyTier($id: String!, $input: UpdateLoyaltyTierInput!) {
     _id
     name
     points
+    requiredDirectDownlines
+    weeklyOrderQuota
   }
 }
 
@@ -103,6 +124,8 @@ mutation DeleteLoyaltyTier($id: String!) {
     _id
     name
     points
+    requiredDirectDownlines
+    weeklyOrderQuota
   }
 }
 
@@ -332,6 +355,8 @@ query FetchUserReferralNetworkDetail($userId: String!) {
     email
     tier
     totalPoints
+    directPoints
+    residualPoints
     level1 {
       pointsPerActivity
       memberCount
@@ -390,6 +415,8 @@ query FetchDriverReferralNetworkDetail($driverId: String!) {
     email
     tier
     totalPoints
+    directPoints
+    residualPoints
     level1 {
       pointsPerActivity
       memberCount
@@ -448,6 +475,8 @@ query FetchLoyaltyStatsOverview {
   fetchLoyaltyStatsOverview {
     totalLoyalCustomers
     totalPointsIssued
+    directPointsIssued
+    residualPointsReleased
     totalPointsRedeemed
     activeDriverReferrals
   }
@@ -465,6 +494,7 @@ query FetchReferralLoyaltyHistory($filter: FetchLoyaltyReferralHistoryFilterInpu
       type
       level
       value
+      rewardRole
       createdAt
     }
     totalCount

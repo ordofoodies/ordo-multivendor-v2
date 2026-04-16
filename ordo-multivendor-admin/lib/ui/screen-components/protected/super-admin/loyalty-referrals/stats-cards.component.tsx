@@ -65,13 +65,25 @@ export default function LoyaltyAndReferralStatsCardComponent() {
       ),
     },
     {
-      label: 'Total Points Issued',
-      value: stats?.totalPointsIssued ?? 0,
-      description: 'Lifetime loyalty points awarded to customers',
+      label: 'Direct Points Issued',
+      value: stats?.directPointsIssued ?? 0,
+      description: 'Points earned by customers from their own orders',
       iconBg: 'bg-orange-50 dark:bg-orange-950/30',
       icon: (
         <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M23 2.68066H9.00004C6.97871 2.68066 5.33337 4.326 5.33337 6.34733V20.014C5.33337 21.3687 5.97471 22.664 7.04804 23.478L13.7834 28.588C14.436 29.0827 15.218 29.33 16 29.33C16.782 29.33 17.564 29.0827 18.216 28.588L24.952 23.478C26.0254 22.6633 26.6667 21.3727 26.6667 20.0253V6.34733C26.6667 4.32533 25.0214 2.68066 23 2.68066ZM16.5 19.3333H15.3594C14.024 19.3333 13.148 18.5313 12.772 17.7807C12.5254 17.2867 12.7254 16.686 13.2194 16.4387C13.7147 16.1933 14.3147 16.392 14.5614 16.886C14.5987 16.9607 14.8127 17.3333 15.3594 17.3333H16.5C16.96 17.3333 17.3334 16.9593 17.3334 16.5C17.3334 16.0407 16.9594 15.6667 16.5 15.6667H15.68C14.1174 15.6667 12.8467 14.3953 12.8467 12.8333C12.8467 11.2973 14.1734 10 15.744 10H16.308C17.476 10 18.3947 10.5513 18.8954 11.5527C19.142 12.0467 18.942 12.6473 18.448 12.8947C17.954 13.1413 17.3534 12.942 17.106 12.4473C16.99 12.2147 16.8127 12 16.3074 12H15.7434C15.2654 12 14.846 12.3893 14.846 12.8333C14.846 13.2927 15.22 13.6667 15.6794 13.6667H16.4994C18.062 13.6667 19.3327 14.938 19.3327 16.5C19.3327 18.062 18.0627 19.3333 16.5 19.3333Z" fill="#F97316"/>
+        </svg>
+      ),
+    },
+    {
+      label: 'Residual Points Released',
+      value: stats?.residualPointsReleased ?? 0,
+      description: 'Upline points released from downline order completions',
+      iconBg: 'bg-amber-50 dark:bg-amber-950/30',
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="15.5" fill="#D97706"/>
+          <path d="M27.2625 11.2563C26.6188 11.2563 25.9688 11.2625 25.325 11.2625C23.8688 8.00002 21.0125 5.64377 17.4125 5.08127C13.3875 4.45002 9.54378 6.31252 7.25003 9.60002C6.23128 11.0563 8.62503 12.425 9.63753 10.975C12.7813 6.47502 19.5 6.88127 22.2563 11.2688C21.6563 11.2688 21.0625 11.2688 20.4625 11.275C20.2938 11.275 20.175 11.35 20.1063 11.4563C19.9875 11.5875 19.9375 11.775 20.0688 11.9688C21.2063 13.7313 22.3438 15.5 23.4813 17.2625C23.675 17.5563 24.0875 17.5563 24.275 17.2625C25.4063 15.4938 26.5313 13.7188 27.6625 11.95C27.8438 11.65 27.5938 11.2563 27.2625 11.2563ZM22.3938 20.9438C19.275 25.4125 12.6375 25.0438 9.83753 20.7563C10.4125 20.7563 10.9813 20.7563 11.5563 20.75C11.725 20.75 11.8438 20.675 11.9125 20.5688C12.0313 20.4375 12.0813 20.25 11.95 20.0563C10.8125 18.2938 9.67503 16.525 8.53753 14.7625C8.34378 14.4625 7.93128 14.4688 7.74378 14.7625C6.61253 16.5313 5.48753 18.3063 4.35628 20.075C4.16878 20.3688 4.41253 20.7625 4.75003 20.7625C5.41878 20.7625 6.08128 20.7563 6.75003 20.7563C8.21878 23.9625 11.05 26.275 14.6188 26.8375C18.6375 27.4688 22.4813 25.6 24.775 22.3188C25.7938 20.8625 23.4 19.5 22.3938 20.9438Z" fill="white"/>
         </svg>
       ),
     },
@@ -88,9 +100,9 @@ export default function LoyaltyAndReferralStatsCardComponent() {
       ),
     },
     {
-      label: 'Active Driver Referrals',
+      label: 'Active Rider Referrals',
       value: stats?.activeDriverReferrals ?? 0,
-      description: 'Drivers who joined via a referral link',
+      description: 'Riders who joined via an invitation link',
       iconBg: 'bg-purple-50 dark:bg-purple-950/30',
       icon: (
         <svg width="20" height="20" viewBox="0 0 39 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,7 +114,7 @@ export default function LoyaltyAndReferralStatsCardComponent() {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-3 pt-1 pb-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-3 pt-1 pb-3">
       {cards.map((card) => (
         <LoyaltyStatCard key={card.label} {...card} loading={loading} />
       ))}

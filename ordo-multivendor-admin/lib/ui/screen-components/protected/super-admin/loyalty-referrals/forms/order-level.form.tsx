@@ -136,7 +136,7 @@ export default function OrderLevelForm() {
                 max={999999}
                 minFractionDigits={2}
                 maxFractionDigits={2}
-                placeholder={isCustomer ? 'Points per order' : `Amount per order (${CURRENCY_SYMBOL})`}
+                placeholder={isCustomer ? 'Points per order' : `Amount per delivery (${CURRENCY_SYMBOL})`}
                 name="value"
                 showLabel
                 value={values.value}
@@ -155,7 +155,7 @@ export default function OrderLevelForm() {
               <CustomNumberField
                 min={1}
                 max={9999}
-                placeholder="Required completed orders"
+                placeholder={isCustomer ? 'Required completed orders' : 'Required completed deliveries'}
                 name="requiredCompletedOrders"
                 showLabel
                 value={values.requiredCompletedOrders}
