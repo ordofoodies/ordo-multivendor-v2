@@ -1,6 +1,8 @@
 // Contexts
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Interfaces
 import { IEarningBottomProps } from "@/lib/utils/interfaces/earning.interface";
@@ -28,9 +30,9 @@ export default function EarningBottomBar({
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
-
-  // Contexts
   const { setRiderOrderEarnings } = useUserContext();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
   return (
     <ReactNativeModal
       animationIn={"slideInUp"}
@@ -100,7 +102,7 @@ export default function EarningBottomBar({
             {t("Total Earnings")}
           </Text>
           <Text style={{ color: appTheme.fontSecondColor }}>
-            ${totalEarnings}
+            {currencySymbol}{totalEarnings}
           </Text>
         </View>
         <View className="flex flex-row justify-between items-center flex-2 p-5">
@@ -114,7 +116,7 @@ export default function EarningBottomBar({
             className="font-bold text-md"
             style={{ color: appTheme.fontSecondColor }}
           >
-            ${totalTips}
+            {currencySymbol}{totalTips}
           </Text>
         </View>
         <View className="flex flex-row justify-between p-5 ">
@@ -143,7 +145,7 @@ export default function EarningBottomBar({
             }}
           >
             <Text className="text-md text-[#3B82F6] font-bold">
-              ${totalEarnings - totalTips}
+              {currencySymbol}{totalEarnings - totalTips}
             </Text>
             <Ionicons name="arrow-forward" size={23} color={"#3B82F6"} />
           </TouchableOpacity>

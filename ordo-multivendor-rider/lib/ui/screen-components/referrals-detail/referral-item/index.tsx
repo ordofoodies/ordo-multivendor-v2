@@ -1,5 +1,7 @@
 // Contexts
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Core
 import { Text, View } from "react-native";
@@ -16,6 +18,8 @@ export default function ReferralItem({ referral }: IReferralItemProps) {
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   // Format date - handles Unix timestamps in milliseconds
   const formatDate = (dateString: string) => {
@@ -84,7 +88,7 @@ export default function ReferralItem({ referral }: IReferralItemProps) {
         <Text
           className="text-lg font-bold text-[#3B82F6]"
         >
-          QAR {referral.amount.toFixed(1)}
+          {currencySymbol}{referral.amount.toFixed(1)}
         </Text>
       </View>
     </View>

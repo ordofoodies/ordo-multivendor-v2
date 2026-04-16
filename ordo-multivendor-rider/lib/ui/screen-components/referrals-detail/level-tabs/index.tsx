@@ -19,9 +19,9 @@ export default function LevelTabs({
   const { t } = useTranslation();
 
   const tabs: Array<{ label: string; value: 1 | 2 | 3 }> = [
-    { label: t("Level 1"), value: 1 },
-    { label: t("Level 2"), value: 2 },
-    { label: t("Level 3"), value: 3 },
+    { label: t("Level 1 Downlines"), value: 1 },
+    { label: t("Level 2 Downlines"), value: 2 },
+    { label: t("Level 3 Downlines"), value: 3 },
   ];
 
   return (
@@ -42,7 +42,7 @@ export default function LevelTabs({
           }}
         >
           <Text
-            className="text-base font-semibold"
+            className="text-xs font-semibold text-center"
             style={{
               color:
                 activeLevel === tab.value

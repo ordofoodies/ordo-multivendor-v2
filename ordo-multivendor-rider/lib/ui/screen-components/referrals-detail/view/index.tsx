@@ -1,6 +1,8 @@
 // Contexts
 import { useApptheme } from "@/lib/context/global/theme.context";
 import { useUserContext } from "@/lib/context/global/user.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Core
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
@@ -44,6 +46,8 @@ export default function ReferralsDetailMain({
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const { userId } = useUserContext();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   // States
   const [isDateFilterVisible, setIsDateFilterVisible] = useState(false);
@@ -212,7 +216,7 @@ export default function ReferralsDetailMain({
               className="font-semibold text-lg"
               style={{ color: appTheme.mainTextColor }}
             >
-              ${totals.totalEarnings.toFixed(2)}
+              {currencySymbol}{totals.totalEarnings.toFixed(2)}
             </Text>
           </View>
         </View>

@@ -1,6 +1,6 @@
 // Core
 import { FlatList, ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 
 // Interfaces
 import {
@@ -50,10 +50,13 @@ import UplineTab from "../upline-tab";
 
 // Helpers
 import formatNumber from "@/lib/utils/methods/num-formatter";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 export default function EarningsMain() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   const [activeTab, setActiveTab] = useState<EarningsTab>("deliveries");
   const [referralModalVisible, setReferralModalVisible] = useState<
@@ -109,7 +112,7 @@ export default function EarningsMain() {
         label: earning._id,
         topLabelComponent: () => (
           <Text style={{ color: appTheme.fontMainColor, fontSize: 10, fontWeight: "600", marginBottom: 0 }}>
-            ${formatNumber(earning.totalEarningsSum)}
+            {currencySymbol}{formatNumber(earning.totalEarningsSum)}
           </Text>
         ),
       })) ?? [];
@@ -154,7 +157,7 @@ export default function EarningsMain() {
         label: formatDisplayDate(group.date).split(",")[0],
         topLabelComponent: () => (
           <Text style={{ color: appTheme.fontMainColor, fontSize: 10, fontWeight: "600", marginBottom: 0 }}>
-            ${formatNumber(group.totalEarnings)}
+            {currencySymbol}{formatNumber(group.totalEarnings)}
           </Text>
         ),
       })),
@@ -284,8 +287,8 @@ export default function EarningsMain() {
             />
           ))}
 
-          <ReferralEarningsCard totalEarnings={totalReferralEarnings} />
-          <ReferralRewards />
+          <ReferralEarningsCard totalEarnings={totalResidualReleasedCash} />
+          <ReferralRewards items={loyaltyReleasedResidualItems} />
 
           {/* Loyalty earnings section */}
           <View
@@ -302,7 +305,7 @@ export default function EarningsMain() {
                   {t("Delivery Loyalty Bonus")}
                 </Text>
                 <Text className="text-xs mt-0.5" style={{ color: appTheme.fontSecondColor }}>
-                  {t("From your own deliveries")} · QAR {totalLoyaltyCash.toFixed(2)}
+                  {t("From your own deliveries")} · {currencySymbol}{totalLoyaltyCash.toFixed(2)}
                 </Text>
               </View>
             </View>
@@ -334,7 +337,7 @@ export default function EarningsMain() {
                       {t("Residual Earnings Released")}
                     </Text>
                     <Text className="text-xs mt-0.5" style={{ color: appTheme.fontSecondColor }}>
-                      {t("From your referred riders' deliveries")} · QAR {totalResidualReleasedCash.toFixed(2)}
+                      {t("From your referred riders' deliveries")} · {currencySymbol}{totalResidualReleasedCash.toFixed(2)}
                     </Text>
                   </View>
                 </View>
@@ -360,7 +363,7 @@ export default function EarningsMain() {
         </ScrollView>
       )}
 
-      {/* ── RESIDUAL POINTS ── */}
+      {/* ── RESIDUAL INCOME ── */}
       {activeTab === "upline" && (
         <View style={{ flex: 1 }}>
           <UplineTab />

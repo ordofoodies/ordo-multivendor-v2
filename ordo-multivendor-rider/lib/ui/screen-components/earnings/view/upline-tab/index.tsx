@@ -1,4 +1,6 @@
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 import {
   FETCH_RIDER_RESIDUAL_LOYALTY_DATA,
   FETCH_RIDER_RESIDUAL_TRANSACTIONS,
@@ -20,10 +22,12 @@ import {
 } from "react-native";
 import { useColorScheme } from "@/lib/hooks/useColorScheme";
 
-export default function ResidualPointsTab() {
+export default function ResidualIncomeTab() {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
   const isDark = useColorScheme() === "dark";
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   const { data: summaryData, loading: summaryLoading } = useQuery(
     FETCH_RIDER_RESIDUAL_LOYALTY_DATA,
@@ -38,6 +42,8 @@ export default function ResidualPointsTab() {
   const residual = summaryData?.fetchRiderResidualLoyaltyData;
   const locked = residual?.residualCashBalance ?? 0;
   const totalEarned = residual?.totalResidualCashEarned ?? 0;
+  const tierName = residual?.tierName ?? null;
+  const weeklyOrderQuota = residual?.weeklyOrderQuota ?? null;
   const transactions = txData?.fetchRiderResidualTransactions ?? [];
 
   const getDaysLeft = (eligibleUntil: string | null) => {
@@ -127,7 +133,7 @@ export default function ResidualPointsTab() {
       alignItems: "center",
       marginBottom: 10,
     },
-    txPoints: { fontSize: 18, fontWeight: "800", color: appTheme.primary },
+    txAmount: { fontSize: 18, fontWeight: "800", color: appTheme.primary },
     txBadge: {
       flexDirection: "row",
       alignItems: "center",
@@ -175,20 +181,33 @@ export default function ResidualPointsTab() {
           <View style={styles.summaryTop}>
             <View style={styles.summaryLeft}>
               <Text style={styles.summaryTitle}>{t("Pending Residual Cash")}</Text>
-              <Text style={styles.summaryValue}>QAR {locked.toFixed(2)}</Text>
+              <Text style={styles.summaryValue}>{currencySymbol} {locked.toFixed(2)}</Text>
               <Text style={styles.summaryUnit}>{t("waiting to be released")}</Text>
             </View>
             <View style={styles.summaryRight}>
-              <Text style={styles.summaryRightValue}>QAR {totalEarned.toFixed(0)}</Text>
+              <Text style={styles.summaryRightValue}>{currencySymbol} {totalEarned.toFixed(0)}</Text>
               <Text style={styles.summaryRightLabel}>{`Total\nEarned`}</Text>
             </View>
           </View>
+
+          {(tierName || weeklyOrderQuota !== null) && (
+            <View style={[styles.infoRow, { marginBottom: 10, backgroundColor: "rgba(31,41,55,0.15)" }]}>
+              <MaterialCommunityIcons name="trophy-outline" size={13} color="rgba(31,41,55,0.7)" style={{ marginTop: 1 }} />
+              <Text style={styles.infoText}>
+                {tierName ? `${t("Your tier")}: ${tierName.charAt(0).toUpperCase() + tierName.slice(1)}` : ""}
+                {tierName && weeklyOrderQuota !== null ? "  ·  " : ""}
+                {weeklyOrderQuota !== null
+                  ? `${t("Complete")} ${weeklyOrderQuota} ${t("deliveries/week to unlock residual cash")}`
+                  : ""}
+              </Text>
+            </View>
+          )}
 
           <View style={styles.infoRow}>
             <Feather name="info" size={12} color="rgba(31,41,55,0.6)" style={{ marginTop: 1 }} />
             <Text style={styles.infoText}>
               {t(
-                "Earned when your referred riders deliver orders. Once they complete the required orders in the time window, the cash is added to your main earnings balance. If the window expires before that, the cash is lost."
+                "Earned when your referred riders complete deliveries. Once they complete the required deliveries in the time window, the cash is added to your main earnings balance. If the window expires before that, the cash is lost."
               )}
             </Text>
           </View>
@@ -234,7 +253,7 @@ export default function ResidualPointsTab() {
             return (
               <View key={tx._id} style={styles.txCard}>
                 <View style={styles.txHeader}>
-                  <Text style={styles.txPoints}>+QAR {tx.value.toFixed(2)}</Text>
+                  <Text style={styles.txAmount}>+{currencySymbol} {tx.value.toFixed(2)}</Text>
                   <View style={[styles.txBadge, isUrgent && styles.urgentBadge]}>
                     <Feather
                       name="clock"
@@ -254,7 +273,7 @@ export default function ResidualPointsTab() {
                   </Text>
                 </View>
                 <View style={styles.txRow}>
-                  <Text style={styles.txLabel}>{t("Required orders")}</Text>
+                  <Text style={styles.txLabel}>{t("Required deliveries")}</Text>
                   <Text style={styles.txValue}>
                     {tx.requiredCompletedOrders} {t("within")}{" "}
                     {tx.completionWindow?.toLowerCase()}

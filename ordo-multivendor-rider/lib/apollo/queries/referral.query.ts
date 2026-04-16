@@ -184,6 +184,8 @@ export const FETCH_RIDER_RESIDUAL_LOYALTY_DATA = gql`
     fetchRiderResidualLoyaltyData {
       residualCashBalance
       totalResidualCashEarned
+      tierName
+      weeklyOrderQuota
     }
   }
 `;

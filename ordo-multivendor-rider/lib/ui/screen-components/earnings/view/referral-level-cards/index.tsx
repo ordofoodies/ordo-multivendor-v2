@@ -16,9 +16,9 @@ export default function ReferralLevelCards() {
   const counts = data?.fetchDriverReferralLevelCounts;
 
   const levels = [
-    { label: t("Level 1"), count: counts?.level1Count ?? 0 },
-    { label: t("Level 2"), count: counts?.level2Count ?? 0 },
-    { label: t("Level 3"), count: counts?.level3Count ?? 0 },
+    { label: t("Level 1 Downlines"), count: counts?.level1Count ?? 0 },
+    { label: t("Level 2 Downlines"), count: counts?.level2Count ?? 0 },
+    { label: t("Level 3 Downlines"), count: counts?.level3Count ?? 0 },
   ];
 
   return (
@@ -36,7 +36,7 @@ export default function ReferralLevelCards() {
           <Text className="text-2xl font-bold" style={{ color: appTheme.primary }}>
             {level.count}
           </Text>
-          <Text className="text-xs font-medium mt-1" style={{ color: appTheme.fontSecondColor }}>
+          <Text className="text-xs font-medium mt-1 text-center" style={{ color: appTheme.fontSecondColor }}>
             {level.label}
           </Text>
           <Text className="text-xs" style={{ color: appTheme.fontSecondColor, opacity: 0.7 }}>

@@ -1,5 +1,7 @@
 // Contexts
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Core
 import { Text, View } from "react-native";
@@ -19,6 +21,8 @@ export default function ReferralSummary({
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   return (
     <View
@@ -59,7 +63,7 @@ export default function ReferralSummary({
         <Text
           className="text-base font-bold text-[#3B82F6]"
         >
-          ${totalEarnings.toFixed(2)}
+          {currencySymbol}{totalEarnings.toFixed(2)}
         </Text>
       </View>
       {dateRange && (

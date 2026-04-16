@@ -1,5 +1,7 @@
 // Contexts
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Interfaces
 import { IReferralEarnings } from "@/lib/utils/interfaces/referral.interface";
@@ -38,6 +40,8 @@ export default function ReferralModal({
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   return (
     <ReactNativeModal
@@ -105,7 +109,7 @@ export default function ReferralModal({
             {t("Total Earnings")}
           </Text>
           <Text style={{ color: appTheme.fontSecondColor }}>
-            ${totalEarnings}
+            {currencySymbol}{totalEarnings}
           </Text>
         </View>
         <View className="flex flex-row justify-between p-5">
@@ -137,7 +141,7 @@ export default function ReferralModal({
             }}
           >
             <Text className="text-md text-[#3B82F6] font-bold">
-              ${totalEarnings}
+              {currencySymbol}{totalEarnings}
             </Text>
             <Ionicons name="arrow-forward" size={23} color={"#3B82F6"} />
           </TouchableOpacity>

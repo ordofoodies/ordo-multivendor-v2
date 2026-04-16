@@ -1,4 +1,6 @@
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 import { IRecentActivityItem } from "@/lib/utils/interfaces/referral.interface";
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
@@ -12,6 +14,8 @@ interface LoyaltyStackProps {
 export default function LoyaltyStack({ item, label, badgeColor }: LoyaltyStackProps) {
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   const timestamp = parseInt(item.createdAt);
   const date = isNaN(timestamp) ? new Date(item.createdAt) : new Date(timestamp);
@@ -49,7 +53,7 @@ export default function LoyaltyStack({ item, label, badgeColor }: LoyaltyStackPr
         </Text>
       </View>
       <Text style={{ fontSize: 15, fontWeight: "700", color }}>
-        +QAR {item.value.toFixed(2)}
+        +{currencySymbol}{item.value.toFixed(2)}
       </Text>
     </View>
   );

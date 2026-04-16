@@ -7,7 +7,9 @@ import { useTranslation } from "react-i18next";
 
 // Core
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useContext } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 export default function EarningStack({
   date,
@@ -21,6 +23,8 @@ export default function EarningStack({
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   // Handlers
   function handleForwardPress() {
@@ -52,7 +56,7 @@ export default function EarningStack({
         className="flex flex-row gap-2 items-center flex-2"
         onPress={handleForwardPress}
       >
-        <Text className="font-bold text-[#3B82F6]">${earning}</Text>
+        <Text className="font-bold text-[#3B82F6]">{currencySymbol}{earning}</Text>
         <RightChevron color="#3B82F6" />
       </TouchableOpacity>
     </View>

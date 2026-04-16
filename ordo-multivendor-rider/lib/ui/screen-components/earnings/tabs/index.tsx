@@ -11,8 +11,8 @@ interface EarningsTabsProps {
 
 const TABS: { key: EarningsTab; label: string }[] = [
   { key: "deliveries", label: "Deliveries" },
-  { key: "referrals", label: "Referrals & Loyalty" },
-  { key: "upline", label: "Residual Points" },
+  { key: "referrals", label: "Invitations & Loyalty" },
+  { key: "upline", label: "Residual Income" },
 ];
 
 export default function EarningsTabs({ activeTab, onTabChange }: EarningsTabsProps) {

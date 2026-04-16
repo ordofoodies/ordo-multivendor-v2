@@ -1,5 +1,7 @@
 // Contexts
 import { useApptheme } from "@/lib/context/global/theme.context";
+import { useContext } from "react";
+import { ConfigurationContext } from "@/lib/context/global/configuration.context";
 
 // Core
 import { Text, View } from "react-native";
@@ -18,6 +20,8 @@ export default function ReferralEarningsCard({
   // Hooks
   const { appTheme } = useApptheme();
   const { t } = useTranslation();
+  const configuration = useContext(ConfigurationContext);
+  const currencySymbol = configuration?.currencySymbol || '$';
 
   return (
     <View 
@@ -78,13 +82,13 @@ export default function ReferralEarningsCard({
           className="text-2xl font-bold mb-1"
           style={{ color: appTheme.fontMainColor }}
         >
-          QAR {totalEarnings.toFixed(0)}
+          {currencySymbol}{totalEarnings.toFixed(0)}
         </Text>
         <Text
           className="text-sm"
           style={{ color: appTheme.fontSecondColor }}
         >
-          {t("Earned from referrals")}
+          {t("Earned from downline deliveries")}
         </Text>
       </View>
     </View>
