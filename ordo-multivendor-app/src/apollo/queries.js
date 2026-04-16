@@ -1171,6 +1171,7 @@ export const FETCH_LOYALTY_REFERRAL_HISTORY = gql`
       type
       source
       level
+      rewardRole
       value
       triggeredBy
       createdAt

@@ -1,7 +1,7 @@
 import { useState, useLayoutEffect, useContext, useEffect } from 'react'
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, SafeAreaView, ActivityIndicator } from 'react-native'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
-import { useQuery } from '@apollo/client'
+import { useQuery, gql } from '@apollo/client'
 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
@@ -23,6 +23,9 @@ function LoyaltyPoints(props) {
   const currentTheme = theme[themeContext.ThemeValue]
   const { profile: userProfile } = useContext(UserContext)
   const isDark = themeContext.ThemeValue === 'Dark'
+
+  const { data: configData } = useQuery(gql`query { configuration { currencySymbol } }`, { fetchPolicy: 'cache-first' })
+  const currencySymbol = configData?.configuration?.currencySymbol || '$'
 
   const { data: loyaltyData, loading: loyaltyLoading } = useQuery(GET_USER_LOYALTY_DATA)
   const { data: referralData, loading: referralLoading } = useQuery(GET_REFERRAL_DATA_BY_LEVELS, {
@@ -209,9 +212,10 @@ function LoyaltyPoints(props) {
       backgroundColor: currentTheme.primary
     },
     tabText: {
-      fontSize: 13,
+      fontSize: 11,
       fontWeight: '500',
-      color: isDark ? '#9CA3AF' : '#6B7280'
+      color: isDark ? '#9CA3AF' : '#6B7280',
+      textAlign: 'center'
     },
     activeTabText: {
       color: '#FFFFFF',
@@ -387,21 +391,23 @@ function LoyaltyPoints(props) {
     
     if (referralData?.fetchReferralLoyaltyHistory) {
       const transactions = referralData.fetchReferralLoyaltyHistory?.data || []
-      const referralTransactions = transactions.filter(t => t.type === 'Referral' && t.source === 'signup' && t.level)
+      const uplineTransactions = transactions.filter(
+        t => t.type === 'Loyalty' && t.source === 'order' && t.rewardRole === 'UPLINE' && t.level
+      )
       const groupedReferrals = {
-        level1: referralTransactions.filter(t => t.level === 1).map(t => ({
+        level1: uplineTransactions.filter(t => t.level === 1).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
           points: t.value,
           date: new Date(parseInt(t.createdAt)).toLocaleDateString()
         })),
-        level2: referralTransactions.filter(t => t.level === 2).map(t => ({
+        level2: uplineTransactions.filter(t => t.level === 2).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
           points: t.value,
           date: new Date(parseInt(t.createdAt)).toLocaleDateString()
         })),
-        level3: referralTransactions.filter(t => t.level === 3).map(t => ({
+        level3: uplineTransactions.filter(t => t.level === 3).map(t => ({
           id: t._id,
           name: t.triggeredBy || 'Unknown User',
           points: t.value,
@@ -472,23 +478,23 @@ function LoyaltyPoints(props) {
               </View>
               <View style={styles.pointsInfo}>
                 <Text style={styles.pointsLabel}>{pointsData.referralPoints.toLocaleString()} points</Text>
-                <Text style={styles.pointsDescription}>From referrals</Text>
+                <Text style={styles.pointsDescription}>From downline orders</Text>
               </View>
             </View>
 
             <View style={styles.dottedBar} />
 
             <View style={[styles.pointsRow, styles.pointsRowLast]}>
-              <Text style={styles.exchangeText}>Exchange Rate: {pointsData.exchangeRate} points = $1</Text>
+              <Text style={styles.exchangeText}>Exchange Rate: {pointsData.exchangeRate} points = {currencySymbol}1</Text>
             </View>
 
             <View style={styles.dottedBar} />
 
             <View style={styles.levelCountsRow}>
               {[
-                { label: 'Level 1', count: levelCounts?.level1Count ?? 0 },
-                { label: 'Level 2', count: levelCounts?.level2Count ?? 0 },
-                { label: 'Level 3', count: levelCounts?.level3Count ?? 0 }
+                { label: 'Level 1 Downlines', count: levelCounts?.level1Count ?? 0 },
+                { label: 'Level 2 Downlines', count: levelCounts?.level2Count ?? 0 },
+                { label: 'Level 3 Downlines', count: levelCounts?.level3Count ?? 0 }
               ].map((item) => (
                 <View key={item.label} style={styles.levelCountCard}>
                   <Text style={styles.levelCountLabel}>{item.label}</Text>
@@ -509,7 +515,7 @@ function LoyaltyPoints(props) {
 
               <View style={styles.referralTitleContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={styles.referralTitle}>Referral Rewards</Text>
+                  <Text style={styles.referralTitle}>ORDO Rewards</Text>
                   <MaterialCommunityIcons
                     name='information-outline'
                     size={16}
@@ -518,7 +524,7 @@ function LoyaltyPoints(props) {
                   />
                 </View>
 
-                <Text style={styles.referralSubtitle}>{pointsData.referralPoints.toLocaleString()} pts earned so far</Text>
+                <Text style={styles.referralSubtitle}>{pointsData.referralPoints.toLocaleString()} pts earned from downline orders</Text>
                 <Text style={styles.referral2ndSubtitle}>Tap to view detailed breakdown</Text>
               </View>
 
@@ -533,19 +539,19 @@ function LoyaltyPoints(props) {
                   style={[styles.tab, activeTab === 'level1' && styles.activeTab]}
                   onPress={() => setActiveTab('level1')}
                 >
-                  <Text style={[styles.tabText, activeTab === 'level1' && styles.activeTabText]}>Level 1</Text>
+                  <Text style={[styles.tabText, activeTab === 'level1' && styles.activeTabText]}>Level 1 Downlines</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   style={[styles.tab, activeTab === 'level2' && styles.activeTab]}
                   onPress={() => setActiveTab('level2')}
                 >
-                  <Text style={[styles.tabText, activeTab === 'level2' && styles.activeTabText]}>Level 2</Text>
+                  <Text style={[styles.tabText, activeTab === 'level2' && styles.activeTabText]}>Level 2 Downlines</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   style={[styles.tab, activeTab === 'level3' && styles.activeTab]}
                   onPress={() => setActiveTab('level3')}
                 >
-                  <Text style={[styles.tabText, activeTab === 'level3' && styles.activeTabText]}>Level 3</Text>
+                  <Text style={[styles.tabText, activeTab === 'level3' && styles.activeTabText]}>Level 3 Downlines</Text>
                 </TouchableOpacity>
               </View>
 

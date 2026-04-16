@@ -291,7 +291,7 @@ function Profile(props) {
                   icon={'gift-outline'}
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('ReferralAndLoyaltyRewards')}
-                  title="Referral & Ördo Rewards"
+                  title="My Network & ÖRDÖ Rewards"
                   currentTheme={currentTheme}
                 />
                 <ButtonContainer

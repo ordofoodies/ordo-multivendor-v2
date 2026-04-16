@@ -152,7 +152,7 @@ function ReferralAndLoyaltyRecentActivity(props) {
     if (raw && Array.isArray(raw)) {
       try {
         const formattedActivities = raw
-          .filter(activity => activity && activity._id && activity.value && activity.createdAt)
+          .filter(activity => activity && activity._id && activity.value && activity.createdAt && activity.source !== 'signup')
           .map(activity => ({
             id: activity._id,
             title: `+${activity.value} pts from ${activity.source === 'signup' ? 'referral' : activity.source || 'activity'}`,
@@ -162,7 +162,8 @@ function ReferralAndLoyaltyRecentActivity(props) {
             points: activity.value,
             time: new Date(parseInt(activity.createdAt)).toLocaleDateString(),
             source: activity.source || 'unknown',
-            level: activity.level
+            level: activity.level,
+            isDirect: !activity.rewardRole || activity.rewardRole === 'SELF'
           }))
         setActivities(formattedActivities)
       } catch (err) {
@@ -194,23 +195,25 @@ function ReferralAndLoyaltyRecentActivity(props) {
     <View style={styles.activityItem}>
       <View style={styles.activityIcon}>{renderActivityIcon(activity)}</View>
       <View style={styles.activityContent}>
-        <Text style={styles.activityTitle}>{activity.title}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+          <Text style={styles.activityTitle}>{activity.title}</Text>
+          <View style={{
+            backgroundColor: activity.isDirect ? '#DBEAFE' : '#FEF3C7',
+            paddingHorizontal: 6,
+            paddingVertical: 2,
+            borderRadius: 10
+          }}>
+            <Text style={{ fontSize: 10, fontWeight: '600', color: activity.isDirect ? '#1D4ED8' : '#92400E' }}>
+              {activity.isDirect ? 'Direct' : 'Residual'}
+            </Text>
+          </View>
+        </View>
         {activity.description ? <Text style={styles.activityDesc}>{activity.description}</Text> : null}
         <View style={styles.activityMeta}>
           <Feather name='clock' size={12} color={isDark ? '#9CA3AF' : '#6B7280'} />
           <Text style={styles.activityTime}>{activity.time}</Text>
         </View>
       </View>
-      {activity.id === '2' && (
-        <View style={styles.avatarGroup}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>S</Text>
-          </View>
-          <View style={[styles.avatar, { marginRight: 0, marginLeft: -8 }]}>
-            <Text style={styles.avatarText}>H</Text>
-          </View>
-        </View>
-      )}
     </View>
   )
 

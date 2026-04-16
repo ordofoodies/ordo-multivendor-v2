@@ -11,6 +11,7 @@ import navigationService from '../../routes/navigationService'
 import { useNavigation } from '@react-navigation/native'
 import { useQuery } from '@apollo/client'
 import { FETCH_LOYALTY_CONFIGURATIon, FETCH_LOYALTY_REFERRAL_HISTORY, FETCH_USER_REFERRAL_LEVEL_COUNTS, FETCH_USER_RESIDUAL_LOYALTY_DATA } from '../../apollo/queries'
+import { gql } from '@apollo/client'
 import { useUserContext } from '../../context/User'
 import { toTitleCase } from '../../utils/string-transformer'
 import { getReferralIcon } from '../../utils/loyalty-helper'
@@ -23,6 +24,8 @@ function ReferralAndLoyaltyRewards(props) {
   const isDark = themeContext.ThemeValue === 'Dark'
 
   const { data } = useQuery(FETCH_LOYALTY_CONFIGURATIon, { fetchPolicy: 'cache-and-network' })
+  const { data: configData } = useQuery(gql`query { configuration { currencySymbol } }`, { fetchPolicy: 'cache-first' })
+  const currencySymbol = configData?.configuration?.currencySymbol || '$'
   const { data: loyaltyActivityData } = useQuery(FETCH_LOYALTY_REFERRAL_HISTORY, {
     variables: {
       filter: {
@@ -36,7 +39,7 @@ function ReferralAndLoyaltyRewards(props) {
   const { data: levelCountsData } = useQuery(FETCH_USER_REFERRAL_LEVEL_COUNTS, { fetchPolicy: 'cache-and-network' })
   const { data: residualData } = useQuery(FETCH_USER_RESIDUAL_LOYALTY_DATA, { fetchPolicy: 'cache-and-network' })
   const loyalty_configuration = data?.fetchLoyaltyConfiguration
-  const loyaltyActivity = loyaltyActivityData?.fetchCustomerReferralHistory || []
+  const loyaltyActivity = (loyaltyActivityData?.fetchCustomerReferralHistory || []).filter(a => a.source !== 'signup')
   const levelCounts = levelCountsData?.fetchUserReferralLevelCounts
   const residualBalance = residualData?.fetchUserResidualLoyaltyData?.residualPointsBalance || 0
 
@@ -416,7 +419,7 @@ function ReferralAndLoyaltyRewards(props) {
   useLayoutEffect(() => {
     props?.navigation.setOptions({
       headerRight: null,
-      headerTitle: 'Ördo Rewards',
+      headerTitle: 'My Network & ÖRDÖ Rewards',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.fontMainColor,
@@ -463,7 +466,7 @@ function ReferralAndLoyaltyRewards(props) {
         <View style={styles.loyaltyCardFirstChild}>
           <View style={styles.cardHeader}>
             <View style={styles.cardLeft}>
-              <Text style={styles.cardTitle}>Ördo Rewards</Text>
+              <Text style={styles.cardTitle}>My Network & ÖRDÖ Rewards</Text>
               <View style={styles.tier}>
                 <Text>{getReferralIcon(profile?.tier?.current_tier_name)}</Text>
                 <Text style={styles.tierText}>{toTitleCase(profile?.tier?.current_tier_name)}</Text>
@@ -475,7 +478,7 @@ function ReferralAndLoyaltyRewards(props) {
               <View style={styles.conversionArrow}>
                 <Fontisto name='arrow-swap' color='#4B5563' size={8} />
               </View>
-              <Text style={styles.conversionValue}>1$</Text>
+              <Text style={styles.conversionValue}>1{currencySymbol}</Text>
             </View>
           </View>
 
@@ -561,7 +564,7 @@ function ReferralAndLoyaltyRewards(props) {
                 <Feather name='gift' size={16} color={isDark ? '#9CA3AF' : '#6B7280'} />
               </View>
               <View style={styles.referText}>
-                <Text style={styles.referLabel}>Refer & Earn Points</Text>
+                <Text style={styles.referLabel}>Invite & Earn Points</Text>
                 <Text style={styles.referDesc}>Invite your friends and always earn points on all their orders.</Text>
               </View>
             </View>

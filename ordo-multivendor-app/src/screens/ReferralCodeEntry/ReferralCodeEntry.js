@@ -56,7 +56,7 @@ function ReferralCodeEntry({ onSkip, onProceed, route, ...props }) {
     const codeToApply = referralCode.trim()
     
     if (!codeToApply) {
-      Alert.alert('Error', 'Please enter a referral code')
+      Alert.alert('Error', 'Please enter an invite code')
       return
     }
 
@@ -74,13 +74,13 @@ function ReferralCodeEntry({ onSkip, onProceed, route, ...props }) {
         if (data?.applyReferralCode?.success) {
           Alert.alert(
             'Success!',
-            'Referral code applied successfully. You\'ll earn points when you complete your first order!',
+            'Invite code applied successfully. You\'ll earn points when you complete your first order!',
             [{ text: 'OK', onPress: () => handleComplete() }]
           )
         }
       }
     } catch (error) {
-      Alert.alert('Error', error.message || 'Invalid referral code')
+      Alert.alert('Error', error.message || 'Invalid invite code')
     } finally {
       setLoading(false)
     }
@@ -132,7 +132,7 @@ function ReferralCodeEntry({ onSkip, onProceed, route, ...props }) {
         
         Alert.alert(
           'Success!',
-          'Account created and referral code applied successfully!',
+          'Account created and invite code applied successfully!',
           [{ 
             text: 'OK', 
             onPress: () => {
@@ -237,7 +237,7 @@ function ReferralCodeEntry({ onSkip, onProceed, route, ...props }) {
     if (!props?.navigation || isNewUser) return
     
     props?.navigation.setOptions({
-      headerTitle: 'Enter Referral Code',
+      headerTitle: 'Enter Invite Code',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.fontMainColor,
@@ -279,11 +279,11 @@ function ReferralCodeEntry({ onSkip, onProceed, route, ...props }) {
           {/* Middle Content Section */}
           <View style={styles.content}>
             <Text style={[styles.title, { color: currentTheme.fontMainColor }]}>
-              Have a Referral Code?
+              Have an Invite Code?
             </Text>
             
             <Text style={[styles.subtitle, { color: currentTheme.fontSecondColor }]}>
-              Enter your friend's referral code to earn bonus points on your first order
+              Enter your friend's invite code to earn bonus points on your first order
             </Text>
 
             <View style={styles.inputContainer}>
@@ -293,7 +293,7 @@ function ReferralCodeEntry({ onSkip, onProceed, route, ...props }) {
                   borderColor: themeContext.ThemeValue === 'Dark' ? '#374151' : currentTheme.borderColor,
                   color: currentTheme.fontMainColor
                 }]}
-                placeholder="Enter referral code"
+                placeholder="Enter invite code"
                 placeholderTextColor={currentTheme.fontSecondColor}
                 value={referralCode}
                 onChangeText={setReferralCode}

@@ -118,14 +118,14 @@ function QRAndReferral(props) {
 
   const handleCopyCode = async () => {
     Clipboard.setString(profile?.referralCode)
-    Alert.alert('Copied', 'Referral code copied to clipboard')
+    Alert.alert('Copied', 'Invite code copied to clipboard')
   }
 
   const handleShareLink = async () => {
     try {
       await Share.share({
-        message: `Join using my referral code: ${profile?.referralCode}\n${referralLink}`,
-        title: 'Share Referral Code'
+        message: `Join using my invite code: ${profile?.referralCode}\n${referralLink}`,
+        title: 'Share Invite Code'
       })
     } catch (error) {
       console.error(error)
@@ -136,7 +136,7 @@ function QRAndReferral(props) {
   useLayoutEffect(() => {
     props?.navigation.setOptions({
       headerRight: null,
-      headerTitle: 'QR & Referral',
+      headerTitle: 'QR & Invite',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.fontMainColor,
