@@ -23,6 +23,9 @@ function ResidualPoints(props) {
   const totalEarned = residual?.totalResidualEarnedPoints || 0
   const transactions = txData?.fetchUserResidualTransactions || []
 
+  // Read required orders from summary data (available even when transactions are empty)
+  const requiredOrders = residual?.requiredCompletedOrders ?? null
+
   const getDaysLeft = (eligibleUntil) => {
     if (!eligibleUntil) return null
     const diff = new Date(eligibleUntil) - new Date()
@@ -171,7 +174,12 @@ function ResidualPoints(props) {
           <View style={styles.infoRow}>
             <Feather name='info' size={12} color='rgba(31,41,55,0.6)' style={{ marginTop: 1 }} />
             <Text style={styles.infoText}>
-              These points are earned when your referrals place orders. They release to your main balance once the required number of orders is completed within the time window. If the window expires, the points are lost.
+              These are your bonus points accumulated this week from orders placed by your downlines.
+              {requiredOrders != null
+                ? ` To be eligible to earn these points, simply place ${requiredOrders} direct order(s) this week.`
+                : ' To be eligible to earn these points, make sure you place your direct orders this week.'
+              }
+              {' '}Go for it, you're sure to succeed!
             </Text>
           </View>
         </View>

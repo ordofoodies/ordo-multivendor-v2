@@ -419,7 +419,7 @@ function ReferralAndLoyaltyRewards(props) {
   useLayoutEffect(() => {
     props?.navigation.setOptions({
       headerRight: null,
-      headerTitle: 'My Network & ÖRDÖ Rewards',
+      headerTitle: 'My Network & ÖRDO Rewards',
       headerTitleAlign: 'center',
       headerTitleStyle: {
         color: currentTheme.fontMainColor,
@@ -466,7 +466,7 @@ function ReferralAndLoyaltyRewards(props) {
         <View style={styles.loyaltyCardFirstChild}>
           <View style={styles.cardHeader}>
             <View style={styles.cardLeft}>
-              <Text style={styles.cardTitle}>My Network & ÖRDÖ Rewards</Text>
+              <Text style={styles.cardTitle}>My Network & ÖRDO Rewards</Text>
               <View style={styles.tier}>
                 <Text>{getReferralIcon(profile?.tier?.current_tier_name)}</Text>
                 <Text style={styles.tierText}>{toTitleCase(profile?.tier?.current_tier_name)}</Text>
