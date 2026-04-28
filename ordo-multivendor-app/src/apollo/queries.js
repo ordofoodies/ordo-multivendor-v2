@@ -1278,6 +1278,7 @@ export const FETCH_USER_RESIDUAL_LOYALTY_DATA = gql`
     fetchUserResidualLoyaltyData {
       residualPointsBalance
       totalResidualEarnedPoints
+      requiredCompletedOrders
     }
   }
 `

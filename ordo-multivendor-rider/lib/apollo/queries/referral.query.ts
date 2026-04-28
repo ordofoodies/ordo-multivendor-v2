@@ -186,6 +186,7 @@ export const FETCH_RIDER_RESIDUAL_LOYALTY_DATA = gql`
       totalResidualCashEarned
       tierName
       weeklyOrderQuota
+      requiredCompletedOrders
     }
   }
 `;

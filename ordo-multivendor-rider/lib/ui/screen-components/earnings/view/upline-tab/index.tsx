@@ -44,6 +44,7 @@ export default function ResidualIncomeTab() {
   const totalEarned = residual?.totalResidualCashEarned ?? 0;
   const tierName = residual?.tierName ?? null;
   const weeklyOrderQuota = residual?.weeklyOrderQuota ?? null;
+  const requiredCompletedOrders = residual?.requiredCompletedOrders ?? null;
   const transactions = txData?.fetchRiderResidualTransactions ?? [];
 
   const getDaysLeft = (eligibleUntil: string | null) => {
@@ -180,7 +181,7 @@ export default function ResidualIncomeTab() {
         <View style={styles.summaryCard}>
           <View style={styles.summaryTop}>
             <View style={styles.summaryLeft}>
-              <Text style={styles.summaryTitle}>{t("Pending Residual Cash")}</Text>
+              <Text style={styles.summaryTitle}>{t("Pending Residual Income")}</Text>
               <Text style={styles.summaryValue}>{currencySymbol} {locked.toFixed(2)}</Text>
               <Text style={styles.summaryUnit}>{t("waiting to be released")}</Text>
             </View>
@@ -190,25 +191,13 @@ export default function ResidualIncomeTab() {
             </View>
           </View>
 
-          {(tierName || weeklyOrderQuota !== null) && (
-            <View style={[styles.infoRow, { marginBottom: 10, backgroundColor: "rgba(31,41,55,0.15)" }]}>
-              <MaterialCommunityIcons name="trophy-outline" size={13} color="rgba(31,41,55,0.7)" style={{ marginTop: 1 }} />
-              <Text style={styles.infoText}>
-                {tierName ? `${t("Your tier")}: ${tierName.charAt(0).toUpperCase() + tierName.slice(1)}` : ""}
-                {tierName && weeklyOrderQuota !== null ? "  ·  " : ""}
-                {weeklyOrderQuota !== null
-                  ? `${t("Complete")} ${weeklyOrderQuota} ${t("deliveries/week to unlock residual cash")}`
-                  : ""}
-              </Text>
-            </View>
-          )}
-
           <View style={styles.infoRow}>
             <Feather name="info" size={12} color="rgba(31,41,55,0.6)" style={{ marginTop: 1 }} />
             <Text style={styles.infoText}>
-              {t(
-                "Earned when your referred riders complete deliveries. Once they complete the required deliveries in the time window, the cash is added to your main earnings balance. If the window expires before that, the cash is lost."
-              )}
+              {requiredCompletedOrders !== null
+                ? `${t("This is your additional income accumulated this week, and it comes from deliveries made by your downlines. To be eligible to earn this income, you only need to complete")} ${requiredCompletedOrders} ${t("direct deliveries this week. Go for it, you'll definitely do it!")}`
+                : t("This is your additional income accumulated this week, and it comes from deliveries made by your downlines. To be eligible to earn this income, you only need to complete direct deliveries this week. Go for it, you'll definitely do it!")
+              }
             </Text>
           </View>
         </View>

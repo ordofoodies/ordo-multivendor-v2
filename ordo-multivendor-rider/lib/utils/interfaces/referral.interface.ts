@@ -130,6 +130,7 @@ export interface IRiderResidualLoyaltyData {
   totalResidualCashEarned: number;
   tierName: string | null;
   weeklyOrderQuota: number | null;
+  requiredCompletedOrders: number | null;
 }
 
 export interface IRiderResidualLoyaltyDataResponse {
