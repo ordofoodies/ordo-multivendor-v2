@@ -453,7 +453,7 @@ export default function ReferralNetworkComponent() {
               }`}
             >
               <FontAwesomeIcon icon={tab === 'driver' ? faTruck : faUser} className="text-xs" />
-              {tab === 'user' ? 'User Foodie Network' : 'Rider Foodie Network'}
+              {tab === 'user' ? 'Customer Foodie Network' : 'Rider Delivery Network'}
             </button>
           ))}
         </div>

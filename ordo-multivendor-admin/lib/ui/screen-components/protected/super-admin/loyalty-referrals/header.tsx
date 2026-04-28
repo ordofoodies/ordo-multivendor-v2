@@ -70,7 +70,7 @@ export default function LoyaltyAndReferralHeader() {
       {/* Header with Title and Tabs */}
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <HeaderText text="Loyalty and Invitations" />
+          <HeaderText text="Loyalty & Enrollments" />
 
           <div className="flex gap-2">
             <div className="flex items-center gap-2 bg-gray-100 dark:bg-dark-600 p-2 rounded">

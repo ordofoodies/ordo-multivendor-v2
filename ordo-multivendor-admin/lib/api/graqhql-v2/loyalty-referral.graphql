@@ -504,3 +504,47 @@ query FetchReferralLoyaltyHistory($filter: FetchLoyaltyReferralHistoryFilterInpu
     hasPrevPage
   }
 }
+
+query FetchCustomerReferralLoyaltyHistory(
+  $filter: FetchLoyaltyReferralHistoryFilterInput
+) {
+  fetchCustomerReferralLoyaltyHistory(filter: $filter) {
+    data {
+      _id
+      user_name
+      user_rank
+      type
+      level
+      value
+      rewardRole
+      createdAt
+    }
+    totalCount
+    totalPages
+    currentPage
+    hasNextPage
+    hasPrevPage
+  }
+}
+
+query FetchRiderReferralLoyaltyHistory(
+  $filter: FetchLoyaltyReferralHistoryFilterInput
+) {
+  fetchRiderReferralLoyaltyHistory(filter: $filter) {
+    data {
+      _id
+      user_name
+      user_rank
+      type
+      level
+      value
+      rewardRole
+      createdAt
+    }
+    totalCount
+    totalPages
+    currentPage
+    hasNextPage
+    hasPrevPage
+  }
+}

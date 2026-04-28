@@ -15,6 +15,9 @@ export interface ITierForm {
   points: number;
   requiredDirectDownlines: number;
   weeklyOrderQuota: number | null;
+  maxDirectDownlines?: number | null;
+  dopPerKilometer?: number | null;
+  weeklyQuotaPercent?: number | null;
 }
 
 export interface IBreakdownForm {
@@ -50,6 +53,9 @@ export interface ITierError {
   points: string[];
   requiredDirectDownlines: string[];
   weeklyOrderQuota: string[];
+  maxDirectDownlines: string[];
+  dopPerKilometer: string[];
+  weeklyQuotaPercent: string[];
 }
 
 export interface IBreakdownError {

@@ -11,26 +11,94 @@ import { useEffect, useRef, useState } from 'react';
 import TierForm from './forms/tier.form';
 import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
 import useToast from '@/lib/hooks/useToast';
-import {
-  FetchLoyaltyTiersByUserTypeDocument,
-  useDeleteLoyaltyTierMutation,
-  useFetchLoyaltyTiersByUserTypeQuery,
-} from '@/lib/graphql-generated';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import DashboardStatsCardSkeleton from '@/lib/ui/useable-components/custom-skeletons/dasboard.stats.card.skeleton';
 import NoData from '@/lib/ui/useable-components/no-data';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { toTextCase } from '@/lib/utils/methods';
+
+const FETCH_LOYALTY_TIERS_BY_USER_TYPE = gql`
+  query FetchLoyaltyTiersByUserType($userType: String!) {
+    fetchLoyaltyTiersByUserType(userType: $userType) {
+      _id
+      name
+      userType
+      points
+      requiredDirectDownlines
+      weeklyOrderQuota
+      maxDirectDownlines
+      dopPerKilometer
+      weeklyQuotaPercent
+    }
+  }
+`;
+
+const DELETE_LOYALTY_TIER = gql`
+  mutation DeleteLoyaltyTier($id: String!) {
+    deleteLoyaltyTier(id: $id) {
+      _id
+    }
+  }
+`;
+
+interface LoyaltyTier {
+  _id: string;
+  name: string;
+  userType: string;
+  points: number;
+  requiredDirectDownlines?: number | null;
+  weeklyOrderQuota?: number | null;
+  maxDirectDownlines?: number | null;
+  dopPerKilometer?: number | null;
+  weeklyQuotaPercent?: number | null;
+}
+
+interface FetchTiersData {
+  fetchLoyaltyTiersByUserType: LoyaltyTier[];
+}
 
 interface LevelCardProps {
   name: string;
   point: number;
   requiredDirectDownlines?: number | null;
   weeklyOrderQuota?: number | null;
+  maxDirectDownlines?: number | null;
+  dopPerKilometer?: number | null;
+  weeklyQuotaPercent?: number | null;
   loading?: boolean;
   onMenuClick: () => void;
 }
 
-function LevelCard({ name, point, requiredDirectDownlines, weeklyOrderQuota, loading, onMenuClick, isRider }: LevelCardProps & { isRider: boolean }) {
+function LevelCard({
+  name,
+  point,
+  requiredDirectDownlines,
+  weeklyOrderQuota,
+  maxDirectDownlines,
+  dopPerKilometer,
+  weeklyQuotaPercent,
+  loading,
+  onMenuClick,
+  isRider,
+}: LevelCardProps & { isRider: boolean }) {
+  const hasDownlineRange =
+    requiredDirectDownlines != null &&
+    maxDirectDownlines != null &&
+    maxDirectDownlines >= requiredDirectDownlines;
+  const downlineLabel = hasDownlineRange
+    ? `${requiredDirectDownlines} - ${maxDirectDownlines}`
+    : requiredDirectDownlines != null && requiredDirectDownlines > 0
+      ? `${requiredDirectDownlines}+`
+      : null;
+
+  const computedRequiredWeekly =
+    weeklyOrderQuota != null &&
+    weeklyOrderQuota > 0 &&
+    weeklyQuotaPercent != null &&
+    weeklyQuotaPercent > 0
+      ? Math.max(1, Math.ceil(weeklyOrderQuota * (weeklyQuotaPercent / 100)))
+      : null;
+
   return (
     <div className="bg-[#F9FAFB] dark:bg-dark-900 border border-[#E4E4E7] dark:border-dark-600 rounded-2xl p-6 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start mb-4">
@@ -59,14 +127,24 @@ function LevelCard({ name, point, requiredDirectDownlines, weeklyOrderQuota, loa
           {point ?? 0} pts
         </div>
       )}
-      {(requiredDirectDownlines != null && requiredDirectDownlines > 0) && (
+      {downlineLabel && (
         <p className="text-xs text-muted-foreground mt-2">
-          <span className="font-semibold text-foreground dark:text-white">{requiredDirectDownlines}</span> direct downlines to reach this level
+          <span className="font-semibold text-foreground dark:text-white">{downlineLabel}</span> direct downlines
         </p>
       )}
       {(weeklyOrderQuota != null && weeklyOrderQuota > 0) && (
         <p className="text-xs text-muted-foreground mt-1">
-          <span className="font-semibold text-foreground dark:text-white">{weeklyOrderQuota}</span> {isRider ? 'deliveries/week' : 'orders/week'} to unlock residual income
+          <span className="font-semibold text-foreground dark:text-white">{weeklyOrderQuota}</span> {isRider ? 'weekly delivery quota' : 'orders/week'}{computedRequiredWeekly ? ` · ${computedRequiredWeekly} required` : ''}
+        </p>
+      )}
+      {isRider && dopPerKilometer != null && dopPerKilometer > 0 && (
+        <p className="text-xs text-muted-foreground mt-1">
+          DOP per km: <span className="font-semibold text-foreground dark:text-white">{dopPerKilometer}</span>
+        </p>
+      )}
+      {isRider && weeklyQuotaPercent != null && weeklyQuotaPercent > 0 && (
+        <p className="text-xs text-muted-foreground mt-1">
+          Quota completion: <span className="font-semibold text-foreground dark:text-white">{weeklyQuotaPercent}%</span>
         </p>
       )}
     </div>
@@ -88,9 +166,11 @@ export default function LoyaltyAndReferralTierSystemComponent() {
   const userType = isRider ? 'driver' : 'customer';
 
   // API
-  const { data, loading } = useFetchLoyaltyTiersByUserTypeQuery({ variables: { userType } });
-  const [deleteLoyaltyTier, { loading: deletingTier }] =
-    useDeleteLoyaltyTierMutation();
+  const { data, loading } = useQuery<FetchTiersData>(FETCH_LOYALTY_TIERS_BY_USER_TYPE, {
+    variables: { userType },
+    fetchPolicy: 'cache-and-network',
+  });
+  const [deleteLoyaltyTier, { loading: deletingTier }] = useMutation(DELETE_LOYALTY_TIER);
 
   const tiers = data?.fetchLoyaltyTiersByUserType ?? [];
 
@@ -101,7 +181,7 @@ export default function LoyaltyAndReferralTierSystemComponent() {
       setOpenMenu(null);
       await deleteLoyaltyTier({
         variables: { id },
-        refetchQueries: [{ query: FetchLoyaltyTiersByUserTypeDocument, variables: { userType } }],
+        refetchQueries: [{ query: FETCH_LOYALTY_TIERS_BY_USER_TYPE, variables: { userType } }],
       });
 
       showToast({
@@ -179,6 +259,9 @@ export default function LoyaltyAndReferralTierSystemComponent() {
                       point={tier.points ?? 0}
                       requiredDirectDownlines={tier.requiredDirectDownlines}
                       weeklyOrderQuota={tier.weeklyOrderQuota}
+                      maxDirectDownlines={tier.maxDirectDownlines}
+                      dopPerKilometer={tier.dopPerKilometer}
+                      weeklyQuotaPercent={tier.weeklyQuotaPercent}
                       isRider={isRider}
                       loading={deletingTier && tier?._id === deletingId}
                       onMenuClick={() =>

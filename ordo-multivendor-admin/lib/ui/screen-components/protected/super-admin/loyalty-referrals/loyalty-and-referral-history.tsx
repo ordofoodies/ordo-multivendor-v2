@@ -1,10 +1,24 @@
 'use client';
 
-import { useFetchReferralLoyaltyHistoryQuery } from '@/lib/graphql-generated';
+import { gql, useQuery } from '@apollo/client';
 import Table from '@/lib/ui/useable-components/table';
 import { toTextCase } from '@/lib/utils/methods';
 import { useMemo, useState } from 'react';
 import type { JSX } from 'react';
+
+interface PaginatedHistoryResponse {
+  data: HistoryRow[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
+interface QueryData {
+  fetchCustomerReferralLoyaltyHistory?: PaginatedHistoryResponse;
+  fetchRiderReferralLoyaltyHistory?: PaginatedHistoryResponse;
+}
 
 interface HistoryRow {
   _id: string;
@@ -25,15 +39,71 @@ interface TableColumn {
 }
 
 type SourceFilter = 'all' | 'direct' | 'residual';
+type EntityTab = 'customer' | 'rider';
+
+const FETCH_CUSTOMER_HISTORY = gql`
+  query FetchCustomerReferralLoyaltyHistory(
+    $filter: FetchLoyaltyReferralHistoryFilterInput
+  ) {
+    fetchCustomerReferralLoyaltyHistory(filter: $filter) {
+      data {
+        _id
+        user_name
+        user_rank
+        type
+        level
+        value
+        rewardRole
+        createdAt
+      }
+      totalCount
+      totalPages
+      currentPage
+      hasNextPage
+      hasPrevPage
+    }
+  }
+`;
+
+const FETCH_RIDER_HISTORY = gql`
+  query FetchRiderReferralLoyaltyHistory(
+    $filter: FetchLoyaltyReferralHistoryFilterInput
+  ) {
+    fetchRiderReferralLoyaltyHistory(filter: $filter) {
+      data {
+        _id
+        user_name
+        user_rank
+        type
+        level
+        value
+        rewardRole
+        createdAt
+      }
+      totalCount
+      totalPages
+      currentPage
+      hasNextPage
+      hasPrevPage
+    }
+  }
+`;
 
 export default function LoyaltyAndReferralHistoryComponent() {
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
+  const [entityTab, setEntityTab] = useState<EntityTab>('customer');
 
   // API
-  const { data, loading, refetch } = useFetchReferralLoyaltyHistoryQuery({
+  const activeQuery = entityTab === 'customer' ? FETCH_CUSTOMER_HISTORY : FETCH_RIDER_HISTORY;
+  const responseKey =
+    entityTab === 'customer'
+      ? 'fetchCustomerReferralLoyaltyHistory'
+      : 'fetchRiderReferralLoyaltyHistory';
+
+  const { data, loading, refetch } = useQuery<QueryData>(activeQuery, {
     variables: {
       filter: {
         page: currentPage,
@@ -46,14 +116,14 @@ export default function LoyaltyAndReferralHistoryComponent() {
   
   // Process data for table
   const tableData = useMemo(() => {
-    const logs = data?.fetchReferralLoyaltyHistory?.data || [];
+    const logs = data?.[responseKey]?.data || [];
     const rows = logs.filter(Boolean) as HistoryRow[];
     if (sourceFilter === 'direct') return rows.filter(r => r.rewardRole === 'SELF');
     if (sourceFilter === 'residual') return rows.filter(r => r.rewardRole !== 'SELF');
     return rows;
-  }, [data, sourceFilter]);
+  }, [data, sourceFilter, responseKey]);
 
-  const totalCount = data?.fetchReferralLoyaltyHistory?.totalCount || 0;
+  const totalCount = data?.[responseKey]?.totalCount || 0;
 
   // Pagination handler
   const handlePageChange = (page: number, rows: number) => {
@@ -74,7 +144,7 @@ export default function LoyaltyAndReferralHistoryComponent() {
   const columns: TableColumn[] = [
     {
       propertyName: 'user_name',
-      headerName: 'Customer Name',
+      headerName: entityTab === 'customer' ? 'Customer Name' : 'Rider Name',
       body: (rowData: HistoryRow) => (
         <span className="text-foreground dark:text-white text-sm">{rowData.user_name}</span>
       ),
@@ -151,24 +221,41 @@ export default function LoyaltyAndReferralHistoryComponent() {
           <h2 className="text-2xl font-bold text-foreground mb-1">
             Invite &amp; Earn History
           </h2>
-          <p className="text-muted-foreground text-sm">
-            Customer loyalty and invitation activity history.
-          </p>
         </div>
-        <div className="flex bg-[#F4F4F5] dark:bg-dark-600 rounded-lg p-1 gap-1">
-          {(['all', 'direct', 'residual'] as SourceFilter[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setSourceFilter(f)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${
-                sourceFilter === f
-                  ? 'bg-white dark:bg-dark-900 text-foreground dark:text-white shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              {f === 'all' ? 'All' : f === 'direct' ? 'Direct' : 'Residual'}
-            </button>
-          ))}
+        <div className="flex items-center gap-3">
+          <div className="flex bg-[#F4F4F5] dark:bg-dark-600 rounded-lg p-1 gap-1">
+            {(['customer', 'rider'] as EntityTab[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setEntityTab(t);
+                  setCurrentPage(1);
+                }}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${
+                  entityTab === t
+                    ? 'bg-white dark:bg-dark-900 text-foreground dark:text-white shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {t === 'customer' ? 'Customer' : 'Rider'}
+              </button>
+            ))}
+          </div>
+          <div className="flex bg-[#F4F4F5] dark:bg-dark-600 rounded-lg p-1 gap-1">
+            {(['all', 'direct', 'residual'] as SourceFilter[]).map((f) => (
+              <button
+                key={f}
+                onClick={() => setSourceFilter(f)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all capitalize ${
+                  sourceFilter === f
+                    ? 'bg-white dark:bg-dark-900 text-foreground dark:text-white shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {f === 'all' ? 'All' : f === 'direct' ? 'Direct' : 'Residual'}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

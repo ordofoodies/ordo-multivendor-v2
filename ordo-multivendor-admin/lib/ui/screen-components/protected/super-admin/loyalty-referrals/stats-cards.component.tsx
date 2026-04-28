@@ -1,6 +1,7 @@
 'use client';
 
-import { useFetchLoyaltyStatsOverviewQuery } from '@/lib/graphql-generated';
+import { useLoyaltyContext } from '@/lib/hooks/useLoyalty';
+import { gql, useQuery } from '@apollo/client';
 import { Skeleton } from 'primereact/skeleton';
 
 interface ILoyaltyStatCard {
@@ -44,8 +45,29 @@ function LoyaltyStatCard({ label, value, description, icon, iconBg, loading }: I
   );
 }
 
+const FETCH_LOYALTY_STATS_OVERVIEW = gql`
+  query FetchLoyaltyStatsOverviewAdminCards {
+    fetchLoyaltyStatsOverview {
+      totalLoyalCustomers
+      totalPointsIssued
+      directPointsIssued
+      residualPointsReleased
+      totalPointsRedeemed
+      activeDriverReferrals
+      totalLoyalRiders
+      totalCashIssued
+      directCashIssued
+      residualCashReleased
+      totalCashWithdrawn
+    }
+  }
+`;
+
 export default function LoyaltyAndReferralStatsCardComponent() {
-  const { data, loading } = useFetchLoyaltyStatsOverviewQuery({
+  const { loyaltyType } = useLoyaltyContext();
+  const isCustomer = loyaltyType === 'Customer Loyalty Program';
+
+  const { data, loading } = useQuery(FETCH_LOYALTY_STATS_OVERVIEW, {
     fetchPolicy: 'cache-and-network',
   });
 
@@ -53,9 +75,11 @@ export default function LoyaltyAndReferralStatsCardComponent() {
 
   const cards: Omit<ILoyaltyStatCard, 'loading'>[] = [
     {
-      label: 'Total Loyal Customers',
-      value: stats?.totalLoyalCustomers ?? 0,
-      description: 'Customers who have earned at least 1 point',
+      label: isCustomer ? 'Total Loyal Customers' : 'Total Loyal Riders',
+      value: isCustomer ? stats?.totalLoyalCustomers ?? 0 : stats?.totalLoyalRiders ?? 0,
+      description: isCustomer
+        ? 'Customers who have earned at least 1 point'
+        : 'Riders who have earned loyalty cash at least once',
       iconBg: 'bg-blue-50 dark:bg-blue-950/30',
       icon: (
         <svg width="20" height="20" viewBox="0 0 39 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,9 +89,11 @@ export default function LoyaltyAndReferralStatsCardComponent() {
       ),
     },
     {
-      label: 'Direct Points Issued',
-      value: stats?.directPointsIssued ?? 0,
-      description: 'Points earned by customers from their own orders',
+      label: isCustomer ? 'Direct Points Issued' : 'Direct Cash Issued',
+      value: isCustomer ? stats?.directPointsIssued ?? 0 : stats?.directCashIssued ?? 0,
+      description: isCustomer
+        ? 'Points earned by customers from their own orders'
+        : 'Cash earned by riders from their own deliveries',
       iconBg: 'bg-orange-50 dark:bg-orange-950/30',
       icon: (
         <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,9 +102,11 @@ export default function LoyaltyAndReferralStatsCardComponent() {
       ),
     },
     {
-      label: 'Residual Points Released',
-      value: stats?.residualPointsReleased ?? 0,
-      description: 'Upline points released from downline order completions',
+      label: isCustomer ? 'Residual Points Released' : 'Residual Cash Released',
+      value: isCustomer ? stats?.residualPointsReleased ?? 0 : stats?.residualCashReleased ?? 0,
+      description: isCustomer
+        ? 'Upline points released from downline order completions'
+        : 'Upline cash released from downline delivery completions',
       iconBg: 'bg-amber-50 dark:bg-amber-950/30',
       icon: (
         <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,9 +116,11 @@ export default function LoyaltyAndReferralStatsCardComponent() {
       ),
     },
     {
-      label: 'Total Points Redeemed',
-      value: stats?.totalPointsRedeemed ?? 0,
-      description: 'Points spent by customers on orders',
+      label: isCustomer ? 'Total Points Redeemed' : 'Total Cash Withdrawn',
+      value: isCustomer ? stats?.totalPointsRedeemed ?? 0 : stats?.totalCashWithdrawn ?? 0,
+      description: isCustomer
+        ? 'Points spent by customers on orders'
+        : 'Cash withdrawn by riders from wallet',
       iconBg: 'bg-green-50 dark:bg-green-950/30',
       icon: (
         <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -100,9 +130,9 @@ export default function LoyaltyAndReferralStatsCardComponent() {
       ),
     },
     {
-      label: 'Active Rider Referrals',
+      label: isCustomer ? 'Active Rider Enrollments' : 'Active Rider Enrollments',
       value: stats?.activeDriverReferrals ?? 0,
-      description: 'Riders who joined via an invitation link',
+      description: 'Riders who joined via a referral (enrollment)',
       iconBg: 'bg-purple-50 dark:bg-purple-950/30',
       icon: (
         <svg width="20" height="20" viewBox="0 0 39 32" fill="none" xmlns="http://www.w3.org/2000/svg">

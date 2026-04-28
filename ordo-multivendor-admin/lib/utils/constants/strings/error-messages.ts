@@ -200,6 +200,9 @@ export const TierErrors: ITierError = {
   points: ['Required'],
   requiredDirectDownlines: ['Required'],
   weeklyOrderQuota: [],
+  maxDirectDownlines: [],
+  dopPerKilometer: [],
+  weeklyQuotaPercent: [],
 };
 
 export const BreakdownErrors: IBreakdownError = {

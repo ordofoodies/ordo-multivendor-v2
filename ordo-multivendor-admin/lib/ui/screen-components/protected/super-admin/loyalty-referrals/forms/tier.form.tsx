@@ -9,18 +9,64 @@ import CustomNumberField from '@/lib/ui/useable-components/number-input-field';
 import { TierSchema } from '@/lib/utils/schema/tier';
 import { useEffect, useState } from 'react';
 import useToast from '@/lib/hooks/useToast';
-import {
-  FetchLoyaltyTiersByUserTypeDocument,
-  useCreateLoyaltyTierMutation,
-  useEditLoyaltyTierMutation,
-  useFetchLoyaltyTierByIdLazyQuery,
-} from '@/lib/graphql-generated';
+import { gql, useLazyQuery, useMutation } from '@apollo/client';
+
+const FETCH_LOYALTY_TIER_BY_ID = gql`
+  query FetchLoyaltyTierById($id: String!) {
+    fetchLoyaltyTierById(id: $id) {
+      _id
+      name
+      userType
+      points
+      requiredDirectDownlines
+      weeklyOrderQuota
+      maxDirectDownlines
+      dopPerKilometer
+      weeklyQuotaPercent
+    }
+  }
+`;
+
+const FETCH_LOYALTY_TIERS_BY_USER_TYPE = gql`
+  query FetchLoyaltyTiersByUserType($userType: String!) {
+    fetchLoyaltyTiersByUserType(userType: $userType) {
+      _id
+      name
+      userType
+      points
+      requiredDirectDownlines
+      weeklyOrderQuota
+      maxDirectDownlines
+      dopPerKilometer
+      weeklyQuotaPercent
+    }
+  }
+`;
+
+const CREATE_LOYALTY_TIER = gql`
+  mutation CreateLoyaltyTier($input: LoyaltyTierInput!) {
+    createLoyaltyTier(input: $input) {
+      _id
+    }
+  }
+`;
+
+const EDIT_LOYALTY_TIER = gql`
+  mutation EditLoyaltyTier($id: String!, $input: UpdateLoyaltyTierInput!) {
+    updateLoyaltyTier(id: $id, input: $input) {
+      _id
+    }
+  }
+`;
 
 const initialData: ITierForm = {
   name: '',
   points: 0,
   requiredDirectDownlines: 0,
   weeklyOrderQuota: null,
+  maxDirectDownlines: null,
+  dopPerKilometer: null,
+  weeklyQuotaPercent: null,
 };
 
 export default function TierForm() {
@@ -32,9 +78,9 @@ export default function TierForm() {
 
   const [initialValues, setInitialValues] = useState<ITierForm>(initialData);
 
-  const [fetchLoyaltyTierById, { loading }] = useFetchLoyaltyTierByIdLazyQuery();
-  const [createLoyaltyTier, { loading: creating }] = useCreateLoyaltyTierMutation();
-  const [updateLoyaltyTier, { loading: updating }] = useEditLoyaltyTierMutation();
+  const [fetchLoyaltyTierById, { loading }] = useLazyQuery(FETCH_LOYALTY_TIER_BY_ID);
+  const [createLoyaltyTier, { loading: creating }] = useMutation(CREATE_LOYALTY_TIER);
+  const [updateLoyaltyTier, { loading: updating }] = useMutation(EDIT_LOYALTY_TIER);
 
   const onHide = () => {
     setTierFormVisible(false);
@@ -54,6 +100,9 @@ export default function TierForm() {
         points: tier.points ?? 0,
         requiredDirectDownlines: tier.requiredDirectDownlines ?? 0,
         weeklyOrderQuota: tier.weeklyOrderQuota ?? null,
+        maxDirectDownlines: tier.maxDirectDownlines ?? null,
+        dopPerKilometer: tier.dopPerKilometer ?? null,
+        weeklyQuotaPercent: tier.weeklyQuotaPercent ?? null,
       });
     });
   }, [loyaltyData?.tierId]);
@@ -66,8 +115,16 @@ export default function TierForm() {
         points: isRider ? 0 : values.points,
         requiredDirectDownlines: values.requiredDirectDownlines,
         weeklyOrderQuota: values.weeklyOrderQuota,
+        maxDirectDownlines: values.maxDirectDownlines ?? null,
+        dopPerKilometer: values.dopPerKilometer ?? null,
+        weeklyQuotaPercent: values.weeklyQuotaPercent ?? null,
       };
-      const refetch = [{ query: FetchLoyaltyTiersByUserTypeDocument, variables: { userType: isRider ? 'driver' : 'customer' } }];
+      const refetch = [
+        {
+          query: FETCH_LOYALTY_TIERS_BY_USER_TYPE,
+          variables: { userType: isRider ? 'driver' : 'customer' },
+        },
+      ];
 
       if (loyaltyData?.tierId) {
         await updateLoyaltyTier({
@@ -169,7 +226,7 @@ export default function TierForm() {
               <CustomNumberField
                 min={0}
                 max={9999}
-                placeholder={isRider ? 'Weekly deliveries required to unlock residual income' : 'Weekly order quota (leave 0 if not applicable)'}
+                placeholder={isRider ? 'Assigned weekly delivery quota (0 if not applicable)' : 'Weekly order quota (leave 0 if not applicable)'}
                 name="weeklyOrderQuota"
                 showLabel={true}
                 value={values.weeklyOrderQuota ?? 0}
@@ -180,9 +237,55 @@ export default function TierForm() {
               />
               <p className="text-xs text-muted-foreground -mt-2">
                 {isRider
-                  ? 'Riders must complete this many deliveries per week to have their residual income released.'
+                  ? 'This is the weekly delivery quota that tiers reference.'
                   : 'Reduced weekly order quota required to earn residual points at this tier.'}
               </p>
+
+              {isRider && (
+                <>
+                  <CustomNumberField
+                    min={0}
+                    max={100}
+                    placeholder="Required % of weekly quota to unlock residual income"
+                    name="weeklyQuotaPercent"
+                    showLabel={true}
+                    value={values.weeklyQuotaPercent ?? 0}
+                    onChange={(name: string, val: number | null) =>
+                      setFieldValue(name, val === 0 ? null : val)
+                    }
+                    isLoading={loading}
+                  />
+                  <p className="text-xs text-muted-foreground -mt-2">
+                    Example: 25% of a 100 weekly quota means 25 deliveries required.
+                  </p>
+
+                  <CustomNumberField
+                    min={0}
+                    max={9999}
+                    placeholder="Max direct downlines (optional)"
+                    name="maxDirectDownlines"
+                    showLabel={true}
+                    value={values.maxDirectDownlines ?? 0}
+                    onChange={(name: string, val: number | null) =>
+                      setFieldValue(name, val === 0 ? null : val)
+                    }
+                    isLoading={loading}
+                  />
+
+                  <CustomNumberField
+                    min={0}
+                    max={9999999}
+                    placeholder="DOP per kilometer"
+                    name="dopPerKilometer"
+                    showLabel={true}
+                    value={values.dopPerKilometer ?? 0}
+                    onChange={(name: string, val: number | null) =>
+                      setFieldValue(name, val === 0 ? null : val)
+                    }
+                    isLoading={loading}
+                  />
+                </>
+              )}
 
               <button
                 className="float-end h-10 w-fit rounded-md bg-gray-800 px-8 text-white hover:bg-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600"
