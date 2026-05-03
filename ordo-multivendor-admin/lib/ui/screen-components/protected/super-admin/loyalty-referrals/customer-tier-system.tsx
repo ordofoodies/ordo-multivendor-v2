@@ -59,7 +59,6 @@ interface FetchTiersData {
 
 interface LevelCardProps {
   name: string;
-  point: number;
   requiredDirectDownlines?: number | null;
   weeklyOrderQuota?: number | null;
   maxDirectDownlines?: number | null;
@@ -71,7 +70,6 @@ interface LevelCardProps {
 
 function LevelCard({
   name,
-  point,
   requiredDirectDownlines,
   weeklyOrderQuota,
   maxDirectDownlines,
@@ -258,7 +256,6 @@ export default function LoyaltyAndReferralTierSystemComponent() {
                   <div key={tier._id} className="relative">
                     <LevelCard
                       name={toTextCase(tier.name || '', 'title')}
-                      point={tier.points ?? 0}
                       requiredDirectDownlines={tier.requiredDirectDownlines}
                       weeklyOrderQuota={tier.weeklyOrderQuota}
                       maxDirectDownlines={tier.maxDirectDownlines}
