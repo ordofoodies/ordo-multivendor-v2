@@ -18,6 +18,7 @@ export interface ITierForm {
   maxDirectDownlines?: number | null;
   dopPerKilometer?: number | null;
   weeklyQuotaPercent?: number | null;
+  directOrderPointsPercent?: number | null;
 }
 
 export interface IBreakdownForm {

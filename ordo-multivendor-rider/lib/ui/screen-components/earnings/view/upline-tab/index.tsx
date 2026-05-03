@@ -258,7 +258,7 @@ export default function ResidualIncomeTab() {
                 <View style={styles.txRow}>
                   <Text style={styles.txLabel}>{t("From")}</Text>
                   <Text style={styles.txValue}>
-                    {tx.triggeredBy} ({t("Level")} {tx.level})
+                    - ({t("Level")} {tx.level})
                   </Text>
                 </View>
                 <View style={styles.txRow}>

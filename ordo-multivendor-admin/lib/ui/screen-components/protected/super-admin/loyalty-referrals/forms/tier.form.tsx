@@ -23,6 +23,7 @@ const FETCH_LOYALTY_TIER_BY_ID = gql`
       maxDirectDownlines
       dopPerKilometer
       weeklyQuotaPercent
+      directOrderPointsPercent
     }
   }
 `;
@@ -39,6 +40,7 @@ const FETCH_LOYALTY_TIERS_BY_USER_TYPE = gql`
       maxDirectDownlines
       dopPerKilometer
       weeklyQuotaPercent
+      directOrderPointsPercent
     }
   }
 `;
@@ -67,6 +69,7 @@ const initialData: ITierForm = {
   maxDirectDownlines: null,
   dopPerKilometer: null,
   weeklyQuotaPercent: null,
+  directOrderPointsPercent: null,
 };
 
 export default function TierForm() {
@@ -103,6 +106,7 @@ export default function TierForm() {
         maxDirectDownlines: tier.maxDirectDownlines ?? null,
         dopPerKilometer: tier.dopPerKilometer ?? null,
         weeklyQuotaPercent: tier.weeklyQuotaPercent ?? null,
+        directOrderPointsPercent: tier.directOrderPointsPercent ?? null,
       });
     });
   }, [loyaltyData?.tierId]);
@@ -116,8 +120,9 @@ export default function TierForm() {
         requiredDirectDownlines: values.requiredDirectDownlines,
         weeklyOrderQuota: values.weeklyOrderQuota,
         maxDirectDownlines: values.maxDirectDownlines ?? null,
-        dopPerKilometer: values.dopPerKilometer ?? null,
-        weeklyQuotaPercent: values.weeklyQuotaPercent ?? null,
+        dopPerKilometer: isRider ? (values.dopPerKilometer ?? null) : null,
+        weeklyQuotaPercent: isRider ? (values.weeklyQuotaPercent ?? null) : null,
+        directOrderPointsPercent: isRider ? null : (values.directOrderPointsPercent ?? null),
       };
       const refetch = [
         {
@@ -156,12 +161,12 @@ export default function TierForm() {
     >
       <div className="mb-4">
         <h2 className="text-lg font-semibold text-foreground dark:text-white">
-          {loyaltyData?.tierId ? 'Edit' : 'Create'} {isRider ? 'Rider Success Level' : 'Tier'}
+          {loyaltyData?.tierId ? 'Edit' : 'Create'} {isRider ? 'Rider Success Level' : 'Customer Success Level'}
         </h2>
         <p className="text-sm text-muted-foreground mt-1">
           {isRider
             ? 'Set the level name, required direct downlines to reach it, and weekly delivery quota to unlock residual income.'
-            : 'Set the tier name, points threshold, required direct downlines, and weekly order quota.'}
+            : 'Set the level name and direct downline range that defines this customer success level.'}
         </p>
       </div>
 
@@ -184,7 +189,7 @@ export default function TierForm() {
                   type="text"
                   value={values.name}
                   onChange={(e) => setFieldValue('name', e.target.value)}
-                  placeholder="e.g. bronze, silver, diamond, elite"
+                  placeholder={isRider ? 'e.g. runner, pearl, sapphire, diamond' : 'e.g. diner, taster, sommelier, master'}
                   className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground dark:bg-dark-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-primary"
                   style={{ borderColor: errors.name ? 'red' : '' }}
                   disabled={loading}
@@ -194,20 +199,7 @@ export default function TierForm() {
                 )}
               </div>
 
-              {/* Points Threshold — only relevant for customers */}
-              {!isRider && (
-                <CustomNumberField
-                  min={0}
-                  max={9999999}
-                  placeholder="Points threshold to reach this tier"
-                  name="points"
-                  showLabel={true}
-                  value={values.points}
-                  onChange={setFieldValue}
-                  isLoading={loading}
-                  style={{ borderColor: errors.points ? 'red' : '' }}
-                />
-              )}
+              {/* Required Direct Downlines is the primary metric for customers */}
 
               {/* Required Direct Downlines */}
               <CustomNumberField
@@ -240,6 +232,26 @@ export default function TierForm() {
                   ? 'This is the weekly delivery quota that tiers reference.'
                   : 'Reduced weekly order quota required to earn residual points at this tier.'}
               </p>
+
+              {!isRider && (
+                <>
+                  <CustomNumberField
+                    min={0}
+                    max={100}
+                    placeholder="Direct order points % (e.g. 8, 10, 12, 14)"
+                    name="directOrderPointsPercent"
+                    showLabel={true}
+                    value={values.directOrderPointsPercent ?? 0}
+                    onChange={(name: string, val: number | null) =>
+                      setFieldValue(name, val === 0 ? null : val)
+                    }
+                    isLoading={loading}
+                  />
+                  <p className="text-xs text-muted-foreground -mt-2">
+                    % of the order amount awarded as points directly to the customer on each order.
+                  </p>
+                </>
+              )}
 
               {isRider && (
                 <>

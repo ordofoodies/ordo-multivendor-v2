@@ -194,7 +194,9 @@ export default function LoyaltyAndReferralHistoryComponent() {
       propertyName: 'level',
       headerName: 'Tier',
       body: (rowData: HistoryRow) => (
-        <span className="text-foreground dark:text-white text-sm font-medium">Level {rowData.level}</span>
+        <span className="text-foreground dark:text-white text-sm font-medium">
+          {rowData.level ? `Level ${rowData.level}` : 'Level'}
+        </span>
       ),
     },
     {

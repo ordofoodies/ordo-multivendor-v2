@@ -218,7 +218,7 @@ function ResidualPoints(props) {
 
                 <View style={styles.txRow}>
                   <Text style={styles.txLabel}>From</Text>
-                  <Text style={styles.txValue}>{tx.triggeredBy} (Level {tx.level})</Text>
+                  <Text style={styles.txValue}>- (Level {tx.level})</Text>
                 </View>
                 <View style={styles.txRow}>
                   <Text style={styles.txLabel}>Required orders</Text>

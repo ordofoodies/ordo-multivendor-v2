@@ -122,15 +122,17 @@ function LevelCard({
         )}
       </div>
 
-      {!isRider && (
-        <div className="text-4xl text-foreground dark:text-white font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
-          {point ?? 0} pts
+      {!isRider && downlineLabel && (
+        <div className="text-foreground dark:text-white font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
+          {downlineLabel}
+          <span className="text-base font-normal text-muted-foreground ml-2">downlines</span>
         </div>
       )}
-      {downlineLabel && (
-        <p className="text-xs text-muted-foreground mt-2">
-          <span className="font-semibold text-foreground dark:text-white">{downlineLabel}</span> direct downlines
-        </p>
+      {!isRider && !downlineLabel && (
+        <div className="text-foreground dark:text-white font-inter font-semibold text-[30px] leading-[36px] tracking-normal">
+          0+
+          <span className="text-base font-normal text-muted-foreground ml-2">downlines</span>
+        </div>
       )}
       {(weeklyOrderQuota != null && weeklyOrderQuota > 0) && (
         <p className="text-xs text-muted-foreground mt-1">
@@ -224,7 +226,7 @@ export default function LoyaltyAndReferralTierSystemComponent() {
               <p className="text-[#4F4F4F] font-inter font-normal text-lg leading-7 tracking-normal">
                 {isRider
                   ? 'Set success levels for riders — required downlines and weekly delivery quota to unlock residual income.'
-                  : 'Set tier thresholds for customers against their earned points.'}
+                  : 'Set tier levels for customers based on direct downlines in their ÖRDO Foodie Network.'}
               </p>
             </div>
             <button
