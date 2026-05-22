@@ -23,8 +23,9 @@ function ResidualPoints(props) {
   const totalEarned = residual?.totalResidualEarnedPoints || 0
   const transactions = txData?.fetchUserResidualTransactions || []
 
-  // Read required orders from summary data (available even when transactions are empty)
-  const requiredOrders = residual?.requiredCompletedOrders ?? null
+  // Read required residual orders from summary data (available even when transactions are empty)
+  const requiredResidualOrders = residual?.requiredCompletedOrders ?? null
+  const pendingOrdersText = requiredResidualOrders != null ? requiredResidualOrders : 0
 
   const getDaysLeft = (eligibleUntil) => {
     if (!eligibleUntil) return null
@@ -174,17 +175,17 @@ function ResidualPoints(props) {
           <View style={styles.infoRow}>
             <Feather name='info' size={12} color='rgba(31,41,55,0.6)' style={{ marginTop: 1 }} />
             <Text style={styles.infoText}>
-              These are your bonus points accumulated this week from orders placed by your downlines.
-              {requiredOrders != null
-                ? ` To be eligible to earn these points, simply place ${requiredOrders} direct order(s) this week.`
-                : ' To be eligible to earn these points, make sure you place your direct orders this week.'
+              These are your residual points accumulated so far this week from orders placed by your Foodie Network downlines.
+              {requiredResidualOrders != null
+                ? ` To earn these points, be sure to place ${requiredResidualOrders} direct order(s) this week.`
+                : ' To earn these points, be sure to place your direct orders this week.'
               }
-              {' '}Go for it, you're sure to succeed!
+              {' '}Go for it, you'll definitely get there!
             </Text>
           </View>
         </View>
 
-        <Text style={styles.sectionTitle}>Pending Transactions ({transactions.length})</Text>
+        <Text style={styles.sectionTitle}>Pending ({pendingOrdersText}) orders for this week.</Text>
 
         {transactions.length === 0 ? (
           <View style={styles.emptyCard}>

@@ -44,7 +44,9 @@ export default function ResidualIncomeTab() {
   const totalEarned = residual?.totalResidualCashEarned ?? 0;
   const tierName = residual?.tierName ?? null;
   const weeklyOrderQuota = residual?.weeklyOrderQuota ?? null;
-  const requiredCompletedOrders = residual?.requiredCompletedOrders ?? null;
+  const requiredResidualDeliveries = residual?.requiredCompletedOrders ?? null;
+  const pendingDeliveriesText =
+    requiredResidualDeliveries !== null ? requiredResidualDeliveries : 0;
   const transactions = txData?.fetchRiderResidualTransactions ?? [];
 
   const getDaysLeft = (eligibleUntil: string | null) => {
@@ -194,9 +196,9 @@ export default function ResidualIncomeTab() {
           <View style={styles.infoRow}>
             <Feather name="info" size={12} color="rgba(31,41,55,0.6)" style={{ marginTop: 1 }} />
             <Text style={styles.infoText}>
-              {requiredCompletedOrders !== null
-                ? `${t("This is your additional income accumulated this week, and it comes from deliveries made by your downlines. To be eligible to earn this income, you only need to complete")} ${requiredCompletedOrders} ${t("direct deliveries this week. Go for it, you'll definitely do it!")}`
-                : t("This is your additional income accumulated this week, and it comes from deliveries made by your downlines. To be eligible to earn this income, you only need to complete direct deliveries this week. Go for it, you'll definitely do it!")
+              {requiredResidualDeliveries !== null
+                ? `${t("This is your accumulated residual income so far this week from deliveries made by your downline in your Delivery Network. To earn this income, you only need to complete")} ${requiredResidualDeliveries} ${t("direct deliveries this week. Go for it, you're sure to make it!")}`
+                : t("This is your accumulated residual income so far this week from deliveries made by your downline in your Delivery Network. To earn this income, you only need to complete direct deliveries this week. Go for it, you're sure to make it!")
               }
             </Text>
           </View>
@@ -204,7 +206,7 @@ export default function ResidualIncomeTab() {
 
         {/* Section title */}
         <Text style={styles.sectionTitle}>
-          {t("Pending Transactions")} ({transactions.length})
+          {t("Pending")} ({pendingDeliveriesText}) {t("deliveries for this week.")}
         </Text>
 
         {/* Empty state */}
