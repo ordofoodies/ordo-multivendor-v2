@@ -34,10 +34,10 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    GRAPHQL_URL: 'http://192.168.18.136:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://192.168.18.136:8001/graphql',
-    SERVER_URL: 'http://192.168.18.136:8001/graphql',
-    SERVER_REST_URL: 'http://192.168.18.136:8001/',
+    GRAPHQL_URL: 'http://192.168.1.200:8001/graphql',
+    WS_GRAPHQL_URL: 'ws://192.168.1.200:8001/graphql',
+    SERVER_URL: 'http://192.168.1.200:8001/graphql',
+    SERVER_REST_URL: 'http://192.168.1.200:8001/',
     // GRAPHQL_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
     // WS_GRAPHQL_URL: 'wss://ordo-api-v2-production.up.railway.app/graphql',
     // SERVER_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
