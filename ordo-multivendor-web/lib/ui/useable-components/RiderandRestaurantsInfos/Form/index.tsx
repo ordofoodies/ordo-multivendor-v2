@@ -30,6 +30,7 @@ import { useTranslations } from "next-intl";
 interface formProps {
   heading: string;
   role: string;
+  helperText?: string;
 }
 
 const initialValues: VendorFormValues = {
@@ -42,7 +43,7 @@ const initialValues: VendorFormValues = {
   termsAccepted: false,
 };
 
-const EmailForm: React.FC<formProps> = ({ heading, role }) => {
+const EmailForm: React.FC<formProps> = ({ heading, role, helperText }) => {
   const { showToast } = useToast();
   const router = useRouter();
   const t = useTranslations();
@@ -79,9 +80,16 @@ const EmailForm: React.FC<formProps> = ({ heading, role }) => {
 
   return (
     <div className="p-6 max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-m my-6">
-      <h2 className="text-[20px] font-semibold mb-6 dark:text-gray-100">
-        {heading}
-      </h2>
+      <div className="mb-6">
+        <h2 className="text-[20px] font-semibold dark:text-gray-100">
+          {heading}
+        </h2>
+        {helperText ? (
+          <p className="mt-2 text-xs font-normal text-gray-500 dark:text-gray-400">
+            {helperText}
+          </p>
+        ) : null}
+      </div>
 
       <Formik
         initialValues={initialValues}

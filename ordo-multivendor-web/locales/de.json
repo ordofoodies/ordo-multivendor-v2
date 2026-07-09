@@ -12,5 +12,6 @@
   "shop-types": "Ladenarten",
   "ok": "OK",
    "loading_orders": "Bestellungen werden geladen...",
-  "show_more_orders": "Weitere Bestellungen anzeigen"
+  "show_more_orders": "Weitere Bestellungen anzeigen",
+  "become_a_restaurant_helper_text": "(Restaurant, Spirituosengeschäft, Supermarkt, Convenience-Store, Apotheke usw.)"
 }
