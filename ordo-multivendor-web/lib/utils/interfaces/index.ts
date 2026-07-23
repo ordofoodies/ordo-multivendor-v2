@@ -25,6 +25,7 @@ export * from "./orders.interface";
 export * from "./popup-menu.interface";
 export * from "./profile.interface";
 export * from "./progress-indicator.interface";
+export * from "./Rider-restaurant.interface";
 export * from "./restaurants.interface";
 export * from "./ripple.interface";
 export * from "./slider-card.interface";
@@ -33,4 +34,3 @@ export * from "./table.interface";
 export * from "./text.interface";
 export * from "./toast.interface";
 export * from "./zone.interface";
-
