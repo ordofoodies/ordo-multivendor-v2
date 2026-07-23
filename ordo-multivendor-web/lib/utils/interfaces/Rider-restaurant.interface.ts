@@ -33,3 +33,21 @@ export interface sideCardProps{
     confirmPassword: string;
     termsAccepted: boolean;
   }
+
+export interface RiderRegistrationFormValues {
+  fullName: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  confirmPassword: string;
+  licenseImage: string;
+  vehicleType: string;
+  vehicleNumber: string;
+  zoneId: string;
+  zoneLabel: string;
+  referralCode: string;
+  vehicleDocumentImage:string
+  
+
+}

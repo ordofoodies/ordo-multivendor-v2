@@ -3,8 +3,8 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 
 // import components
-import EmailForm from '@/lib/ui/useable-components/RiderandRestaurantsInfos/Form';
 import Heading from '@/lib/ui/useable-components/RiderandRestaurantsInfos/Heading/Heading';
+import RiderRegistrationForm from '@/lib/ui/useable-components/RiderandRestaurantsInfos/RiderRegistrationForm';
 import WhyCardsList from '@/lib/ui/useable-components/RiderandRestaurantsInfos/WhyCards/WhyCardsList';
 import WhyChoose from '@/lib/ui/useable-components/RiderandRestaurantsInfos/WhyChoose';
 import StartingImage from '@/lib/ui/useable-components/RiderandRestaurantsInfos/StartingImage/StartingImage';
@@ -48,8 +48,11 @@ const Rider = () => {
         subHeading={t("enatega_rider_page_name_why_subheading")}
       />
       <WhyCardsList cards={cards} />
-      <hr className="w-[30%] ml-12 border-4 border-primary-color my-12 rounded" />
-      <EmailForm
+      <WhyChoose
+        heading={t("enatega_rider_page_name_partner_heading")}
+        subHeading={t("enatega_rider_page_name_partner_subheading")}
+      />
+      <RiderRegistrationForm
         heading={t("enatega_rider_page_name_form_heading")}
         role={t("enatega_rider_page_name_form_role")}
       />

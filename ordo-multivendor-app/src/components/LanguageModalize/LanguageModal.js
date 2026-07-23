@@ -46,6 +46,14 @@ export const languageTypes = [
   { value: 'Nederlands', code: 'nl', index: 30 }
 ]
 
+const getDeviceLanguageCode = () => {
+  const deviceLocale = Localization.getLocales?.()[0]
+  const languageCode = deviceLocale?.languageTag ?? deviceLocale?.languageCode ?? Localization.locale
+  const normalizedCode = languageCode?.toLowerCase().split('-')[0]
+
+  return normalizedCode === 'ja' ? 'jp' : normalizedCode
+}
+
 const LanguageModal = ({ modalVisible, setModalVisible, currentTheme, showCrossButton, dontClose }) => {
   const { t } = useTranslation()
   const [activeRadio, activeRadioSetter] = useState(0)
@@ -64,7 +72,7 @@ const LanguageModal = ({ modalVisible, setModalVisible, currentTheme, showCrossB
       const storedLanguageCode = await AsyncStorage.getItem('enatega-language')
 
       // Get system language
-      const systemLanguageCode = Localization?.locale?.split('-')[0]
+      const systemLanguageCode = getDeviceLanguageCode()
 
       // Available language codes
       const availableLanguageCodes = languageTypes.map((lang) => lang.code)

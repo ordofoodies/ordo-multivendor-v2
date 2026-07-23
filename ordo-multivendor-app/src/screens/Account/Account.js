@@ -186,13 +186,15 @@ function Account(props) {
 
   const fetchSelectedLanguage = async () => {
     const lang = await AsyncStorage.getItem('enatega-language-name')
-    const systemLangCode = Localization?.locale?.split('-')[0]
+    const deviceLocale = Localization.getLocales?.()[0]
+    const systemLangCode = (deviceLocale?.languageTag ?? deviceLocale?.languageCode ?? Localization.locale)?.toLowerCase().split('-')[0]
+    const normalizedSystemLangCode = systemLangCode === 'ja' ? 'jp' : systemLangCode
 
     if (lang) {
       setselectedLanguage(lang)
     } else {
       // Find the language value based on the system language code
-      const matchedLanguage = languageTypes.find((langType) => langType.code === systemLangCode)
+      const matchedLanguage = languageTypes.find((langType) => langType.code === normalizedSystemLangCode)
       // Set to the language value if found, otherwise default to 'English'
       setselectedLanguage(matchedLanguage ? matchedLanguage.value : 'English')
     }

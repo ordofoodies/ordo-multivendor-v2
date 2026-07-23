@@ -71,7 +71,6 @@ const RestInfo = () => {
       />
       <WhyCardsList cards={cards} />
       <SideContainers sideCards={sideCards} />
-      <hr className='w-[30%] ml-12 border-4 border-primary-color my-12 rounded' />
       <EmailForm
         heading={t("become_a_restaurant")}
         role={t("vendor_registration")}

@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Localization from "expo-localization";
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
-import { Platform } from "react-native";
 
 // Import language files
 import { en } from "./languages/en";
@@ -72,40 +71,46 @@ export const languageResources: { [key: string]: { translation: object } } = {
   nl: { translation: nl },
 };
 
-// Function to get stored language from AsyncStorage or fallback to device locale
-const getStoredLanguage = async (): Promise<void> => {
+const LANGUAGE_STORAGE_KEY = "enatega-language";
+const DEFAULT_LANGUAGE = "en";
+
+const normalizeLanguageCode = (languageCode?: string | null): string => {
+  if (!languageCode) return DEFAULT_LANGUAGE;
+
+  const normalizedCode = languageCode.toLowerCase().split("-")[0];
+  const appLanguageCode = normalizedCode === "ja" ? "jp" : normalizedCode;
+
+  return languageResources[appLanguageCode] ? appLanguageCode : DEFAULT_LANGUAGE;
+};
+
+const getDeviceLanguage = (): string => {
+  const deviceLocale = Localization.getLocales()[0];
+
+  return normalizeLanguageCode(deviceLocale?.languageTag ?? deviceLocale?.languageCode);
+};
+
+// Use the saved language if the user selected one, otherwise follow the device language.
+const getInitialLanguage = async (): Promise<string> => {
+  const storedLang = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
+
+  return storedLang ? normalizeLanguageCode(storedLang) : getDeviceLanguage();
+};
+
+const initializeLanguage = async (): Promise<void> => {
   try {
-    const storedLang = await AsyncStorage.getItem("enatega-language");
-    const deviceLang = Localization.getLocales()[0]?.languageCode || "en";
-    const initialLang = storedLang || deviceLang;
+    const initialLang = await getInitialLanguage();
 
     await i18next.use(initReactI18next).init({
       lng: initialLang,
-      fallbackLng: "en",
+      fallbackLng: DEFAULT_LANGUAGE,
       resources: languageResources,
     });
-
-    // Apply the initial language
-    await i18next.changeLanguage(initialLang);
   } catch (error) {
     console.log("Error initializing language:", error);
   }
 };
 
 // Initialize language
-getStoredLanguage();
-
-// Additional iOS-specific configuration (if necessary)
-if (Platform.OS === "ios") {
-  const iosLang = Localization.getLocales()[0]?.languageCode || "en";
-
-  i18next.use(initReactI18next).init({
-    lng: iosLang,
-    fallbackLng: "en",
-    resources: languageResources,
-  });
-
-  i18next.changeLanguage(iosLang);
-}
+initializeLanguage();
 
 export default i18next;

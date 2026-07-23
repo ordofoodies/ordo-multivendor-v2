@@ -5,7 +5,6 @@ import React from "react";
 
 //Componets
 import Start from "../../screen-components/un-protected/Home/Start";
-import Cities from "../../screen-components/un-protected/Home/Cities";
 import Info from "../../screen-components/un-protected/Home/Info";
 import EnategaInfo from "../../screen-components/un-protected/Home/LifeWithEnatega";
 import GrowBussiness from "../../screen-components/un-protected/Home/GrowBussiness";
@@ -23,8 +22,8 @@ const Main = () => {
     <div className="w-screen dark:bg-gray-900">
       <Start />
       <PaddingContainer>
-        <div className="w-full">
-          <Cities />
+        <div className="w-full mt-10">
+          {/* <Cities /> */}
           <Info />
           <EnategaInfo />
           <GrowBussiness />
