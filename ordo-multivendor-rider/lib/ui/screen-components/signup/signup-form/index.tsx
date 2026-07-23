@@ -166,7 +166,7 @@ export default function SignUpForm({
           />
 
           <FormInput
-            label={t("Referral Code (Optional)")}
+            label={t("Referral Code ")}
             placeholder={t("Enter referral code")}
             value={values.referralCode}
             onChangeText={(text) => {
