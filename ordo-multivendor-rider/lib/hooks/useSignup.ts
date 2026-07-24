@@ -1,6 +1,9 @@
 import { useMutation } from "@apollo/client";
 import { CREATE_RIDER } from "@/lib/apollo/mutations/rider.mutation";
-import { IRiderInput, ISignUpInitialValues } from "@/lib/utils/interfaces/auth.interface";
+import {
+  IRiderInput,
+  ISignUpInitialValues,
+} from "@/lib/utils/interfaces/auth.interface";
 import { useState } from "react";
 
 export default function useSignup() {
@@ -23,6 +26,13 @@ export default function useSignup() {
         zone: values.zone,
         madeBy: "RIDER_REQUEST",
         riderRequestStatus: "PENDING",
+        licenseDetails: {
+          image: values.licenseImage,
+        },
+        vehicleDetails: {
+          image: values.vehicleDocumentImage,
+          number: values.vehicleNumber,
+        },
         ...(values.referralCode && { referralCode: values.referralCode }),
       };
 

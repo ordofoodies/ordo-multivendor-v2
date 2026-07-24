@@ -17,7 +17,10 @@ export interface ISignUpInitialValues {
   password: string;
   confirmPassword: string;
   phone: string;
+  licenseImage: string;
   vehicleType: string;
+  vehicleNumber: string;
+  vehicleDocumentImage: string;
   zone: string;
   referralCode?: string;
 }
@@ -35,8 +38,14 @@ export interface IRiderInput {
   madeBy: "ADMIN" | "RIDER_REQUEST";
   riderRequestStatus: "PENDING" | "ACCEPTED";
   referralCode?: string;
+  licenseDetails?: {
+    image?: string;
+  };
+  vehicleDetails?: {
+    image?: string;
+    number?: string;
+  };
 }
-
 
 export interface IAuthContext {
   token: string;

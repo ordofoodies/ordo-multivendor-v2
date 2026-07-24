@@ -16,14 +16,14 @@ export const SignUpSchema = Yup.object().shape({
     .max(20, "Username must not exceed 20 characters")
     .matches(
       /^[a-zA-Z0-9_]+$/,
-      "Username can only contain letters, numbers and underscores"
+      "Username can only contain letters, numbers and underscores",
     )
     .required("Username is required"),
   email: Yup.string()
     .email("Invalid email address")
     .matches(
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      "Please enter a valid email address"
+      "Please enter a valid email address",
     )
     .required("Email is required"),
   password: Yup.string()
@@ -31,7 +31,7 @@ export const SignUpSchema = Yup.object().shape({
     .max(50, "Password must not exceed 50 characters")
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      "Password must contain uppercase, lowercase, number and special character"
+      "Password must contain uppercase, lowercase, number and special character",
     )
     .required("Password is required"),
   confirmPassword: Yup.string()
@@ -40,9 +40,17 @@ export const SignUpSchema = Yup.object().shape({
   phone: Yup.string()
     .min(10, "Phone number must be at least 10 digits")
     .max(15, "Phone number must not exceed 15 digits")
-    .matches(/^[0-9+\s()-]+$/, "Phone number can only contain digits and + - ( ) characters")
+    .matches(
+      /^[0-9+\s()-]+$/,
+      "Phone number can only contain digits and + - ( ) characters",
+    )
     .required("Phone number is required"),
+  licenseImage: Yup.string().required("Driver license image is required"),
   vehicleType: Yup.string().required("Vehicle type is required"),
+  vehicleNumber: Yup.string().required("Vehicle number is required"),
+  vehicleDocumentImage: Yup.string().required(
+    "Vehicle photo with license is required",
+  ),
   zone: Yup.string().required("Zone is required"),
   referralCode: Yup.string()
     .min(3, "Referral code must be at least 3 characters")

@@ -4,10 +4,15 @@ import { SignUpSchema } from "@/lib/utils/schema";
 import { Formik } from "formik";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
+import { useMutation } from "@apollo/client";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import FormInput from "../form-input";
 import CustomPhoneInput from "../custom-phone-input";
 import VehicleSelector from "../vehicle-selector";
 import ZoneSelector from "../zone-selector";
+import DocumentUploadField from "../document-upload-field";
+import { UPLOAD_IMAGE_TO_S3 } from "@/lib/apollo/mutations/rider.mutation";
 
 interface Zone {
   _id: string;
@@ -31,6 +36,7 @@ export default function SignUpForm({
   initialReferralCode,
 }: SignUpFormProps) {
   const { t } = useTranslation();
+  const [uploadImageToS3] = useMutation(UPLOAD_IMAGE_TO_S3);
 
   const initialValues: ISignUpInitialValues = {
     name: "",
@@ -39,9 +45,63 @@ export default function SignUpForm({
     password: "",
     confirmPassword: "",
     phone: "",
+    licenseImage: "",
     vehicleType: "",
+    vehicleNumber: "",
+    vehicleDocumentImage: "",
     zone: "",
     referralCode: initialReferralCode ?? "",
+  };
+
+  const uploadDocument = async (uri: string) => {
+    const base64 = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+
+    const { data, errors } = await uploadImageToS3({
+      variables: {
+        image: `data:image/jpeg;base64,${base64}`,
+      },
+    });
+
+    if (errors && errors.length > 0) {
+      throw new Error(errors[0].message || t("Failed to upload image"));
+    }
+
+    const imageUrl = data?.uploadImageToS3?.imageUrl;
+
+    if (!imageUrl) {
+      throw new Error(t("Failed to upload image"));
+    }
+
+    return imageUrl;
+  };
+
+  const handlePickImage = async (
+    field: "licenseImage" | "vehicleDocumentImage",
+    setFieldValue: (
+      field: string,
+      value: any,
+      shouldValidate?: boolean,
+    ) => void,
+    setFieldTouched: (
+      field: string,
+      touched?: boolean,
+      shouldValidate?: boolean,
+    ) => void,
+  ) => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const imageUrl = await uploadDocument(result.assets[0].uri);
+      setFieldValue(field, imageUrl);
+      setFieldTouched(field, true, false);
+    }
   };
 
   return (
@@ -86,7 +146,9 @@ export default function SignUpForm({
               setFieldTouched("username", true, false);
             }}
             onBlur={handleBlur("username") as any}
-            error={touched.username && errors.username ? errors.username : undefined}
+            error={
+              touched.username && errors.username ? errors.username : undefined
+            }
             icon="user"
             autoCapitalize="none"
           />
@@ -126,7 +188,9 @@ export default function SignUpForm({
               setFieldTouched("password", true, false);
             }}
             onBlur={handleBlur("password") as any}
-            error={touched.password && errors.password ? errors.password : undefined}
+            error={
+              touched.password && errors.password ? errors.password : undefined
+            }
             icon="lock"
             secureTextEntry
           />
@@ -140,7 +204,11 @@ export default function SignUpForm({
               setFieldTouched("confirmPassword", true, false);
             }}
             onBlur={handleBlur("confirmPassword") as any}
-            error={touched.confirmPassword && errors.confirmPassword ? errors.confirmPassword : undefined}
+            error={
+              touched.confirmPassword && errors.confirmPassword
+                ? errors.confirmPassword
+                : undefined
+            }
             icon="lock"
             secureTextEntry
           />
@@ -151,7 +219,58 @@ export default function SignUpForm({
               setFieldValue("vehicleType", vehicleCode);
               setFieldTouched("vehicleType", true, false);
             }}
-            error={touched.vehicleType && errors.vehicleType ? errors.vehicleType : undefined}
+            error={
+              touched.vehicleType && errors.vehicleType
+                ? errors.vehicleType
+                : undefined
+            }
+          />
+
+          <FormInput
+            label={t("Vehicle Number")}
+            placeholder={t("Enter vehicle number")}
+            value={values.vehicleNumber}
+            onChangeText={(text) => {
+              handleChange("vehicleNumber")(text);
+              setFieldTouched("vehicleNumber", true, false);
+            }}
+            onBlur={handleBlur("vehicleNumber") as any}
+            error={
+              touched.vehicleNumber && errors.vehicleNumber
+                ? errors.vehicleNumber
+                : undefined
+            }
+            icon="car"
+          />
+
+          <DocumentUploadField
+            label={t("Driver's License")}
+            value={values.licenseImage}
+            error={
+              touched.licenseImage && errors.licenseImage
+                ? errors.licenseImage
+                : undefined
+            }
+            onPress={() =>
+              handlePickImage("licenseImage", setFieldValue, setFieldTouched)
+            }
+          />
+
+          <DocumentUploadField
+            label={t("Vehicle Photo with License")}
+            value={values.vehicleDocumentImage}
+            error={
+              touched.vehicleDocumentImage && errors.vehicleDocumentImage
+                ? errors.vehicleDocumentImage
+                : undefined
+            }
+            onPress={() =>
+              handlePickImage(
+                "vehicleDocumentImage",
+                setFieldValue,
+                setFieldTouched,
+              )
+            }
           />
 
           <ZoneSelector
@@ -174,7 +293,11 @@ export default function SignUpForm({
               setFieldTouched("referralCode", true, false);
             }}
             onBlur={handleBlur("referralCode") as any}
-            error={touched.referralCode && errors.referralCode ? errors.referralCode : undefined}
+            error={
+              touched.referralCode && errors.referralCode
+                ? errors.referralCode
+                : undefined
+            }
             icon="gift"
           />
 
