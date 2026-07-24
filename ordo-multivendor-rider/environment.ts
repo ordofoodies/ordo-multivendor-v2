@@ -24,8 +24,8 @@ const getEnvVars = (env = Updates.channel) => {
   }
 
   return {
-     GRAPHQL_URL: "http://192.168.18.136:8001/graphql",
-      WS_GRAPHQL_URL: "ws://192.168.18.136:8001/graphql",
+      GRAPHQL_URL: "http://192.168.1.200:8001/graphql",
+    WS_GRAPHQL_URL: "ws://192.168.1.200:8001/graphql",
     SENTRY_DSN:
       configuration?.riderAppSentryUrl ??
       "https://e963731ba0f84e5d823a2bbe2968ea4d@o1103026.ingest.sentry.io/6135261",
