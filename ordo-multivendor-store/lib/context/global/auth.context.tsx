@@ -6,7 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 
 // Constants
-import { STORE_TOKEN } from "@/lib/utils/constants";
+import { LANGUAGES, STORE_TOKEN } from "@/lib/utils/constants";
 
 // Interfaces
 import { IAuthContext, IAuthProviderProps } from "@/lib/utils/interfaces";
@@ -22,6 +22,26 @@ import { changeLanguage } from "i18next";
 export const AuthContext = React.createContext<IAuthContext>(
   {} as IAuthContext,
 );
+
+const DEFAULT_LANGUAGE = "en";
+const supportedLanguageCodes = LANGUAGES.map((language) => language.code);
+
+const normalizeLanguageCode = (languageCode?: string | null): string => {
+  if (!languageCode) return DEFAULT_LANGUAGE;
+
+  const normalizedCode = languageCode.toLowerCase().split("-")[0];
+  const appLanguageCode = normalizedCode === "ja" ? "jp" : normalizedCode;
+
+  return supportedLanguageCodes.includes(appLanguageCode)
+    ? appLanguageCode
+    : DEFAULT_LANGUAGE;
+};
+
+const getDeviceLanguage = (): string => {
+  const deviceLocale = Localization.getLocales()[0];
+
+  return normalizeLanguageCode(deviceLocale?.languageTag ?? deviceLocale?.languageCode);
+};
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({
   client,
@@ -41,24 +61,10 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
   const handleSetCurrentLanguage = async () => {
     try {
       const lng = await AsyncStorage.getItem("lang");
-      console.log("🚀 ~ handleSetCurrentLanguage ~ lng:", lng);
-      
-      // Safe handling of Localization.locale
-      let systemLanguage = "en"; // default fallback
-      
-      if (Localization.locale && typeof Localization.locale === 'string') {
-        systemLanguage = Localization.locale.split("-")[0];
-      } else if (Localization.locales && Array.isArray(Localization.locales) && Localization.locales.length > 0) {
-        const firstLocale = Localization.locales[0];
-        if (firstLocale && typeof firstLocale === 'string') {
-          systemLanguage = firstLocale.split("-")[0];
-        }
-      }
-      
-      console.log("🚀 ~ handleSetCurrentLanguage ~ systemLanguage:", systemLanguage);
 
-      // Use stored language preference or fall back to system language
-      const selectedLanguage = lng || systemLanguage;
+      const selectedLanguage = lng
+        ? normalizeLanguageCode(lng)
+        : getDeviceLanguage();
       
       await changeLanguage(selectedLanguage);
       setIsSelected(selectedLanguage);
@@ -67,8 +73,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({
       console.error("Language setting error:", error);
       // Ultimate fallback
       try {
-        await changeLanguage("en");
-        setIsSelected("en");
+        await changeLanguage(DEFAULT_LANGUAGE);
+        setIsSelected(DEFAULT_LANGUAGE);
       } catch (fallbackError) {
         console.error("Fallback language setting failed:", fallbackError);
       }
