@@ -20,6 +20,8 @@ export default function InviteFriendsScreen() {
 
   // Generate referral code
   const referralCode = dataProfile?.referralCode || "000000";
+  const riderInviteUrl = `https://ordo-rider-landing.vercel.app/invite?ref=${referralCode}`;
+  const ordoWebRiderUrl = `https://ordofoodies.com/rider?ref=${referralCode}`;
 
   const handleCopyCode = async () => {
     try {
@@ -33,9 +35,19 @@ export default function InviteFriendsScreen() {
 
   const handleShareLink = async () => {
     try {
-      const shareUrl = `https://ordo-rider-landing.vercel.app/invite?ref=${referralCode}`;
       await Share.share({
-        message: `Join me on ÖRDO Rider! Use my referral code ${referralCode} and always generate income on all my deliveries. Download here: ${shareUrl}`,
+        message: `Join me on ÖRDO Rider! Use my referral code ${referralCode} and always generate income on all my deliveries. Download here: ${riderInviteUrl}`,
+        title: t("Invite Friends"),
+      });
+    } catch (error) {
+      console.error("Share error:", error);
+    }
+  };
+
+  const handleShareOrdoWeb = async () => {
+    try {
+      await Share.share({
+        message: `Join me on ÖRDO Web to become a rider using my referral code ${referralCode}. Apply here: ${ordoWebRiderUrl}`,
         title: t("Invite Friends"),
       });
     } catch (error) {
@@ -84,7 +96,7 @@ export default function InviteFriendsScreen() {
             }}
           >
             <QRCode
-              value={`https://ordo-rider-landing.vercel.app/invite?ref=${referralCode}`}
+              value={riderInviteUrl}
               size={220}
               color="#000000"
               backgroundColor="#ffffff"
@@ -108,7 +120,7 @@ export default function InviteFriendsScreen() {
           </Text>
 
           {/* Action Buttons */}
-          <View className="flex-row gap-3 px-4">
+          <View className="flex-row flex-wrap justify-center gap-3 px-4">
             {/* Copy Code Button */}
             <TouchableOpacity
               onPress={handleCopyCode}
@@ -151,6 +163,27 @@ export default function InviteFriendsScreen() {
               />
               <Text className="text-sm font-semibold" style={{ color: appTheme.fontMainColor }}>
                 {t("Share link")}
+              </Text>
+            </TouchableOpacity>
+
+            {/* Share Ordo Web Button */}
+            <TouchableOpacity
+              onPress={handleShareOrdoWeb}
+              className="flex-row items-center justify-center px-6 py-3 rounded-full"
+              style={{
+                backgroundColor: appTheme.themeBackground,
+                borderWidth: 1.5,
+                borderColor: appTheme.borderLineColor,
+              }}
+            >
+              <FontAwesome
+                name="share-alt"
+                size={16}
+                color={appTheme.fontMainColor}
+                style={{ marginRight: 8 }}
+              />
+              <Text className="text-sm font-semibold" style={{ color: appTheme.fontMainColor }}>
+                Share Ordo Web
               </Text>
             </TouchableOpacity>
           </View>

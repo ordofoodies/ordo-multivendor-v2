@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useMutation, useQuery } from "@apollo/client";
 import { useTranslations } from "next-intl";
@@ -49,10 +51,9 @@ const initialValues: RiderRegistrationFormValues = {
   zoneId: "",
   zoneLabel: "",
   referralCode: "",
-    vehicleDocumentImage:"",
-licenseImage:"",
-  vehicleNumber: ""
-
+  vehicleDocumentImage: "",
+  licenseImage: "",
+  vehicleNumber: "",
 };
 
 const vehicleOptions = [
@@ -68,6 +69,16 @@ const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
 }) => {
   const t = useTranslations();
   const { showToast } = useToast();
+  const searchParams = useSearchParams();
+  const referralCodeFromUrl = searchParams.get("ref") ?? "";
+
+  const formInitialValues = useMemo(
+    () => ({
+      ...initialValues,
+      referralCode: referralCodeFromUrl,
+    }),
+    [referralCodeFromUrl]
+  );
 
   const { data, loading: zonesLoading } = useQuery(GET_ZONES, {
     fetchPolicy: "cache-and-network",
@@ -169,7 +180,8 @@ const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
       </div>
 
       <Formik
-        initialValues={initialValues}
+        initialValues={formInitialValues}
+        enableReinitialize
         validationSchema={riderValidationSchema(t)}
         onSubmit={handleSubmit}
       >
