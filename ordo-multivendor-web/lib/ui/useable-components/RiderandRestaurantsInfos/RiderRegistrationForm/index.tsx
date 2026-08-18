@@ -142,7 +142,7 @@ const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
 
     try {
       await createRider({ variables: { riderInput } });
-      await sendEmail("template_eogfh2k", templateParams);
+      await sendEmail("template_kay0wlk", templateParams);
 
       showToast({
         type: "success",
