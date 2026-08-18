@@ -213,10 +213,10 @@ export const getDistanceFromLatLonInKm = (
 
 export const sendEmail = (templateId : any, templateParams : any) => {
   return emailjs.send(
-    "service_463sz1v",
+    "service_lxjgf8o",
     templateId,
     templateParams,
-    "kfOnsw1Kn8ZWu4l77"
+    "A-u-TsA0GEMHGmyX_"
   );
 };
 
