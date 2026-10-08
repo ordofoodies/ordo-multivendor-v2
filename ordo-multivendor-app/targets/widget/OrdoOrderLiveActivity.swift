@@ -1,6 +1,7 @@
 import ActivityKit
 import WidgetKit
 import SwiftUI
+import UIKit
 
 // MARK: - ÖRDO palette (matches the Android "warm cream" notification)
 
@@ -258,6 +259,35 @@ struct RoundAction: View {
   }
 }
 
+/// The rider's photo when the backend sent one, otherwise the ÖRDO rider image.
+/// Widgets can't download images, so the photo arrives as a small base64 JPEG.
+struct RiderAvatar: View {
+  let photo: String?
+  let size: CGFloat
+
+  private var image: UIImage? {
+    guard let photo, !photo.isEmpty, let data = Data(base64Encoded: photo) else { return nil }
+    return UIImage(data: data)
+  }
+
+  var body: some View {
+    if let image {
+      Image(uiImage: image)
+        .resizable()
+        .scaledToFill()
+        .frame(width: size, height: size)
+        .clipShape(Circle())
+        .overlay(Circle().stroke(Color.white, lineWidth: 1.5))
+    } else {
+      Image("OrdoRider")
+        .resizable()
+        .scaledToFit()
+        .frame(width: size, height: size)
+        .background(Circle().fill(.white))
+    }
+  }
+}
+
 struct RiderActions: View {
   let state: OrdoDeliveryAttributes.ContentState
   let orderId: String
@@ -326,11 +356,7 @@ struct LockScreenContent: View {
 
       if state.hasRider {
         HStack(spacing: 8) {
-          Image("OrdoRider")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 24, height: 24)
-            .background(Circle().fill(.white))
+          RiderAvatar(photo: state.riderPhoto, size: 24)
           Text(state.riderName)
             .font(.system(size: 13, weight: .bold))
             .foregroundStyle(ink)

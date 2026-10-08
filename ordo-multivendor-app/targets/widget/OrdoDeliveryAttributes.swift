@@ -13,6 +13,9 @@ public struct OrdoDeliveryAttributes: ActivityAttributes {
     public var riderName: String
     public var riderPhone: String
     public var language: String
+    /// Small base64 JPEG of the rider, sent by the backend; nil/"" shows the ÖRDO rider image.
+    /// Optional so content-states without it still decode.
+    public var riderPhoto: String?
 
     public init(
       schemaVersion: Int,
@@ -21,7 +24,8 @@ public struct OrdoDeliveryAttributes: ActivityAttributes {
       etaUpdatedAtEpoch: Int64,
       riderName: String,
       riderPhone: String,
-      language: String
+      language: String,
+      riderPhoto: String? = nil
     ) {
       self.schemaVersion = schemaVersion
       self.status = status
@@ -30,6 +34,7 @@ public struct OrdoDeliveryAttributes: ActivityAttributes {
       self.riderName = riderName
       self.riderPhone = riderPhone
       self.language = language
+      self.riderPhoto = riderPhoto
     }
   }
 

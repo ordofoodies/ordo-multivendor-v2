@@ -92,6 +92,21 @@ function Main(props) {
     skip: !location || !location.longitude || !location.latitude
   })
 
+  // A first request at launch can fail while the server wakes up or the session
+  // token refreshes. Retry once quietly before showing "Something went wrong".
+  const [restaurantsFailed, setRestaurantsFailed] = useState(false)
+  useEffect(() => {
+    if (!error) {
+      setRestaurantsFailed(false)
+      return
+    }
+    const timer = setTimeout(() => {
+      refetchRestaurants().catch(() => setRestaurantsFailed(true))
+    }, 1500)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error])
+
   let filteredCuisines
   const { data: banners, refetch: refetchBanners } = useQuery(GET_BANNERS, {
     fetchPolicy: 'network-only'
@@ -113,7 +128,14 @@ function Main(props) {
   const { restaurantData: mostOrderedGroceryStores, loading: mostOrderedGroceryLoading, error: mostOrderedGroceryError } = useRestaurantQueries('topPicks', location, 'grocery')
 
   const { restaurantData: nearByGroceryStores, loading: nearByGroceryStoresLoading, error: nearByGroceryStoresError } = useRestaurantQueries('grocery', location, 'grocery')
-  const { restaurantData: restaurantorders } = useRestaurantQueries('restaurant', location, 'restaurant')
+  const {
+    restaurantData: restaurantorders,
+    loading: nearbyLoading,
+    error: nearbyError
+  } = useRestaurantQueries('restaurant', location, 'restaurant')
+  // restaurantorders stays null until the nearby list has loaded; until then
+  // keep the spinner instead of flashing "not available in your location"
+  const nearbyPending = !!location?.latitude && !nearbyError && (nearbyLoading || restaurantorders == null)
 
   const handleActiveOrdersChange = (activeOrdersExist) => {
     setHasActiveOrders(activeOrdersExist)
@@ -342,7 +364,11 @@ function Main(props) {
   const restaurantCuisines = useCuisinesData('restaurant', allCuisines)
   const groceryCuisines = useCuisinesData('grocery', allCuisines)
 
-  if (error) return <ErrorView />
+  // keep the loading view during the quiet retry; only a second failure shows the error
+  if (error && restaurantsFailed && !data) {
+    return <ErrorView refetchFunctions={[refetchRestaurants, refetchBanners]} />
+  }
+  const showLoading = loading || nearbyPending || (!!error && !restaurantsFailed && !data)
 
 
   return (
@@ -355,7 +381,7 @@ function Main(props) {
             <View style={styles().flex}>
               <View style={styles().mainContentContainer}>
                 <View style={[styles().flex, styles().subContainer]}>
-                  {loading ? (
+                  {showLoading ? (
                     <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20 }}>
                       <ActivityIndicator size='large' color={currentTheme.spinnerColor} />
                     </View>
