@@ -2,9 +2,7 @@
 
 import { useEffect, useState, useContext } from 'react'
 import { StatusBar, Platform } from 'react-native'
-import * as Notifications from 'expo-notifications'
 import * as Device from 'expo-device'
-import Constants from 'expo-constants'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import useEnvVars from '../../../environment' // Adjust path if necessary
 import gql from 'graphql-tag'
@@ -22,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { GoogleSignin } from '@react-native-google-signin/google-signin' // Android-specific Google import
 import { getStoredReferralCode } from '../../utils/branch.io'
 import { getReferralCode, clearReferralCode } from '../../utils/referralStorage'
+import { getExpoPushToken, pushLog } from '../../utils/pushNotifications'
 
 const LOGIN = gql`
   ${login}
@@ -135,34 +134,9 @@ export const useCreateAccount = () => {
       console.log('🔐 [Login Debug] User type:', user.type)
       console.log('🔐 [Login Debug] Full user object:', user)
 
-      let notificationToken = null
-
-      if (Device.isDevice) {
-        try {
-          const { status: existingStatus } = await Notifications.getPermissionsAsync()
-          console.log('🔐 [Login Debug] Notification permission status:', existingStatus)
-
-          if (existingStatus === 'granted') {
-            try {
-              const tokenData = await Notifications.getExpoPushTokenAsync({
-                projectId: Constants.expoConfig?.extra?.eas?.projectId
-              })
-              notificationToken = tokenData.data
-              console.log('🔐 [Login Debug] ✅ Got notification token')
-            } catch (tokenError) {
-              console.warn('🔐 [Login Debug] ⚠️ Could not get push token (this is OK):', tokenError.message)
-              notificationToken = null
-            }
-          } else {
-            console.log('🔐 [Login Debug] ℹ️ Notification permission not granted, skipping token')
-          }
-        } catch (permissionError) {
-          console.warn('🔐 [Login Debug] ⚠️ Could not check notification permissions:', permissionError.message)
-          notificationToken = null
-        }
-      } else {
-        console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token')
-      }
+      // Asks for notification permission if needed so order updates can be pushed.
+      const notificationToken = await getExpoPushToken()
+      pushLog('google login: sending token to API', { email: user.email, type: user.type, notificationToken })
 
       console.log('🔐 [Login Debug] About to call GraphQL mutation with variables:', {
         ...user,
@@ -218,6 +192,7 @@ export const useCreateAccount = () => {
 
   // --- Common Login Success Handler ---
   async function onCompleted(data) {
+    pushLog('google login: logged in', { userId: data?.login?.userId, email: data?.login?.email })
     console.log('✅ [Login Debug] Login mutation completed successfully')
     console.log('✅ [Login Debug] Response data:', data)
     console.log('✅ [Login Debug] User email:', data.login.email)

@@ -98,3 +98,41 @@ export const TOGGLE_RIDER = gql`
     }
   }
 `;
+
+export const REVIEW_RIDER_DOCUMENT = gql`
+  mutation ReviewRiderDocument(
+    $riderId: ID!
+    $document: String!
+    $status: String!
+    $reason: String
+  ) {
+    reviewRiderDocument(
+      riderId: $riderId
+      document: $document
+      status: $status
+      reason: $reason
+    ) {
+      _id
+    }
+  }
+`;
+
+export const REPROCESS_RIDER_PHOTO = gql`
+  mutation ReprocessRiderPhoto($riderId: ID!) {
+    reprocessRiderPhoto(riderId: $riderId) {
+      _id
+    }
+  }
+`;
+
+export const UPDATE_RIDER_ZONE = gql`
+  mutation UpdateRiderZone($riderId: ID!, $zoneId: ID!) {
+    updateRiderZone(riderId: $riderId, zoneId: $zoneId) {
+      _id
+      zone {
+        _id
+        title
+      }
+    }
+  }
+`;

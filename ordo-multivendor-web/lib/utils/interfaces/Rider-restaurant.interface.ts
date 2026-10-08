@@ -34,6 +34,21 @@ export interface sideCardProps{
     termsAccepted: boolean;
   }
 
+export type RiderDocumentKey =
+  | "driverLicense"
+  | "vehicleRegistration"
+  | "insurance"
+  | "platePhoto"
+  | "ownershipProof"
+  | "idDocument";
+
+export interface RiderDocumentFormValue {
+  url: string;
+  backUrl: string;
+  number: string;
+  expiryDate: string;
+}
+
 export interface RiderRegistrationFormValues {
   fullName: string;
   username: string;
@@ -41,13 +56,14 @@ export interface RiderRegistrationFormValues {
   phoneNumber: string;
   password: string;
   confirmPassword: string;
-  licenseImage: string;
+  referralCode: string;
   vehicleType: string;
   vehicleNumber: string;
   zoneId: string;
   zoneLabel: string;
-  referralCode: string;
-  vehicleDocumentImage:string
-  
-
+  // address the zone was detected from, shown back to the rider
+  deliveryArea: string;
+  profilePhoto: string;
+  documents: Record<RiderDocumentKey, RiderDocumentFormValue>;
+  termsAccepted: boolean;
 }

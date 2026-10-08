@@ -7,6 +7,9 @@ import { Skeleton } from 'primereact/skeleton';
 // Localization
 import { useTranslations } from 'next-intl';
 
+// Components
+import ZoneEditor from './zone-editor';
+
 const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
   const t = useTranslations();
 
@@ -34,13 +37,11 @@ const PersonalDetails = ({ loading, rider }: IRiderDetailsProps) => {
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-xs">{t('Zone')}</span>
-            <span className="font-medium ">
-              {loading ? (
-                <Skeleton height="1.5rem" />
-              ) : (
-                (rider?.zone.title ?? '-')
-              )}
-            </span>
+            {loading || !rider ? (
+              <Skeleton height="1.5rem" />
+            ) : (
+              <ZoneEditor rider={rider} />
+            )}
           </div>
         </div>
 

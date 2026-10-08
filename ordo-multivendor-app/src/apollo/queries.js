@@ -417,6 +417,8 @@ export const order = `query Order($id:String!){
     expectedTime
     isPickedUp
     deliveryCharges
+    membershipDeliveryDiscount
+    membershipOrderDiscount
     acceptedAt
     pickedAt
     deliveredAt
@@ -502,6 +504,8 @@ export const myOrders = `query Orders($offset:Int){
     expectedTime
     isPickedUp
     deliveryCharges
+    membershipDeliveryDiscount
+    membershipOrderDiscount
     acceptedAt
     pickedAt
     deliveredAt
@@ -944,6 +948,8 @@ export const orderFragment = `fragment NewOrder on Order {
   completionTime
   preparationTime
   deliveryCharges
+  membershipDeliveryDiscount
+  membershipOrderDiscount
   acceptedAt
   pickedAt
   deliveredAt

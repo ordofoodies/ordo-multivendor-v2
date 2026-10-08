@@ -78,6 +78,10 @@ import { useTranslations } from "next-intl";
 import { useTheme } from "@/lib/providers/ThemeProvider";
 import { darkMapStyle } from "@/lib/utils/mapStyles/mapStyle";
 import { GET_TIPS } from "@/lib/api/graphql/queries/tipping";
+import useMembership from "@/lib/hooks/useMembership";
+import DeliveryFee from "@/lib/ui/useable-components/membership/DeliveryFee";
+import MembershipUpsell from "@/lib/ui/useable-components/membership/MembershipUpsell";
+import MemberBadge from "@/lib/ui/useable-components/membership/MemberBadge";
 
 //Coupon localStorage Keys
 const COUPON_STORAGE_KEY = "applied_coupon";
@@ -92,6 +96,7 @@ export default function OrderCheckoutScreen() {
   // const [isOpen, setIsOpen] = useState(false);
   const [deliveryType, setDeliveryType] = useState("Delivery");
   const [deliveryCharges, setDeliveryCharges] = useState(0);
+  const membership = useMembership();
   const [isPickUp, setIsPickUp] = useState(false);
   const [selectedTip, setSelectedTip] = useState("");
   const [distance, setDistance] = useState("0.0");
@@ -864,7 +869,7 @@ export default function OrderCheckoutScreen() {
   }
 
   // Pricing Handlers
-  function calculatePrice(delivery = 0, withDiscount: boolean = false) {
+  function itemsSubtotal(withDiscount: boolean) {
     let itemTotal: number = 0;
     cart.forEach((cartItem) => {
       itemTotal = itemTotal + Number(cartItem?.price || 0) * cartItem.quantity;
@@ -872,7 +877,17 @@ export default function OrderCheckoutScreen() {
     if (withDiscount && coupon && coupon.discount && isCouponApplied) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal;
     }
-    const deliveryAmount = delivery > 0 ? deliveryCharges : 0;
+    return itemTotal;
+  }
+
+  // member benefits (same rule the API applies when placing the order)
+  const memberDiscounts = membership.memberDiscounts(itemsSubtotal(true), deliveryCharges, isPickUp);
+  const memberFreeDelivery = memberDiscounts.delivery > 0;
+  const customerDeliveryCharges = deliveryCharges - memberDiscounts.delivery;
+
+  function calculatePrice(delivery = 0, withDiscount: boolean = false) {
+    const itemTotal = itemsSubtotal(withDiscount) - (withDiscount ? memberDiscounts.order : 0);
+    const deliveryAmount = delivery > 0 ? customerDeliveryCharges : 0;
     return (itemTotal + deliveryAmount).toFixed(2);
   }
 
@@ -1410,15 +1425,28 @@ export default function OrderCheckoutScreen() {
                 </span>
               </div>
 
+              {!membership.isMember && membership.program ? (
+                <MembershipUpsell
+                  program={membership.program}
+                  deliveryFee={deliveryCharges}
+                  subtotal={itemsSubtotal(true)}
+                  isPickUp={isPickUp}
+                  currencySymbol={CURRENCY_SYMBOL}
+                />
+              ) : null}
+
               {deliveryType === "Delivery" && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
                   <span className="font-inter text-gray-900 dark:text-white leading-5">
                     {t("delivery_with_distance_label")} ({distance} km)
                   </span>
-                  <span className="font-inter text-gray-900  dark:text-white leading-5">
-                    {CURRENCY_SYMBOL}
-                    {deliveryCharges.toFixed()}
-                  </span>
+                  <DeliveryFee
+                    amount={deliveryCharges}
+                    free={memberFreeDelivery}
+                    badgeLabel={membership.program?.name}
+                    currencySymbol={CURRENCY_SYMBOL}
+                    className="font-inter text-gray-900  dark:text-white leading-5"
+                  />
                 </div>
               )}
 
@@ -1465,9 +1493,22 @@ export default function OrderCheckoutScreen() {
                   </span>
                   <span className="font-inter text-gray-900 dark:text-white leading-5">
                     {`-${CURRENCY_SYMBOL} ${(
-                      Number(calculatePrice(0, false)) -
-                      Number(calculatePrice(0, true))
+                      itemsSubtotal(false) - itemsSubtotal(true)
                     ).toFixed(2)}`}
+                  </span>
+                </div>
+              )}
+
+              {memberDiscounts.order > 0 && membership.membership && (
+                <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
+                  <span className="flex items-center gap-2 font-inter text-gray-900 dark:text-white leading-5">
+                    {t("membership_member_discount", {
+                      percent: membership.membership.benefits.orderDiscountPercent,
+                    })}
+                    <MemberBadge label={membership.program?.name ?? ""} />
+                  </span>
+                  <span className="font-inter font-semibold text-green-600 leading-5">
+                    {`-${CURRENCY_SYMBOL} ${memberDiscounts.order.toFixed(2)}`}
                   </span>
                 </div>
               )}
@@ -1521,6 +1562,16 @@ export default function OrderCheckoutScreen() {
                 </span>
               </div>
 
+              {!membership.isMember && membership.program ? (
+                <MembershipUpsell
+                  program={membership.program}
+                  deliveryFee={deliveryCharges}
+                  subtotal={itemsSubtotal(true)}
+                  isPickUp={isPickUp}
+                  currencySymbol={CURRENCY_SYMBOL}
+                />
+              ) : null}
+
               {deliveryType === "Delivery" && (
                 <div className="flex justify-between mb-1 text-xs lg:text-[12px]">
                   <span className="font-inter text-gray-900 dark:text-white leading-5">
@@ -1529,10 +1580,13 @@ export default function OrderCheckoutScreen() {
                       unit: t("km_unit"),
                     })}
                   </span>
-                  <span className="font-inter text-gray-900 dark:text-white leading-5">
-                    {CURRENCY_SYMBOL}
-                    {deliveryCharges.toFixed()}
-                  </span>
+                  <DeliveryFee
+                    amount={deliveryCharges}
+                    free={memberFreeDelivery}
+                    badgeLabel={membership.program?.name}
+                    currencySymbol={CURRENCY_SYMBOL}
+                    className="font-inter text-gray-900 dark:text-white leading-5"
+                  />
                 </div>
               )}
 
@@ -1578,9 +1632,22 @@ export default function OrderCheckoutScreen() {
                   </span>
                   <span className="font-inter text-gray-900 dark:text-white leading-5">
                     {`-${CURRENCY_SYMBOL} ${(
-                      Number(calculatePrice(0, false)) -
-                      Number(calculatePrice(0, true))
+                      itemsSubtotal(false) - itemsSubtotal(true)
                     ).toFixed(2)}`}
+                  </span>
+                </div>
+              )}
+
+              {memberDiscounts.order > 0 && membership.membership && (
+                <div className="flex justify-between mb-1 text-xs lg:text-[14px]">
+                  <span className="flex items-center gap-2 font-inter text-gray-900 dark:text-white leading-5">
+                    {t("membership_member_discount", {
+                      percent: membership.membership.benefits.orderDiscountPercent,
+                    })}
+                    <MemberBadge label={membership.program?.name ?? ""} />
+                  </span>
+                  <span className="font-inter font-semibold text-green-600 leading-5">
+                    {`-${CURRENCY_SYMBOL} ${memberDiscounts.order.toFixed(2)}`}
                   </span>
                 </div>
               )}
@@ -1643,10 +1710,13 @@ export default function OrderCheckoutScreen() {
                         <span className="font-inter  text-gray-900 text-[14px] md:text-lg leading-6 md:leading-7">
                           Delivery ({dstance} km)
                         </span>
-                        <span className="font-inter  text-gray-900 text-[14px] md:text-lg leading-6 md:leading-7">
-                          {CURRENCY_SYMBOL}
-                          {deliveryCharges.toFixed()}
-                        </span>
+                        <DeliveryFee
+                          amount={deliveryCharges}
+                          free={memberFreeDelivery}
+                          badgeLabel={membership.program?.name}
+                          currencySymbol={CURRENCY_SYMBOL}
+                          className="font-inter  text-gray-900 text-[14px] md:text-lg leading-6 md:leading-7"
+                        />
                       </div>
 
                       {selectedTip && (

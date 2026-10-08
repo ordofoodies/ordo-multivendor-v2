@@ -7,7 +7,7 @@ import { scale } from '../../../utils/scaling'
 import { theme } from '../../../utils/themeColors'
 import TextDefault from '../../Text/TextDefault/TextDefault'
 import styles from './styles'
-import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
+import { AntDesign, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { addFavouriteRestaurant } from '../../../apollo/mutations'
 import UserContext from '../../../context/User'
@@ -19,6 +19,7 @@ import Spinner from '../../Spinner/Spinner'
 import Bicycle from '../../../assets/SVG/Bicycle'
 import { storeSearch } from '../../../utils/recentSearch'
 import Ripple from 'react-native-material-ripple'
+import useMembership from '../../../ui/hooks/useMembership'
 
 const ADD_FAVOURITE = gql`
   ${addFavouriteRestaurant}
@@ -34,6 +35,13 @@ function NewRestaurantCard(props) {
   const { t, i18n } = useTranslation()
   const configuration = useContext(ConfigurationContext)
   const navigation = useNavigation()
+  // cache-first: one request for the whole list, not one per card
+  const { isMember, membership } = useMembership({ cacheFirst: true })
+  const memberBadge = !isMember
+    ? null
+    : membership?.benefits?.freeDelivery
+      ? t('membershipCardBadge')
+      : t('membershipBadgePercent', { percent: membership?.benefits?.orderDiscountPercent })
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
     isRTL: i18n.dir() === 'rtl',
@@ -142,6 +150,27 @@ function NewRestaurantCard(props) {
         >
           <View style={styles().imageContainer}>
             <Image resizeMode='cover' source={{ uri: props?.image }} style={[styles().restaurantImage, props?.fullWidth && { width: '100%' }]} />
+            {memberBadge ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 8,
+                  left: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                  backgroundColor: '#fff',
+                  borderRadius: 12,
+                  paddingHorizontal: 8,
+                  paddingVertical: 3
+                }}
+              >
+                <MaterialCommunityIcons name='crown' size={12} color={currentTheme.main} />
+                <TextDefault small bold textColor={currentTheme.main}>
+                  {memberBadge}
+                </TextDefault>
+              </View>
+            ) : null}
             {isRestaurantClosed && (
               <View style={styles(currentTheme).closedOverlay}>
                 <TextDefault H4 textColor={currentTheme.white} bold>

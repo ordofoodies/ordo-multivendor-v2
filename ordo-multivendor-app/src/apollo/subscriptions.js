@@ -87,6 +87,8 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       expectedTime
       isPickedUp
       deliveryCharges
+      membershipDeliveryDiscount
+      membershipOrderDiscount
       acceptedAt
       pickedAt
       deliveredAt

@@ -69,6 +69,7 @@ import { setUserLocale } from "@/lib/utils/methods/locale";
 import { Dialog } from "primereact/dialog";
 
 import CustomButton from "@/lib/ui/useable-components/button";
+import useMembership from "@/lib/hooks/useMembership";
 
 const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
   // State for cart sidebar
@@ -116,6 +117,7 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
     refetchProfileData,
     setRefetchProfileData,
   } = useAuth();
+  const { program: membershipProgram } = useMembership();
   const { queryData = [] } = useNearByRestaurantsPreview(true, 1, 100);
 
   const {
@@ -514,6 +516,23 @@ const AppTopbar = ({ handleModalToggle }: IAppBarProps) => {
                             );
                           },
                         },
+                        ...(membershipProgram?.enabled
+                          ? [
+                              {
+                                label: membershipProgram.name,
+                                template(item: { label?: string }) {
+                                  return (
+                                    <div
+                                      className="text-gray-600 hover:bg-gray-300 dark:text-white dark:hover:bg-gray-600 p-2 cursor-pointer"
+                                      onClick={() => router.push("/membership")}
+                                    >
+                                      {item.label}
+                                    </div>
+                                  );
+                                },
+                              },
+                            ]
+                          : []),
                         {
                           label: t("ProfileSection.gethelp"),
                           template(item) {

@@ -83,6 +83,9 @@ export interface IOrderTrackingDetail {
   discountAmount:number;
   orderStatus: string;
   deliveryCharges: number;
+  // delivery fee covered by membership; not part of discountAmount
+  membershipDeliveryDiscount?: number | null;
+  membershipOrderDiscount?: number | null;
   instructions:string;
   tipping: number;
   taxationAmount: number;

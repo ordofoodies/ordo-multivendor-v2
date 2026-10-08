@@ -83,6 +83,8 @@ export const SUBSCRIPTION_ORDER = gql`
       orderStatus
       rider {
         _id
+        name
+        image
       }
       completionTime
     }

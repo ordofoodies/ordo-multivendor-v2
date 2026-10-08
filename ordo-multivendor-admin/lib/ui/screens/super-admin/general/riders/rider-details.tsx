@@ -12,6 +12,7 @@ import { useParams } from 'next/navigation';
 import { IQueryResult, IRiderDetailDataResponse } from '@/lib/utils/interfaces';
 
 // UI Components
+import ApplicationDocuments from '@/lib/ui/screen-components/protected/super-admin/riders/view/cards/application-documents';
 import BankDetails from '@/lib/ui/screen-components/protected/super-admin/riders/view/cards/bank-details';
 import LicenseDetails from '@/lib/ui/screen-components/protected/super-admin/riders/view/cards/license-details';
 import PersonalDetails from '@/lib/ui/screen-components/protected/super-admin/riders/view/cards/personal-details';
@@ -50,6 +51,8 @@ export default function RidersDetailScreen() {
         <LicenseDetails loading={loading} rider={rider} />
         {/* bottom-right */}
         <VehicleDetails loading={loading} rider={rider} />
+        {/* full width */}
+        <ApplicationDocuments loading={loading} rider={rider} />
       </div>
     </div>
   );

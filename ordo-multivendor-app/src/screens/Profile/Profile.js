@@ -42,6 +42,7 @@ import OrdersContext from '../../context/Orders'
 import useHomeRestaurants from '../../ui/hooks/useRestaurantOrderInfo'
 import { I18nManager } from 'react-native'
 import { isOpen, sortRestaurantsByOpenStatus } from '../../utils/customFunctions'
+import useMembership from '../../ui/hooks/useMembership'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
@@ -63,6 +64,7 @@ function Profile(props) {
  
 
   const { profile } = useContext(UserContext)
+  const { program: membershipProgram, isMember, refetch: refetchMembership } = useMembership()
   const themeContext = useContext(ThemeContext)
   const currentTheme = { isRTL: i18n.dir() === "rtl", ...theme[themeContext.ThemeValue] }
   const { orders } = useContext(OrdersContext)
@@ -89,9 +91,12 @@ function Profile(props) {
       // Only refetch if we're coming back from a screen that might have updated data
       const timeoutId = setTimeout(() => {
         refetch();
+        // pick up membership changes made in admin (enabled, name)
+        refetchMembership();
       }, 100); // Small delay to prevent immediate refetch
       
       return () => clearTimeout(timeoutId);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refetch])
   );
 
@@ -292,6 +297,14 @@ function Profile(props) {
                   iconType={'Ionicons'}
                   onPress={() => navigation.navigate('ReferralAndLoyaltyRewards')}
                   title="My Network & ÖRDO Rewards"
+                  currentTheme={currentTheme}
+                />
+                {/* always listed; the screen says "coming soon" while the program is off */}
+                <ButtonContainer
+                  icon={isMember ? 'ribbon' : 'ribbon-outline'}
+                  iconType={'Ionicons'}
+                  onPress={() => navigation.navigate('Membership')}
+                  title={membershipProgram?.name || t('membershipTitle')}
                   currentTheme={currentTheme}
                 />
                 <ButtonContainer

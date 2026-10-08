@@ -1,6 +1,7 @@
 // import libraries
 import React from 'react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 // import components
 import Heading from '@/lib/ui/useable-components/RiderandRestaurantsInfos/Heading/Heading';
@@ -56,6 +57,12 @@ const Rider = () => {
         heading={t("enatega_rider_page_name_form_heading")}
         role={t("enatega_rider_page_name_form_role")}
       />
+      <p className="mb-10 text-center text-sm text-gray-600 dark:text-gray-300">
+        {t("rider_already_applied")}{" "}
+        <Link href="/rider/resubmit" className="font-medium text-primary-color">
+          {t("rider_check_application")}
+        </Link>
+      </p>
     </div>
   );
 };

@@ -16,6 +16,7 @@ import {
 // Icons
 import {
   faCog,
+  faCrown,
   faHome,
   faSliders,
   faUpRightFromSquare,
@@ -59,6 +60,9 @@ export default function MakeSidebar() {
   const { isSuperAdminSidebarVisible } =
     useContext<LayoutContextProps>(LayoutContext);
 
+  const canSeeMembership =
+    useCheckAllowedRoutes([{ text: 'Membership' }]).length > 0;
+
   const navBarItems: ISidebarMenuItem[] = [
     {
       text: 'My Website',
@@ -94,6 +98,12 @@ export default function MakeSidebar() {
           text: 'Stores',
           label: t('Stores'),
           route: '/general/stores',
+          isParent: false,
+        },
+        {
+          text: 'Merchant Applications',
+          label: t('merchant_applications'),
+          route: '/general/merchant-applications',
           isParent: false,
         },
         {
@@ -203,6 +213,16 @@ export default function MakeSidebar() {
       shouldShow: function () {
         return this.subMenu ? this.subMenu.length > 0 : false;
       },
+    },
+    {
+      text: 'Membership',
+      label: t('membership_title'),
+      route: '/membership',
+      isParent: true,
+      icon: faCrown,
+      isClickable: true,
+      // staff need the Membership permission
+      shouldShow: () => canSeeMembership,
     },
     {
       text: 'Wallet',

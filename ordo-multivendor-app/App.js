@@ -38,6 +38,7 @@ import * as Clarity from '@microsoft/react-native-clarity'
 import { initializeBranch } from './src/utils/branch.io'
 import ReferralManager from './src/ui/ReferralManager'
 import { suppressApolloWarnings } from './src/utils/apolloErrorSuppression'
+import { LIVE_ACTIVITY_MESSAGE_TYPE } from './src/utils/liveActivity/liveActivityService'
 
 // Suppress Apollo Client warnings that don't affect functionality
 suppressApolloWarnings()
@@ -53,8 +54,17 @@ Clarity.initialize('mcdyi6urgs', {
   logLevel: Clarity.LogLevel.Verbose // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
 })
 
+// Android live-activity updates are FCM data messages applied natively by the
+// activity controller; they must never be shown as regular notifications.
+const isLiveActivityUpdate = (notification) =>
+  notification?.request?.content?.data?.type === LIVE_ACTIVITY_MESSAGE_TYPE ||
+  notification?.request?.trigger?.remoteMessage?.data?.type === LIVE_ACTIVITY_MESSAGE_TYPE
+
 Notifications.setNotificationHandler({
   handleNotification: async (notification) => {
+    if (isLiveActivityUpdate(notification)) {
+      return { shouldShowAlert: false, shouldShowBanner: false, shouldShowList: false, shouldPlaySound: false, shouldSetBadge: false }
+    }
     return {
       shouldShowAlert: notification?.request?.content?.data?.type !== NOTIFICATION_TYPES.REVIEW_ORDER,
       shouldPlaySound: false,

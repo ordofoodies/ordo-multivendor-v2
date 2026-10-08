@@ -95,11 +95,13 @@ export const RIDER_TABLE_COLUMNS = ({
         message: t('Rider request accepted successfully'),
       });
     },
-    onError: () => {
+    onError: (error) => {
       showToast({
         type: 'error',
         title: t('Error'),
-        message: t('Failed to accept rider request'),
+        message:
+          error.graphQLErrors?.[0]?.message ??
+          t('Failed to accept rider request'),
       });
     },
   });
@@ -139,7 +141,8 @@ export const RIDER_TABLE_COLUMNS = ({
     {
       headerName: t('Zone'),
       propertyName: 'zone',
-      body: (rider: IRiderResponse) => rider.zone.title,
+      // self-registered riders may not have a zone until admin assigns one
+      body: (rider: IRiderResponse) => rider.zone?.title ?? t('rider_no_zone'),
     },
     {
       headerName: t('Vehicle Type'),

@@ -16,5 +16,6 @@ export const PERMISSIONS = [
   { label: 'Notification', code: 'Notification' },
   { label: 'Zone', code: 'Zone' },
   { label: 'Dispatch', code: 'Dispatch' },
-  {label:"Shop Type", code:"Shop Type"}
+  {label:"Shop Type", code:"Shop Type"},
+  { label: 'Membership', code: 'Membership' },
 ];

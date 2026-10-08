@@ -11,6 +11,7 @@ import Animated, { useSharedValue, useAnimatedStyle, runOnJS, withSpring } from 
 import { PanGestureHandler, Gesture } from 'react-native-gesture-handler'
 import { getTipping, orderFragment } from '../../apollo/queries'
 import { applyCoupon, placeOrder } from '../../apollo/mutations'
+import LiveActivityService from '../../utils/liveActivity/liveActivityService'
 import { scale } from '../../utils/scaling'
 import { stripeCurrencies, paypalCurrencies } from '../../utils/currencies'
 import { theme } from '../../utils/themeColors'
@@ -46,6 +47,7 @@ import { useCallback } from 'react'
 
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
+import useMembership, { computeMemberDiscounts, planPriceText } from '../../ui/hooks/useMembership'
 
 // Constants
 const PLACEORDER = gql`
@@ -87,6 +89,7 @@ function Checkout(props) {
   const [selectedRestaurant, setSelectedRestaurant] = useState({})
   const [tax, setTax] = useState(0)
   const [deliveryCharges, setDeliveryCharges] = useState(0)
+  const membership = useMembership()
   const [restaurantName, setrestaurantName] = useState('...')
   const [voucherCode, setVoucherCode] = useState('')
   const [tip, setTip] = useState(null)
@@ -435,6 +438,9 @@ function Checkout(props) {
       orderDate: data?.placeOrder.orderDate
     })
     if (paymentMode === 'COD') {
+      LiveActivityService.startForOrder({ ...data?.placeOrder, isPickedUp: isPickup }).catch((error) => {
+        console.warn('Live Activity could not be started', error?.message)
+      })
       props.navigation.reset({
         routes: [
           { name: 'Main' },
@@ -516,7 +522,7 @@ function Checkout(props) {
     return taxAmount
   }
 
-  function calculatePrice(delivery = 0, withDiscount) {
+  function itemsSubtotal(withDiscount) {
     let itemTotal = 0
     cart.forEach((cartItem) => {
       itemTotal += cartItem.price * cartItem.quantity
@@ -524,7 +530,32 @@ function Checkout(props) {
     if (withDiscount && coupon && coupon.discount) {
       itemTotal = itemTotal - (coupon.discount / 100) * itemTotal
     }
-    const deliveryAmount = delivery > 0 ? deliveryCharges : 0
+    return itemTotal
+  }
+
+  // member benefits (same rule the API applies when placing the order)
+  const memberDiscounts = membership.memberDiscounts(itemsSubtotal(true), deliveryCharges, isPickup)
+
+  // best saving a non-member would get on this order by joining
+  const upsell = (() => {
+    const program = membership.program
+    if (membership.isMember || !program?.enabled) return null
+    const subtotal = itemsSubtotal(true)
+    if (subtotal < (program.freeDeliveryMinOrder || 0)) return null
+    return (
+      program.plans
+        .map((plan) => {
+          const d = computeMemberDiscounts(plan, subtotal, deliveryCharges, isPickup)
+          return { plan, saving: d.delivery + d.order }
+        })
+        .filter((x) => x.saving > 0)
+        .sort((a, b) => b.saving - a.saving || a.plan.price - b.plan.price)[0] ?? null
+    )
+  })()
+
+  function calculatePrice(delivery = 0, withDiscount) {
+    const itemTotal = itemsSubtotal(withDiscount) - (withDiscount ? memberDiscounts.order : 0)
+    const deliveryAmount = delivery > 0 ? deliveryCharges - memberDiscounts.delivery : 0
     return (itemTotal + deliveryAmount).toFixed(2)
   }
 
@@ -549,7 +580,7 @@ function Checkout(props) {
       })
       return false
     }
-    if (calculatePrice(deliveryCharges, true) < minimumOrder) {
+    if (itemsSubtotal(true) + (isPickup ? 0 : deliveryCharges) < minimumOrder) {
       FlashMessage({
         message: `The minimum amount of (${configuration.currencySymbol} ${minimumOrder}) for your order has not been reached.`
         // message: `(${t(minAmount)}) (${configuration.currencySymbol
@@ -919,7 +950,7 @@ function Checkout(props) {
                             </TextDefault>
                             <TextDefault small bold textColor={currentTheme.fontFourthColor}>
                               -{configuration.currencySymbol}
-                              {parseFloat(calculatePrice(0, false) - calculatePrice(0, true)).toFixed(2)}
+                              {parseFloat(itemsSubtotal(false) - itemsSubtotal(true)).toFixed(2)}
                             </TextDefault>
                           </View>
                         </View>
@@ -972,6 +1003,37 @@ function Checkout(props) {
                   </View>
                 )}
 
+                {upsell ? (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => props?.navigation.navigate('Membership')}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 10,
+                      marginHorizontal: scale(15),
+                      marginTop: scale(12),
+                      padding: scale(12),
+                      borderRadius: 12,
+                      borderWidth: 1,
+                      borderColor: 'rgba(255,128,0,0.35)',
+                      backgroundColor: 'rgba(255,128,0,0.08)'
+                    }}
+                  >
+                    <MaterialCommunityIcons name='crown' size={22} color={currentTheme.main} />
+                    <TextDefault small textColor={currentTheme.fontMainColor} style={{ flex: 1 }} isRTL>
+                      {t('membershipUpsell', {
+                        amount: `${configuration.currencySymbol}${upsell.saving.toFixed(2)}`,
+                        name: membership.program.name,
+                        price: planPriceText(t, upsell.plan, configuration.currencySymbol)
+                      })}
+                    </TextDefault>
+                    <TextDefault small bolder textColor={currentTheme.main}>
+                      {t('membershipJoin')}
+                    </TextDefault>
+                  </TouchableOpacity>
+                ) : null}
+
                 <View style={[styles(currentTheme).priceContainer]}>
                   <TextDefault numberOfLines={1} H5 bolder textColor={currentTheme.fontNewColor} style={{ ...alignment.MBmedium }} isRTL>
                     {t('paymentSummary')}
@@ -993,10 +1055,23 @@ function Checkout(props) {
                         <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           {t('deliveryFee')}
                         </TextDefault>
-                        <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
-                          {configuration.currencySymbol}
-                          {deliveryCharges.toFixed(2)}
-                        </TextDefault>
+                        {memberDiscounts.delivery > 0 ? (
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                            <MaterialCommunityIcons name='crown' size={14} color={currentTheme.main} />
+                            <TextDefault numberOfLines={1} textColor={currentTheme.fontSecondColor} small style={{ textDecorationLine: 'line-through' }}>
+                              {configuration.currencySymbol}
+                              {deliveryCharges.toFixed(2)}
+                            </TextDefault>
+                            <TextDefault numberOfLines={1} textColor='#16a34a' normal bolder>
+                              {t('membershipFree')}
+                            </TextDefault>
+                          </View>
+                        ) : (
+                          <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                            {configuration.currencySymbol}
+                            {deliveryCharges.toFixed(2)}
+                          </TextDefault>
+                        )}
                       </View>
                       <View style={styles(currentTheme).horizontalLine2} />
                     </>
@@ -1036,7 +1111,25 @@ function Checkout(props) {
                         </TextDefault>
                         <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
                           -{configuration.currencySymbol}
-                          {parseFloat(calculatePrice(0, false) - calculatePrice(0, true)).toFixed(2)}
+                          {parseFloat(itemsSubtotal(false) - itemsSubtotal(true)).toFixed(2)}
+                        </TextDefault>
+                      </View>
+                    </View>
+                  )}
+
+                  {memberDiscounts.order > 0 && (
+                    <View>
+                      <View style={styles(currentTheme).horizontalLine2} />
+                      <View style={styles(currentTheme).billsec}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                          <MaterialCommunityIcons name='crown' size={14} color={currentTheme.main} />
+                          <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                            {t('membershipMemberDiscount', { percent: membership.membership?.benefits?.orderDiscountPercent })}
+                          </TextDefault>
+                        </View>
+                        <TextDefault numberOfLines={1} textColor='#16a34a' normal bold>
+                          -{configuration.currencySymbol}
+                          {memberDiscounts.order.toFixed(2)}
                         </TextDefault>
                       </View>
                     </View>

@@ -236,10 +236,46 @@ function TrackingOrderDetails({
 
           <div className="flex justify-between">
             <span>{t("order_details_delivery_charge_label")}</span>
-            <span>
-              {formatCurrency(orderTrackingDetails.deliveryCharges || 0)}
-            </span>
+            {(orderTrackingDetails.membershipDeliveryDiscount ?? 0) > 0 ? (
+              <span className="flex items-center gap-2">
+                <span className="text-gray-400 line-through">
+                  {formatCurrency(orderTrackingDetails.deliveryCharges || 0)}
+                </span>
+                <span className="font-semibold text-green-600">
+                  {formatCurrency(
+                    (orderTrackingDetails.deliveryCharges || 0) -
+                      (orderTrackingDetails.membershipDeliveryDiscount ?? 0)
+                  )}
+                </span>
+              </span>
+            ) : (
+              <span>
+                {formatCurrency(orderTrackingDetails.deliveryCharges || 0)}
+              </span>
+            )}
           </div>
+
+          {(orderTrackingDetails.membershipOrderDiscount ?? 0) > 0 && (
+            <div className="flex justify-between">
+              <span>{t("membership_member_discount_label")}</span>
+              <span className="text-green-600">
+                -{""} {formatCurrency(orderTrackingDetails.membershipOrderDiscount ?? 0)}
+              </span>
+            </div>
+          )}
+
+          {(orderTrackingDetails.membershipDeliveryDiscount ?? 0) +
+            (orderTrackingDetails.membershipOrderDiscount ?? 0) > 0 && (
+            <div className="flex justify-between rounded-md bg-orange-50 px-2 py-1 text-primary-color dark:bg-gray-700">
+              <span>{t("membership_order_saved")}</span>
+              <span className="font-semibold">
+                {formatCurrency(
+                  (orderTrackingDetails.membershipDeliveryDiscount ?? 0) +
+                    (orderTrackingDetails.membershipOrderDiscount ?? 0)
+                )}
+              </span>
+            </div>
+          )}
 
           <div className="flex justify-between">
             <span>{t("discount_label")}</span>

@@ -138,7 +138,10 @@ function OrderDetail(props) {
 
   const { _id, id: orderId, restaurant, deliveryAddress, items, tipping: tip, taxationAmount: tax, orderAmount: total, deliveryCharges } = order
 
-  const subTotal = total - tip - tax - deliveryCharges
+  // membership: waived delivery and the member discount aren't in the total
+  const memberDelivery = order?.membershipDeliveryDiscount || 0
+  const memberOrder = order?.membershipOrderDiscount || 0
+  const subTotal = total - tip - tax - (deliveryCharges - memberDelivery) + memberOrder
 
   const isOrderPending = order?.orderStatus === ORDER_STATUS_ENUM.PENDING
   const isOrderCancelable = isOrderPending
@@ -258,7 +261,7 @@ function OrderDetail(props) {
         </View>
         <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
         <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} />
-        <Taxes tax={tax} deliveryCharges={deliveryCharges} currency={configuration.currencySymbol} />
+        <Taxes tax={tax} deliveryCharges={deliveryCharges} memberDelivery={memberDelivery} memberOrder={memberOrder} currency={configuration.currencySymbol} />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
         {/* Tip is not showing on the tracking page

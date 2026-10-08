@@ -7,6 +7,7 @@ import useEnvVars from '../../../environment'
 import { useApolloClient } from '@apollo/client'
 import UserContext from '../../context/User'
 import analytics from '../../utils/analytics'
+import LiveActivityService from '../../utils/liveActivity/liveActivityService'
 
 import { useTranslation } from 'react-i18next'
 
@@ -49,6 +50,9 @@ function StripeCheckout(props) {
         fetchPolicy: 'network-only'
       })
       const order = result.data.orders.find((order) => order.orderId === _id)
+      LiveActivityService.startForOrder(order).catch((error) => {
+        console.warn('Live Activity could not be started', error?.message)
+      })
       await clearCart()
       props?.navigation.reset({
         routes: [

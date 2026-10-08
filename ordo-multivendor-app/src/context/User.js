@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useApolloClient, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { v5 as uuidv5 } from 'uuid'
 import { v1 as uuidv1 } from 'uuid'
 import { profile } from '../apollo/queries'
+import { pushToken } from '../apollo/mutations'
+import { getExpoPushToken, pushLog } from '../utils/pushNotifications'
 import { LocationContext } from './Location'
 import AuthContext from './Auth'
 
@@ -18,6 +20,10 @@ const v1options = {
 
 const PROFILE = gql`
   ${profile}
+`
+
+const PUSH_TOKEN = gql`
+  ${pushToken}
 `
 
 const UserContext = React.createContext({})
@@ -35,6 +41,7 @@ export const UserProvider = (props) => {
   const [isPickup, setIsPickup] = useState(false)
   const [instructions, setInstructions] = useState('')
   const [coupon, setCoupon] = useState(null)
+  const pushTokenSyncedRef = useRef(false)
 
   const {
     called: calledProfile,
@@ -97,12 +104,39 @@ export const UserProvider = (props) => {
     await Analytics.track(Analytics.events.USER_RECONNECTED, {
       userId: data?.profile?._id
     })
+    syncPushToken(data?.profile)
+  }
+
+  // Keeps the server's push token in sync with this device (e.g. permission granted
+  // after login, token rotated, or an older login that saved no token). Once per session.
+  async function syncPushToken(userProfile) {
+    if (!userProfile || pushTokenSyncedRef.current) return
+    pushTokenSyncedRef.current = true
+    const deviceToken = await getExpoPushToken()
+    pushLog('logged in user', {
+      userId: userProfile._id,
+      email: userProfile.email,
+      serverToken: userProfile.notificationToken,
+      deviceToken,
+      isOrderNotification: userProfile.isOrderNotification
+    })
+    if (deviceToken && deviceToken !== userProfile.notificationToken) {
+      await client
+        .mutate({ mutation: PUSH_TOKEN, variables: { token: deviceToken } })
+        .then(({ data }) => pushLog('token saved on server', { saved: data?.pushToken?.notificationToken }))
+        .catch((error) => console.log('[Push] error saving push token', error.message))
+    } else if (!deviceToken) {
+      pushLog('no device token, server not updated')
+    } else {
+      pushLog('server token already up to date')
+    }
   }
 
   const logout = async () => {
     try {
       await AsyncStorage.removeItem('token')
       setToken(null)
+      pushTokenSyncedRef.current = false
       if (location._id) {
         setLocation({
           label: t('selectedLocation'),

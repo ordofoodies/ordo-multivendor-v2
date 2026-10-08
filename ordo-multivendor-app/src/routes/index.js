@@ -69,8 +69,12 @@ import QRAndReferral from '../screens/QR-And-Referral/QR-And-Referral'
 import ReferralAndLoyaltyRecentActivity from '../screens/Referral-And-Loyalty-Recent-Activity/Referral-And-Loyalty-Recent-Activity'
 import LoyaltyPoints from '../screens/Loyalty-Points/Loyalty-Points'
 import Wallet from '../screens/Wallet/Wallet'
+import Membership from '../screens/Membership/Membership'
+import MembershipCheckout from '../screens/Membership/MembershipCheckout'
 import ReferralCodeEntry from '../screens/ReferralCodeEntry/ReferralCodeEntry'
 import ResidualPoints from '../screens/ResidualPoints/ResidualPoints'
+import LiveActivityService from '../utils/liveActivity/liveActivityService'
+import { subscribeToLiveActivityLinks } from '../utils/liveActivity/liveActivityLinking'
 
 const NavigationStack = createStackNavigator()
 const Location = createStackNavigator()
@@ -160,6 +164,8 @@ function MainNavigator() {
       <NavigationStack.Screen name='QRAndReferral' component={QRAndReferral} />
       <NavigationStack.Screen name='ReferralAndLoyaltyRecentActivity' component={ReferralAndLoyaltyRecentActivity} />
       <NavigationStack.Screen name='Wallet' component={Wallet} />
+      <NavigationStack.Screen name='Membership' component={Membership} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
+      <NavigationStack.Screen name='MembershipCheckout' component={MembershipCheckout} />
       <NavigationStack.Screen name='ReferralCodeEntry' component={ReferralCodeEntry} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='ResidualPoints' component={ResidualPoints} options={SLIDE_RIGHT_WITH_CURVE_ANIM} />
       <NavigationStack.Screen name='HelpBrowser' component={HelpBrowser} />
@@ -294,6 +300,18 @@ function AppContainer() {
   const lastNotificationResponse = Notifications.useLastNotificationResponse()
 
   const [isLoadingPermission, setIsLoadingPermission] = React.useState(true)
+  const [isNavigationReady, setIsNavigationReady] = React.useState(false)
+
+  // Live Activity (iOS) / progress notification (Android): keeps push tokens registered.
+  useEffect(() => {
+    LiveActivityService.configure(client)
+  }, [client])
+
+  // Taps on the Live Activity / progress notification open order tracking or rider chat.
+  useEffect(() => {
+    if (!isNavigationReady) return
+    return subscribeToLiveActivityLinks({ client, navigate: navigationService.navigate })
+  }, [isNavigationReady, client])
 
   const handleNotification = useCallback(
     async (response) => {
@@ -349,6 +367,7 @@ function AppContainer() {
         ref={(ref) => {
           navigationService.setGlobalRef(ref)
         }}
+        onReady={() => setIsNavigationReady(true)}
       >
         {!location ? <LocationStack /> : <MainNavigator />}
       </NavigationContainer>

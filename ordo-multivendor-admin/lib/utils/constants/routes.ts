@@ -40,6 +40,10 @@ export const ROUTES = [
     route: '/general/stores',
   },
   {
+    text: 'Merchant Applications',
+    route: '/general/merchant-applications',
+  },
+  {
     text: 'Riders',
     route: '/general/riders',
   },
@@ -54,6 +58,10 @@ export const ROUTES = [
   {
     text: 'My Foodie Network',
     route: '/management/referral-network',
+  },
+  {
+    text: 'Membership',
+    route: '/membership',
   },
 ];
 

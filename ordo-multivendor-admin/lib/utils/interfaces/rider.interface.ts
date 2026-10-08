@@ -19,7 +19,7 @@ export interface IRiderResponse {
   available: boolean;
   vehicleType: string;
   assigned: string[];
-  zone: IRiderResponseZone;
+  zone: IRiderResponseZone | null;
   madeBy: 'ADMIN' | 'RIDER_REQUEST';
   riderRequestStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   rejectionReason?: string;
@@ -37,10 +37,49 @@ export interface ISingleRiderResponse {
   phone: string;
   available: boolean;
   assigned: string[];
-  zone: IRiderResponseZone;
+  zone: IRiderResponseZone | null;
   bussinessDetails: IBusinessDetails;
   licenseDetails: ILicenseDetails;
   vehicleDetails: IVehicleDetails;
+  vehicleType?: string;
+  image?: string;
+  workArea?: string | null;
+  riderRequestStatus?: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  documents?: IRiderDocuments | null;
+  requiredDocuments?: string[];
+  missingDocuments?: string[];
+}
+
+export type TRiderDocumentStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+export interface IRiderDocument {
+  url: string;
+  backUrl?: string | null;
+  number?: string | null;
+  expiryDate?: string | null;
+  status: TRiderDocumentStatus;
+  rejectionReason?: string | null;
+  uploadedAt?: string | null;
+  reviewedAt?: string | null;
+}
+
+export interface IRiderProfilePhoto {
+  originalUrl: string;
+  processedUrl?: string | null;
+  status: TRiderDocumentStatus;
+  rejectionReason?: string | null;
+  processingStatus?: 'NONE' | 'PROCESSING' | 'DONE' | 'FAILED' | null;
+  processingError?: string | null;
+}
+
+export interface IRiderDocuments {
+  profilePhoto?: IRiderProfilePhoto | null;
+  driverLicense?: IRiderDocument | null;
+  vehicleRegistration?: IRiderDocument | null;
+  insurance?: IRiderDocument | null;
+  platePhoto?: IRiderDocument | null;
+  ownershipProof?: IRiderDocument | null;
+  idDocument?: IRiderDocument | null;
 }
 
 export interface IBusinessDetails {

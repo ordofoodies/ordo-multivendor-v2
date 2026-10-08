@@ -48,3 +48,5 @@ export * from './transaction-history.interface';
 export * from './collective.interface';
 export * from './shop-type.interface'
 // export * from './loyalty.interface'
+export * from './merchant-application.interface';
+export * from './membership.interface';

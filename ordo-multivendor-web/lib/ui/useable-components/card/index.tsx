@@ -20,6 +20,9 @@ import CustomDialog from "../custom-dialog";
 import { Button } from "primereact/button";
 import { useConfig } from "@/lib/context/configuration/configuration.context";
 import { useTranslations } from "next-intl";
+import useMembership from "@/lib/hooks/useMembership";
+import MemberBadge from "../membership/MemberBadge";
+import { benefitBadge } from "../membership/format";
 
 const Card: React.FC<ICardProps> = ({
   item,
@@ -34,6 +37,7 @@ const Card: React.FC<ICardProps> = ({
     useSearchUI();
 
   const { DELIVERY_RATE, CURRENCY_SYMBOL } = useConfig();
+  const { isMember, membership } = useMembership({ cacheFirst: true });
 
   const isWithinOpeningTime = (openingTimes: IOpeningTime[]): boolean => {
     const now = new Date();
@@ -95,6 +99,12 @@ const Card: React.FC<ICardProps> = ({
           className="object-cover rounded-t-md"
           unoptimized
         />
+        {isMember && membership && (
+          <MemberBadge
+            label={benefitBadge(t, membership.benefits)}
+            className="absolute start-2 top-2 z-10 shadow-sm"
+          />
+        )}
       </div>
 
       {/* Overlay if closed */}

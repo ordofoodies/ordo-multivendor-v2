@@ -2,9 +2,6 @@
 
 import { useEffect, useState, useContext } from 'react'
 import { StatusBar, Platform } from 'react-native'
-import * as Notifications from 'expo-notifications'
-import * as Device from 'expo-device'
-import Constants from 'expo-constants'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import useEnvVars from '../../../environment' // Adjust path if necessary
 import gql from 'graphql-tag'
@@ -23,6 +20,7 @@ import * as WebBrowser from 'expo-web-browser'
 import * as Google from 'expo-auth-session/providers/google' // iOS-specific Google import
 import { getStoredReferralCode } from '../../utils/branch.io'
 import { getReferralCode, clearReferralCode } from '../../utils/referralStorage'
+import { getExpoPushToken, pushLog } from '../../utils/pushNotifications'
 WebBrowser.maybeCompleteAuthSession() // Important for Expo Auth Session
 
 const LOGIN = gql`
@@ -150,32 +148,9 @@ export const useCreateAccount = () => {
   // --- Common Login Mutation Function ---
   async function mutateLogin(user) {
     try {
-      let notificationToken = null
-
-      if (Device.isDevice) {
-        try {
-          const { status: existingStatus } = await Notifications.getPermissionsAsync()
-
-          if (existingStatus === 'granted') {
-            try {
-              const tokenData = await Notifications.getExpoPushTokenAsync({
-                projectId: Constants.expoConfig?.extra?.eas?.projectId
-              })
-              notificationToken = tokenData.data
-            } catch (tokenError) {
-              console.warn('🔐 [Login Debug] ⚠️ Could not get push token (this is OK):', tokenError.message)
-              notificationToken = null
-            }
-          } else {
-            console.log('🔐 [Login Debug] ℹ️ Notification permission not granted, skipping token')
-          }
-        } catch (permissionError) {
-          console.warn('🔐 [Login Debug] ⚠️ Could not check notification permissions:', permissionError.message)
-          notificationToken = null
-        }
-      } else {
-        console.log('🔐 [Login Debug] ℹ️ Not a physical device, skipping notification token')
-      }
+      // Asks for notification permission if needed so order updates can be pushed.
+      const notificationToken = await getExpoPushToken()
+      pushLog('social login: sending token to API', { email: user.email, type: user.type, notificationToken })
 
       const referralData = await getStoredReferralCode()
       const branchReferralCode = referralData?.code || null
@@ -218,6 +193,7 @@ export const useCreateAccount = () => {
 
   // --- Common Login Success Handler ---
   async function onCompleted(data) {
+    pushLog('social login: logged in', { userId: data?.login?.userId, email: data?.login?.email })
     console.log('✅ [LOGIN DEBUG] Login mutation completed successfully')
     console.log('✅ [LOGIN DEBUG] Response data:', data)
     console.log('✅ [LOGIN DEBUG] Is new user:', data?.login?.isNewUser)

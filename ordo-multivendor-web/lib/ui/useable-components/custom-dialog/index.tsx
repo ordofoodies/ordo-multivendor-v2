@@ -2,6 +2,7 @@
 import { Dialog } from "primereact/dialog";
 import { ICustomDialogProps } from "@/lib/utils/interfaces";
 import { CircleCrossSvg } from "@/lib/utils/assets/svg";
+import { useDirection } from "@/lib/context/direction/DirectionContext";
 
 export default function CustomDialog({
   visible,
@@ -13,7 +14,7 @@ export default function CustomDialog({
   className = "",
 }: ICustomDialogProps) {
   // get the RTL direction
-  const direction = document.documentElement.getAttribute("dir") || "ltr";
+  const direction = useDirection();
   return (
     <Dialog
       visible={visible}

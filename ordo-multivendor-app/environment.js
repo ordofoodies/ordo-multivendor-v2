@@ -12,14 +12,19 @@ const useEnvVars = (env = Updates.channel) => {
   console.log('🔧 [useEnvVars] Environment:', env)
   console.log('🔧 [useEnvVars] Configuration:', configuration)
   console.log('🔧 [useEnvVars] Google API Key:', configuration?.googleApiKey)
-  
+
   if (env === 'production' || env === 'staging') {
     return {
 
-      GRAPHQL_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
-      WS_GRAPHQL_URL: 'wss://ordo-api-v2-production.up.railway.app/graphql',
-      SERVER_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
-      SERVER_REST_URL: 'https://ordo-api-v2-production.up.railway.app/',
+      // GRAPHQL_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
+      // WS_GRAPHQL_URL: 'wss://ordo-api-v2-production.up.railway.app/graphql',
+      // SERVER_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
+      // SERVER_REST_URL: 'https://ordo-api-v2-production.up.railway.app/',
+      GRAPHQL_URL: 'https://5k2n1mch-8001.inc1.devtunnels.ms/graphql',
+      WS_GRAPHQL_URL: 'wss://5k2n1mch-8001.inc1.devtunnels.ms/graphql',
+      SERVER_URL: 'https://5k2n1mch-8001.inc1.devtunnels.ms/graphql',
+      SERVER_REST_URL: 'https://5k2n1mch-8001.inc1.devtunnels.ms/',
+
       IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
       ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
       AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,
@@ -34,15 +39,16 @@ const useEnvVars = (env = Updates.channel) => {
   }
 
   return {
-    GRAPHQL_URL: 'http://192.168.1.200:8001/graphql',
-    WS_GRAPHQL_URL: 'ws://192.168.1.200:8001/graphql',
-    SERVER_URL: 'http://192.168.1.200:8001/graphql',
-    SERVER_REST_URL: 'http://192.168.1.200:8001/',
+
+    GRAPHQL_URL: 'https://5k2n1mch-8001.inc1.devtunnels.ms/graphql',
+    WS_GRAPHQL_URL: 'wss://5k2n1mch-8001.inc1.devtunnels.ms/graphql',
+    SERVER_URL: 'https://5k2n1mch-8001.inc1.devtunnels.ms/graphql',
+    SERVER_REST_URL: 'https://5k2n1mch-8001.inc1.devtunnels.ms/',
     // GRAPHQL_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
     // WS_GRAPHQL_URL: 'wss://ordo-api-v2-production.up.railway.app/graphql',
     // SERVER_URL: 'https://ordo-api-v2-production.up.railway.app/graphql',
     // SERVER_REST_URL: 'https://ordo-api-v2-production.up.railway.app/',
-   
+
     IOS_CLIENT_ID_GOOGLE: configuration?.iOSClientID,
     ANDROID_CLIENT_ID_GOOGLE: configuration?.androidClientID,
     AMPLITUDE_API_KEY: configuration?.appAmplitudeApiKey,

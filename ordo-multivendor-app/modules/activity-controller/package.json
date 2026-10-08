@@ -1,0 +1,18 @@
+{
+  "name": "ordo-activity-controller",
+  "version": "1.0.0",
+  "description": "ÖRDO order-tracking Live Activities (iOS ActivityKit) and live progress notifications (Android)",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "keywords": [
+    "react-native",
+    "live-activity",
+    "ios",
+    "android"
+  ],
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}

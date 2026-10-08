@@ -85,6 +85,8 @@ export const placeOrder = `
       completionTime
       preparationTime
       deliveryCharges
+      membershipDeliveryDiscount
+      membershipOrderDiscount
       acceptedAt
       pickedAt
       deliveredAt
@@ -273,6 +275,8 @@ export const reviewOrder = `mutation ReviewOrder(
       expectedTime
       isPickedUp
       deliveryCharges
+      membershipDeliveryDiscount
+      membershipOrderDiscount
       acceptedAt
       pickedAt
       deliveredAt

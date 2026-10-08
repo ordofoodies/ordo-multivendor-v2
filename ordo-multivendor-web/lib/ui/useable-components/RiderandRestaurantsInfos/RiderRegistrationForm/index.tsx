@@ -1,470 +1,343 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useMutation, useQuery } from "@apollo/client";
+import {
+  Form,
+  Formik,
+  FormikProps,
+  useFormikContext,
+  validateYupSchema,
+  yupToFormErrors,
+} from "formik";
+import { useMutation } from "@apollo/client";
 import { useTranslations } from "next-intl";
 import { Button } from "primereact/button";
-import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
-import {
-  faBicycle,
-  faCar,
-  faMotorcycle,
-  faTruckPickup,
-} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
-import { GET_ZONES } from "@/lib/api/graphql";
 import { CREATE_RIDER } from "@/lib/api/graphql/mutations";
 import useToast from "@/lib/hooks/useToast";
 import { sendEmail } from "@/lib/utils/methods";
-import {
-  IMapZone,
-  RiderRegistrationFormValues,
-} from "@/lib/utils/interfaces";
+import { RiderRegistrationFormValues } from "@/lib/utils/interfaces";
 
-import DocumentUploadField from "./DocumentUploadField";
-import PhoneNumberInput from "../Form/phoneNumberInput/PhoneNumberInput";
-import riderValidationSchema from "./validationSchema";
+import {
+  STEPS,
+  StepId,
+  initialRiderValues,
+  isMotorized,
+  toDocumentsInput,
+} from "./constants";
+import { stepValidationSchema } from "./validationSchema";
+import StepHeader from "./StepHeader";
+import AccountStep from "./steps/AccountStep";
+import VehicleStep from "./steps/VehicleStep";
+import PhotoStep from "./steps/PhotoStep";
+import DocumentsStep from "./steps/DocumentsStep";
+import ReviewStep from "./steps/ReviewStep";
+import FormErrorFocus from "./FormErrorFocus";
+import {
+  UploadTrackerProvider,
+  useUploadTracker,
+  withoutLocalPreviews,
+} from "./uploads";
 
 interface RiderRegistrationFormProps {
   heading: string;
   role: string;
 }
 
-interface ZoneOption {
-  _id: string;
-  label: string;
+const DRAFT_KEY = "ordo-rider-application-draft";
+
+interface Draft {
+  values: Partial<RiderRegistrationFormValues>;
 }
 
-const initialValues: RiderRegistrationFormValues = {
-  fullName: "",
-  username: "",
-  email: "",
-  phoneNumber: "",
-  password: "",
-  confirmPassword: "",
-  vehicleType: "bicycle",
-  zoneId: "",
-  zoneLabel: "",
-  referralCode: "",
-  vehicleDocumentImage: "",
-  licenseImage: "",
-  vehicleNumber: "",
+const readDraft = (): Draft | null => {
+  try {
+    const raw = window.localStorage.getItem(DRAFT_KEY);
+    return raw ? (JSON.parse(raw) as Draft) : null;
+  } catch {
+    return null;
+  }
 };
 
-const vehicleOptions = [
-  { key: "bicycle", icon: faBicycle, labelKey: "bicycle_label" },
-  { key: "motorbike", icon: faMotorcycle, labelKey: "motorbike_label" },
-  { key: "car", icon: faCar, labelKey: "car_label" },
-  { key: "pickup truck", icon: faTruckPickup, labelKey: "pickup_truck_label" },
-];
+const clearDraft = () => {
+  try {
+    window.localStorage.removeItem(DRAFT_KEY);
+  } catch {
+    // storage unavailable
+  }
+};
 
-const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = ({
+// saves progress so a refresh doesn't lose uploads; passwords are never stored
+const DraftSaver = () => {
+  const { values } = useFormikContext<RiderRegistrationFormValues>();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // in-flight previews (blob: URLs) die with the page, so don't keep them
+      const safe: Partial<RiderRegistrationFormValues> = withoutLocalPreviews({ ...values });
+      delete safe.password;
+      delete safe.confirmPassword;
+      try {
+        window.localStorage.setItem(DRAFT_KEY, JSON.stringify({ values: safe }));
+      } catch {
+        // storage unavailable
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [values]);
+  return null;
+};
+
+const SubmittedState = () => {
+  const t = useTranslations();
+  return (
+    <div className="flex flex-col items-center gap-4 py-6 text-center">
+      <FontAwesomeIcon icon={faCircleCheck} className="text-5xl text-green-600" />
+      <h3 className="text-xl font-semibold dark:text-gray-100">
+        {t("rider_submitted_title")}
+      </h3>
+      <p className="max-w-sm text-sm text-gray-600 dark:text-gray-300">
+        {t("rider_submitted_body")}
+      </p>
+      <Link href="/" className="text-sm font-medium text-primary-color">
+        {t("rider_submitted_home")}
+      </Link>
+    </div>
+  );
+};
+
+const RiderRegistrationWizard: React.FC<RiderRegistrationFormProps> = ({
   heading,
   role,
 }) => {
   const t = useTranslations();
   const { showToast } = useToast();
   const searchParams = useSearchParams();
-  const referralCodeFromUrl = searchParams.get("ref") ?? "";
-
-  const formInitialValues = useMemo(
-    () => ({
-      ...initialValues,
-      referralCode: referralCodeFromUrl,
-    }),
-    [referralCodeFromUrl]
-  );
-
-  const { data, loading: zonesLoading } = useQuery(GET_ZONES, {
-    fetchPolicy: "cache-and-network",
-  });
-
+  const formikRef = useRef<FormikProps<RiderRegistrationFormValues>>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
   const [createRider] = useMutation(CREATE_RIDER);
+  const tracker = useUploadTracker();
+  const [finishingUploads, setFinishingUploads] = useState(false);
 
-  const zoneOptions: ZoneOption[] =
-    data?.zones?.map((zone: IMapZone) => ({
-      _id: zone._id,
-      label: zone.title,
-    })) ?? [];
+  const step: StepId = STEPS[stepIndex].id;
+  const isLastStep = stepIndex === STEPS.length - 1;
 
-  const handleSubmit = async (
-    formData: RiderRegistrationFormValues,
-    {
-      setSubmitting,
-      resetForm,
-    }: {
-      setSubmitting: (isSubmitting: boolean) => void;
-      resetForm: () => void;
+  // restore a saved draft once on the client; ?ref= wins over the draft
+  useEffect(() => {
+    const draft = readDraft();
+    const referralCode = searchParams.get("ref");
+    if (draft?.values) {
+      formikRef.current?.setValues(
+        {
+          ...initialRiderValues,
+          ...draft.values,
+          documents: { ...initialRiderValues.documents, ...draft.values.documents },
+          password: "",
+          confirmPassword: "",
+          ...(referralCode ? { referralCode } : {}),
+        },
+        false
+      );
+      // passwords aren't saved, so a restored draft always starts on step 1
+    } else if (referralCode) {
+      formikRef.current?.setFieldValue("referralCode", referralCode, false);
     }
-  ) => {
-    const [firstName = "", ...restName] = formData.fullName.trim().split(" ");
-    const lastName = restName.join(" ");
-    const normalizedPhone = formData.phoneNumber.startsWith("+")
-      ? formData.phoneNumber
-      : `+${formData.phoneNumber}`;
+  }, [searchParams]);
 
-    const templateParams = {
-      ...formData,
+  const goTo = (index: number) => {
+    setStepIndex(index);
+    formikRef.current?.setTouched({}, false);
+    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const validate = async (values: RiderRegistrationFormValues) => {
+    try {
+      await validateYupSchema(values, stepValidationSchema(t, step, values.vehicleType));
+      return {};
+    } catch (error) {
+      return yupToFormErrors(error);
+    }
+  };
+
+  const submitApplication = async (values: RiderRegistrationFormValues) => {
+    const normalizedPhone = values.phoneNumber.startsWith("+")
+      ? values.phoneNumber
+      : `+${values.phoneNumber}`;
+    const motorized = isMotorized(values.vehicleType);
+
+    await createRider({
+      variables: {
+        riderInput: {
+          _id: "",
+          name: values.fullName.trim(),
+          username: values.username.trim(),
+          email: values.email.trim(),
+          phone: normalizedPhone,
+          password: values.password,
+          ...(values.zoneId ? { zone: values.zoneId } : {}),
+          workArea: values.deliveryArea.trim(),
+          referralCode: values.referralCode.trim(),
+          vehicleType: values.vehicleType,
+          ...(motorized
+            ? {
+                vehicleDetails: {
+                  number: values.vehicleNumber.trim(),
+                  image: values.documents.vehicleRegistration.url,
+                },
+              }
+            : {}),
+          documents: toDocumentsInput(values),
+          madeBy: "RIDER_REQUEST",
+          riderRequestStatus: "PENDING",
+          available: true,
+        },
+      },
+    });
+
+    // the application is saved at this point; the email only notifies the team
+    const [firstName = "", ...rest] = values.fullName.trim().split(" ");
+    sendEmail("template_kay0wlk", {
+      fullName: values.fullName,
       firstName,
-      lastName,
+      lastName: rest.join(" "),
+      username: values.username,
+      email: values.email,
       phoneNumber: normalizedPhone,
+      vehicleType: values.vehicleType,
+      vehicleNumber: values.vehicleNumber,
+      deliveryZone: values.zoneLabel,
+      deliveryArea: values.deliveryArea,
+      referralCode: values.referralCode,
+      licenseImage: values.documents.driverLicense.url,
+      vehicleDocumentImage: values.documents.vehicleRegistration.url,
+      profilePhoto: values.profilePhoto,
       role,
       isRider: true,
-      deliveryZone: formData.zoneLabel,
-    };
+    }).catch((error: unknown) =>
+      console.error("Rider application email failed:", error)
+    );
+  };
 
-      const riderInput = {
-      _id: "",
-      name: formData.fullName.trim(),
-      username: formData.username.trim(),
-      email: formData.email.trim(),
-      phone: normalizedPhone,
-      password: formData.password,
-      zone: formData.zoneId,
-      referralCode: formData.referralCode.trim(),
-      vehicleType: formData.vehicleType,
-      licenseDetails: {
-        image: formData.licenseImage,
-      },
-      vehicleDetails: {
-        number: formData.vehicleNumber.trim(),
-        image: formData.vehicleDocumentImage,
-      },
-      madeBy: "RIDER_REQUEST",
-      riderRequestStatus: "PENDING",
-      available: true,
-    };
+  const handleSubmit = async (values: RiderRegistrationFormValues) => {
+    if (!isLastStep) {
+      goTo(stepIndex + 1);
+      return;
+    }
+
+    // uploads keep running while the rider fills in the form; wait for them
+    // and re-check, since one may have failed after its step was passed
+    setFinishingUploads(true);
+    await tracker?.waitForAll();
+    setFinishingUploads(false);
+    const latest = formikRef.current?.values ?? values;
+    for (const check of ["photo", "documents"] as const) {
+      try {
+        await validateYupSchema(latest, stepValidationSchema(t, check, latest.vehicleType));
+      } catch {
+        showToast({
+          type: "error",
+          title: t("toast_error"),
+          message: t("rider_upload_failed_retry"),
+          duration: 5000,
+        });
+        goTo(STEPS.findIndex((s) => s.id === check));
+        return;
+      }
+    }
 
     try {
-      await createRider({ variables: { riderInput } });
-      await sendEmail("template_kay0wlk", templateParams);
-
-      showToast({
-        type: "success",
-        title: t("toast_success"),
-        message: t("form_submitted_successfully"),
-        duration: 4000,
-      });
-      resetForm();
-      
+      await submitApplication(latest);
+      clearDraft();
+      setSubmitted(true);
+      topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (error: any) {
-      const backendMessage =
+      const message =
         error?.graphQLErrors?.[0]?.message ||
         error?.message ||
         t("failed_to_submit_form_please_try_again");
-
       console.error("Failed to submit rider registration:", error);
-
-      showToast({
-        type: "error",
-        title: t("toast_error"),
-        message: backendMessage,
-        duration: 4000,
-      });
-    } finally {
-      setSubmitting(false);
+      showToast({ type: "error", title: t("toast_error"), message, duration: 5000 });
     }
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-m my-6">
-      <div className="mb-6">
-        <h2 className="text-[20px] font-semibold dark:text-gray-100">
-          {heading}
-        </h2>
-      </div>
+    <div
+      ref={topRef}
+      className="mx-auto my-6 max-w-xl scroll-mt-24 rounded-md bg-white p-6 shadow-lg dark:bg-gray-800"
+    >
+      <h2 className="mb-6 text-[20px] font-semibold dark:text-gray-100">{heading}</h2>
 
-      <Formik
-        initialValues={formInitialValues}
-        enableReinitialize
-        validationSchema={riderValidationSchema(t)}
-        onSubmit={handleSubmit}
-      >
-        {({ values, setFieldValue, isSubmitting }) => (
-          <Form className="grid gap-5">
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("full_name_label")}
-              </label>
-              <Field name="fullName">
-                {({ field }: any) => (
-                  <InputText
-                    placeholder={t("full_name_label")}
-                    {...field}
-                    className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
+      {submitted ? (
+        <SubmittedState />
+      ) : (
+        <>
+          <StepHeader current={stepIndex} labels={STEPS.map((s) => t(s.labelKey))} />
+
+          <Formik
+            innerRef={formikRef}
+            initialValues={initialRiderValues}
+            validate={validate}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className="grid gap-6" noValidate>
+                <DraftSaver />
+
+                {step === "account" && <AccountStep />}
+                {step === "vehicle" && <VehicleStep />}
+                {step === "photo" && <PhotoStep />}
+                {step === "documents" && <DocumentsStep />}
+                {step === "review" && (
+                  <ReviewStep
+                    onEdit={(target) => goTo(STEPS.findIndex((s) => s.id === target))}
                   />
                 )}
-              </Field>
-              <ErrorMessage
-                name="fullName"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
 
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("username_label")}
-              </label>
-              <Field name="username">
-                {({ field }: any) => (
-                  <InputText
-                    placeholder={t("username_label")}
-                    {...field}
-                    className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
-                  />
-                )}
-              </Field>
-              <ErrorMessage
-                name="username"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
+                <FormErrorFocus key={step} />
 
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("email_label")}
-              </label>
-              <Field name="email">
-                {({ field }: any) => (
-                  <InputText
-                    placeholder={t("email_address_placeholder")}
-                    {...field}
-                    className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
-                  />
-                )}
-              </Field>
-              <ErrorMessage
-                name="email"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("phone_label")}
-              </label>
-              <PhoneNumberInput />
-              <ErrorMessage
-                name="phoneNumber"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("password_label")}
-              </label>
-              <Field name="password">
-                {({ field }: any) => (
-                  <Password
-                    {...field}
-                    inputClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
-                    panelClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
-                    placeholder={t("password")}
-                    toggleMask
-                    className="w-full text-sm border-2 border-gray-200 dark:border-gray-600 p-2 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    feedback={false}
-                  />
-                )}
-              </Field>
-              <ErrorMessage
-                name="password"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("confirm_password_label")}
-              </label>
-              <Field name="confirmPassword">
-                {({ field }: any) => (
-                  <Password
-                    {...field}
-                    inputClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
-                    panelClassName="bg-white text-black dark:bg-gray-700 dark:text-white"
-                    placeholder={t("confirm_password_label")}
-                    toggleMask
-                    className="w-full text-sm border-2 border-gray-200 dark:border-gray-600 p-2 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                    feedback={false}
-                  />
-                )}
-              </Field>
-              <ErrorMessage
-                name="confirmPassword"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-
-           
-
-        
-
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("vehicle_type_label")}
-              </label>
-              <div className="grid grid-cols-2 gap-3 mt-2">
-                {vehicleOptions.map((option) => {
-                  const isSelected = values.vehicleType === option.key;
-
-                  return (
+                <div className="flex items-center justify-between gap-3">
+                  {stepIndex > 0 ? (
                     <button
-                      key={option.key}
                       type="button"
-                      onClick={() => setFieldValue("vehicleType", option.key)}
-                      className={`flex min-h-[88px] flex-col items-center justify-center gap-2 rounded-xl border-2 px-4 py-3 text-sm transition-colors ${
-                        isSelected
-                          ? "border-primary-color bg-orange-50 text-primary-color dark:bg-gray-700"
-                          : "border-gray-200 text-gray-600 dark:border-gray-600 dark:text-gray-300"
-                      }`}
+                      onClick={() => goTo(stepIndex - 1)}
+                      className="rounded-full px-5 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
                     >
-                      <FontAwesomeIcon icon={option.icon} className="text-lg" />
-                      <span>{t(option.labelKey)}</span>
+                      {t("rider_back")}
                     </button>
-                  );
-                })}
-              </div>
-              <ErrorMessage
-                name="vehicleType"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("vehicle_number_label")}
-              </label>
-              <Field name="vehicleNumber">
-                {({ field }: any) => (
-                  <InputText
-                    placeholder={t("vehicle_number_label")}
-                    {...field}
-                    className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
+                  ) : (
+                    <span />
+                  )}
+                  <Button
+                    type="submit"
+                    label={
+                      finishingUploads
+                        ? t("rider_finishing_uploads")
+                        : isLastStep
+                          ? t("rider_submit_application")
+                          : t("rider_next")
+                    }
+                    loading={isSubmitting}
+                    className="min-w-[160px] rounded-full bg-primary-color p-2 text-[16px] font-medium text-white transition-all hover:bg-primary-color"
                   />
-                )}
-              </Field>
-              <ErrorMessage
-                name="vehicleNumber"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("delivery_zone_label")}
-              </label>
-              <Dropdown
-                value={values.zoneId}
-                options={zoneOptions}
-                optionLabel="label"
-                optionValue="_id"
-                placeholder={t("select_delivery_zone_placeholder")}
-                onChange={(e: DropdownChangeEvent) => {
-                  const selectedZone = zoneOptions.find(
-                    (zone) => zone._id === e.value
-                  );
-                  setFieldValue("zoneId", e.value);
-                  setFieldValue("zoneLabel", selectedZone?.label ?? "");
-                }}
-                loading={zonesLoading}
-                className="md:w-20rem mt-2 h-11 w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded text-sm"
-                panelClassName="border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100"
-              />
-              <style jsx global>{`
-                html.dark .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
-                  color: #f3f4f6;
-                }
-
-                html.dark
-                  .p-dropdown-panel
-                  .p-dropdown-items
-                  .p-dropdown-item:hover,
-                html.dark
-                  .p-dropdown-panel
-                  .p-dropdown-items
-                  .p-dropdown-item.p-highlight,
-                html.dark
-                  .p-dropdown-panel
-                  .p-dropdown-items
-                  .p-dropdown-item.p-focus {
-                  background: #374151;
-                  color: #f9fafb;
-                }
-              `}</style>
-              <ErrorMessage
-                name="zoneId"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-
-            <div>
-              <DocumentUploadField
-                label={t("vehicle_document_image_label")}
-                value={values.vehicleDocumentImage}
-                helperText={t("vehicle_document_helper_text")}
-                onChange={(url) => setFieldValue("vehicleDocumentImage", url)}
-              />
-              <ErrorMessage
-                name="vehicleDocumentImage"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
- <div>
-              <DocumentUploadField
-                label={t("drivers_license_image_label")}
-                value={values.licenseImage}
-                onChange={(url) => setFieldValue("licenseImage", url)}
-              />
-              <ErrorMessage
-                name="licenseImage"
-                component="small"
-                className="p-error text-sm"
-              />
-            </div>
-            <div>
-              <label className="text-sm dark:text-gray-300">
-                {t("referral_code_label")} 
-              </label>
-              <Field name="referralCode">
-                {({ field }: any) => (
-                  <InputText
-                    placeholder={t("referral_code_label")}
-                    {...field}
-                    className="w-full border-2 text-sm border-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 p-2 rounded-lg"
-                  />
-                )}
-              </Field>
-            </div>
-
-            <div className="flex justify-center items-center">
-              <Button
-                type="submit"
-                label={t("register_label")}
-                loading={isSubmitting}
-                className="mt-4 bg-primary-color text-[16px] font-medium w-[220px] p-2 rounded-full text-white hover:bg-primary-color transition-all"
-              />
-            </div>
-          </Form>
-        )}
-      </Formik>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </>
+      )}
     </div>
   );
 };
+
+const RiderRegistrationForm: React.FC<RiderRegistrationFormProps> = (props) => (
+  <UploadTrackerProvider>
+    <RiderRegistrationWizard {...props} />
+  </UploadTrackerProvider>
+);
 
 export default RiderRegistrationForm;

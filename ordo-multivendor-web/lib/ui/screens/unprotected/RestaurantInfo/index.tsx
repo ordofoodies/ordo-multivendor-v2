@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 
 // components
-import EmailForm from '@/lib/ui/useable-components/RiderandRestaurantsInfos/Form';
+import MerchantApplicationForm from '@/lib/ui/useable-components/RiderandRestaurantsInfos/MerchantApplicationForm';
 import Heading from '@/lib/ui/useable-components/RiderandRestaurantsInfos/Heading/Heading';
 import SideContainers from '@/lib/ui/useable-components/RiderandRestaurantsInfos/SideContainers/SideCard';
 import WhyCardsList from '@/lib/ui/useable-components/RiderandRestaurantsInfos/WhyCards/WhyCardsList';
@@ -71,11 +72,13 @@ const RestInfo = () => {
       />
       <WhyCardsList cards={cards} />
       <SideContainers sideCards={sideCards} />
-      <EmailForm
-        heading={t("become_a_restaurant")}
-        role={t("vendor_registration")}
-        helperText={t("become_a_restaurant_helper_text")}
-      />
+      <MerchantApplicationForm heading={t("become_a_restaurant")} />
+      <p className="mb-10 text-center text-sm text-gray-600 dark:text-gray-300">
+        {t("merchant_already_applied")}{" "}
+        <Link href="/restaurantInfo/status" className="font-medium text-primary-color">
+          {t("merchant_check_status")}
+        </Link>
+      </p>
     </div>
   );
 };

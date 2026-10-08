@@ -1,14 +1,11 @@
 import { useState, useContext, useRef, useEffect } from 'react'
 import { Alert } from 'react-native'
 import _ from 'lodash' // Import lodash
-import * as Device from 'expo-device'
-import Constants from 'expo-constants'
 import { useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { login, emailExist } from '../../apollo/mutations'
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
-import * as Notifications from 'expo-notifications'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
 import analytics from '../../utils/analytics'
 import AuthContext from '../../context/Auth'
@@ -16,6 +13,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { getStoredReferralCode } from '../../utils/branch.io'
 import { getReferralCode } from '../../utils/referralStorage'
+import { getExpoPushToken, pushLog } from '../../utils/pushNotifications'
 
 const LOGIN = gql`
   ${login}
@@ -128,6 +126,7 @@ export const useLogin = () => {
   }
 
   async function onLoginCompleted(data) {
+    pushLog('email login: logged in', { userId: data?.login?.userId, email: data?.login?.email })
     if (data.login.isActive == false) {
       FlashMessage({ message: t('accountDeactivated') })
     } else {
@@ -172,24 +171,10 @@ export const useLogin = () => {
   async function loginAction(email, password) {
     try {
       if (validateCredentials()) {
-        let notificationToken = null
-          try {
-            if (Device.isDevice) {
-              const {
-                status: existingStatus
-              } = await Notifications.getPermissionsAsync()
-              if (existingStatus === 'granted') {
-                notificationToken = (await Notifications.getExpoPushTokenAsync({
-                  projectId: Constants.expoConfig.extra.eas.projectId
-                })).data
-              }
-            }
-        } catch (error) {
-          FlashMessage({
-            message: t('errorWhileGettingNotificationToken'),
-          })
-        }
-        
+        // Asks for notification permission if needed so order updates can be pushed.
+        const notificationToken = await getExpoPushToken()
+        pushLog('email login: sending token to API', { email, notificationToken })
+
         // For email login, don't send referral code (existing user)
         LoginMutation({
           variables: {

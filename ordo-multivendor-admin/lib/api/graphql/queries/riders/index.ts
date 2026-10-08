@@ -58,6 +58,28 @@ export const GET_RIDER = gql`
         number
         image
       }
+      vehicleType
+      image
+      workArea
+      riderRequestStatus
+      requiredDocuments
+      missingDocuments
+      documents {
+        profilePhoto {
+          originalUrl
+          processedUrl
+          status
+          rejectionReason
+          processingStatus
+          processingError
+        }
+        driverLicense { url backUrl number expiryDate status rejectionReason uploadedAt reviewedAt }
+        vehicleRegistration { url backUrl number expiryDate status rejectionReason uploadedAt reviewedAt }
+        insurance { url backUrl number expiryDate status rejectionReason uploadedAt reviewedAt }
+        platePhoto { url backUrl number expiryDate status rejectionReason uploadedAt reviewedAt }
+        ownershipProof { url backUrl number expiryDate status rejectionReason uploadedAt reviewedAt }
+        idDocument { url backUrl number expiryDate status rejectionReason uploadedAt reviewedAt }
+      }
     }
   }
 `;

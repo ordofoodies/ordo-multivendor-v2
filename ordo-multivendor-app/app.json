@@ -39,6 +39,7 @@
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.ordocustomer.app",
+      "appleTeamId": "7J2SGWAVUT",
       "icon": "./assets/icon.png",
       "config": {
         "googleMapsApiKey": "AIzaSyASc2PXUyjCvYdI-3dB1J4VycPWYJp_izI"
@@ -53,10 +54,13 @@
         "UIBackgroundModes": [
           "remote-notification"
         ],
+        "NSSupportsLiveActivities": true,
+        "NSSupportsLiveActivitiesFrequentUpdates": true,
         "NSUserTrackingUsageDescription": "Allow this app to collect app-related data that can be used for tracking you or your device.",
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
+              "ordo-customer",
               "enategamultivendor",
               "com.googleusercontent.apps.822560760184-qjcj5ho18j2kpdi03ne4cejlfs55t1rl"
             ]
@@ -187,7 +191,8 @@
           "iosAppDomain": "390ag.app.link"
         }
       ],
-      "./plugins/fix-appdelegate.js"
+      "./plugins/fix-appdelegate.js",
+      "@bacons/apple-targets"
     ],
     "extra": {
       "eas": {

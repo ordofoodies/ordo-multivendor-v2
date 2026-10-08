@@ -19,6 +19,7 @@ import { StepperPanel } from "primereact/stepperpanel";
 
 // Components
 import { useConfig } from "@/lib/context/configuration/configuration.context";
+import { useDirection } from "@/lib/context/direction/DirectionContext";
 import useToast from "@/lib/hooks/useToast";
 import EmailVerification from "./email-verification";
 import EnterPassword from "./enter-password";
@@ -60,7 +61,7 @@ export default function AuthModal({
     }
   }, [isAuthModalVisible]);
   // get the RTL direction
-  const direction = document.documentElement.getAttribute("dir") || "ltr";
+  const direction = useDirection();
 
   // Refs
   const authenticationPanelRef = useRef(null);

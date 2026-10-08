@@ -344,6 +344,37 @@ function TrackingStatusCard({ orderTrackingDetails }: TrackingStatusCardProps) {
         {getStatusMessage()}
       </p>
 
+      {orderTrackingDetails.rider?.name &&
+        ["ASSIGNED", "PICKED"].includes(orderTrackingDetails.orderStatus) && (
+          <div className="mt-3 flex items-center gap-3 rounded-lg bg-orange-50 p-3 dark:bg-gray-700">
+            {orderTrackingDetails.rider.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={orderTrackingDetails.rider.image}
+                alt={orderTrackingDetails.rider.name}
+                className="h-12 w-12 shrink-0 rounded-full object-cover ring-2 ring-primary-color"
+              />
+            ) : (
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-color text-lg font-semibold text-white">
+                {orderTrackingDetails.rider.name.charAt(0).toUpperCase()}
+              </span>
+            )}
+            <div className="min-w-0">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                {t("tracking_your_rider")}
+              </p>
+              <p className="truncate text-sm font-semibold dark:text-white">
+                {orderTrackingDetails.rider.name}
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-300">
+                {orderTrackingDetails.orderStatus === "PICKED"
+                  ? t("tracking_rider_on_the_way")
+                  : t("tracking_rider_heading_to_store")}
+              </p>
+            </div>
+          </div>
+        )}
+
       {/* Real-time update indicator */}
       {orderTrackingDetails.orderStatus !== "DELIVERED" &&
         orderTrackingDetails.orderStatus !== "COMPLETED" &&
