@@ -12,6 +12,8 @@ export const GET_RIDERS = gql`
       available
       vehicleType
       assigned
+      reviewAverage
+      reviewCount
       madeBy
       riderRequestStatus
       rejectionReason

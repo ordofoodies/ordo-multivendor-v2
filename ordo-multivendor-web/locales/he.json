@@ -292,5 +292,10 @@
  "validation_business_chars": "{field}: יש להשתמש רק באותיות, ספרות ו- & ' . , ( ) / # ! + -",
  "validation_name_chars": "{field}: יש להשתמש באותיות בלבד (רווחים, גרש ומקף מותרים)",
  "form_fix_errors_more": "…ועוד {count}",
- "form_fix_errors_title": "יש לתקן {count, plural, one {דבר אחד} other {# דברים}} כדי להמשיך:"
+ "form_fix_errors_title": "יש לתקן {count, plural, one {דבר אחד} other {# דברים}} כדי להמשיך:",
+ "rate_details_title": "דרגו את הפרטים (אופציונלי)",
+ "rate_food_label": "אוכל",
+ "rate_rider_label": "שליח",
+ "rate_rider_named_label": "שליח ({name})",
+ "rate_ordo_service_label": "שירות ÖRDO"
 }

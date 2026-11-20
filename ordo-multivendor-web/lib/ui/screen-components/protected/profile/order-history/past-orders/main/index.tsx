@@ -1,4 +1,5 @@
 "use client";
+import { IDetailedRatings } from "@/lib/utils/interfaces/ratings.interface";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 // Components
@@ -95,7 +96,8 @@ export default function PastOrders({
     orderId: string | undefined,
     ratingValue: number,
     comment?: string,
-    aspects: string[] = []
+    aspects: string[] = [],
+    detailed?: IDetailedRatings
   ) => {
     const reviewDescription = comment?.trim() || undefined;
     const reviewComments =
@@ -109,6 +111,9 @@ export default function PastOrders({
           description: reviewDescription,
           rating: ratingValue,
           comments: reviewComments,
+          foodRating: detailed?.foodRating || null,
+          riderRating: detailed?.riderRating || null,
+          serviceRating: detailed?.serviceRating || null,
         },
       });
     } catch (error) {

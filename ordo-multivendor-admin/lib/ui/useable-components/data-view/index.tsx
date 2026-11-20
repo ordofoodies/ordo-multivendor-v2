@@ -25,6 +25,7 @@ const CustomDataView: React.FC<ICustomDataViewProps> = ({
           name={review?.order?.user?.name}
           orderedItems={orderedItems}
           rating={review?.rating}
+          foodRating={review?.foodRating}
           imageSrc={review?.restaurant?.image}
           comments={review?.comments}
           reviewContent={review?.description}

@@ -1,10 +1,11 @@
 import * as React from 'react'
 import Svg, { Path } from 'react-native-svg'
-const StarIcon = ({ isFilled = false }) => (
+const StarIcon = ({ isFilled = false, size = 40 }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
-    width={40}
-    height={37}
+    width={size}
+    height={(size * 37) / 40}
+    viewBox="0 0 40 37"
     fill={isFilled ? '#FFA921' : 'none'}
     // {...props}
   >

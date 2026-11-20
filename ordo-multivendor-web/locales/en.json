@@ -1208,5 +1208,10 @@
   "validation_business_chars": "{field}: use letters, numbers and & ' . , ( ) / # ! + - only",
   "validation_name_chars": "{field}: use letters only (spaces, apostrophes and hyphens are OK)",
   "form_fix_errors_more": "…and {count} more",
-  "form_fix_errors_title": "Please fix {count, plural, one {# thing} other {# things}} to continue:"
+  "form_fix_errors_title": "Please fix {count, plural, one {# thing} other {# things}} to continue:",
+  "rate_details_title": "Rate the details (optional)",
+  "rate_food_label": "Food",
+  "rate_rider_label": "Delivery rider",
+  "rate_rider_named_label": "Rider ({name})",
+  "rate_ordo_service_label": "ÖRDO service"
 }

@@ -151,6 +151,19 @@ export const RIDER_TABLE_COLUMNS = ({
         toTextCase(rider.vehicleType.replaceAll('_', ' '), 'title'),
     },
     {
+      headerName: t('rider_rating_column'),
+      propertyName: 'reviewAverage',
+      body: (rider: IRiderResponse) =>
+        rider.reviewCount ? (
+          <span title={t('rider_rating_count', { count: rider.reviewCount })}>
+            ★ {Number(rider.reviewAverage ?? 0).toFixed(1)}{' '}
+            <span className="text-xs text-gray-500">({rider.reviewCount})</span>
+          </span>
+        ) : (
+          <span className="text-gray-400">-</span>
+        ),
+    },
+    {
       headerName: t('Made By'),
       propertyName: 'madeBy',
       body: (rider: IRiderResponse) => (

@@ -11,7 +11,16 @@ import RenderStepThree from "../step-three";
 // Useable Components
 import CustomDialog from "@/lib/ui/useable-components/custom-dialog";
 // Interfaces
-import { IRatingModalProps } from "@/lib/utils/interfaces/ratings.interface";
+import {
+  IDetailedRatings,
+  IRatingModalProps,
+} from "@/lib/utils/interfaces/ratings.interface";
+
+const EMPTY_DETAILED: IDetailedRatings = {
+  foodRating: 0,
+  riderRating: 0,
+  serviceRating: 0,
+};
 import { useTranslations } from "next-intl";
 
 /**
@@ -33,12 +42,21 @@ export default function RatingModal({
   const [rating, setRating] = useState<number | null>(null); // Star rating (1-5)
   const [comment, setComment] = useState<string>(""); // User's text feedback
   const [selectedAspects, setSelectedAspects] = useState<string[]>([]); // Selected rating aspects/tags
+  const [detailed, setDetailedState] = useState<IDetailedRatings>(EMPTY_DETAILED); // Food / rider / ÖRDO service
+
+  // a rider can only be rated when one delivered the order
+  const showRider = Boolean(order?.rider?._id) && !order?.isPickedUp;
+  const setDetailed = (key: keyof IDetailedRatings, value: number) =>
+    setDetailedState((prev) => ({ ...prev, [key]: value }));
 
   const t = useTranslations();
   // Debounced submit function to prevent multiple rapid submissions
   const handleSubmitDebounced = useDebounceFunction(() => {
     if (order && rating !== null) {
-      onSubmitRating(order._id, rating, comment, selectedAspects);
+      onSubmitRating(order._id, rating, comment, selectedAspects, {
+        ...detailed,
+        riderRating: showRider ? detailed.riderRating : 0,
+      });
       onHide();
     }
   }, 500);
@@ -50,6 +68,7 @@ export default function RatingModal({
       setRating(null);
       setComment("");
       setSelectedAspects([]);
+      setDetailedState(EMPTY_DETAILED);
     }
   }, [visible]);
 
@@ -134,6 +153,10 @@ export default function RatingModal({
         {/* Step 2: Select aspects/tags about the experience */}
         {step === 2 && (
           <RenderStepTwo
+            detailed={detailed}
+            setDetailed={setDetailed}
+            showRider={showRider}
+            riderName={order?.rider?.name}
             selectedAspects={selectedAspects}
             handleAspectToggle={handleAspectToggle}
             handleNext={handleNext}

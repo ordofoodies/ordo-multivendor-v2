@@ -168,20 +168,21 @@ const Item = ({
   )
   const { t } = useTranslation()
 
+  const openOrderDetail = () =>
+    navigation.navigate('OrderDetail', {
+      _id: item._id,
+      currencySymbol: configuration.currencySymbol,
+      restaurant: item.restaurant,
+      user: item.user
+    })
+
   return (
     <View style={{ ...alignment.MBsmall }}>
-      <TouchableOpacity
-        activeOpacity={0.7}
-        onPress={() =>
-          navigation.navigate('OrderDetail', {
-            _id: item._id,
-            currencySymbol: configuration.currencySymbol,
-            restaurant: item.restaurant,
-            user: item.user
-          })
-        }
-      >
-        <View style={styles(currentTheme).subContainer}>
+      <View style={styles(currentTheme).subContainer}>
+        {/* Only the order summary opens the order detail; the reorder and
+            rating rows below sit outside this touchable so taps near the
+            stars don't fall through and open the order. */}
+        <TouchableOpacity activeOpacity={0.7} onPress={openOrderDetail}>
           {(item.orderStatus == 'CANCELLED' ||
             item.orderStatus === 'CANCELLEDBYREST') && (
             <View style={{ display: 'flex', paddingBottom: 10 }}>
@@ -273,6 +274,7 @@ const Item = ({
               </View>
             </View>
           </View>
+        </TouchableOpacity>
           <View style={styles().rateOrderContainer}>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -301,7 +303,7 @@ const Item = ({
                 </TextDefault>
               </View>
 
-              <View style={{ flexDirection: 'row', gap: 10 }}>
+              <View style={{ flexDirection: 'row', gap: 2 }}>
                 {[1, 2, 3, 4, 5].map((index) => (
                   <StarIcon
                     disabled={Boolean(item?.review)}
@@ -313,8 +315,7 @@ const Item = ({
               </View>
             </View>
           )}
-        </View>
-      </TouchableOpacity>
+      </View>
     </View>
   )
 }

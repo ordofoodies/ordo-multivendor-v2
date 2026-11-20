@@ -1359,5 +1359,7 @@
   "merchant_app_waiting_applicant_hint": "ביקשתם שינויים. אפשר לבדוק שוב אחרי שליחה מחדש, או לדחות עכשיו.",
   "merchant_app_waiting_applicant": "ממתין שהסוחר יעדכן את הבקשה",
   "merchant_app_review_banner_hint": "בדקו את הפרטים ואז אשרו, בקשו שינויים או דחו.",
-  "merchant_app_review_banner": "הבקשה הזו ממתינה להחלטתך"
+  "merchant_app_review_banner": "הבקשה הזו ממתינה להחלטתך",
+  "rider_rating_column": "דירוג",
+  "rider_rating_count": "{count, plural, one {דירוג אחד} other {# דירוגים}}"
 }

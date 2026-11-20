@@ -415,7 +415,12 @@ export const order = `query Order($id:String!){
     orderAmount
     orderDate
     expectedTime
-    isPickedUp
+    rider{
+        _id
+        name
+        image
+      }
+      isPickedUp
     deliveryCharges
     membershipDeliveryDiscount
     membershipOrderDiscount

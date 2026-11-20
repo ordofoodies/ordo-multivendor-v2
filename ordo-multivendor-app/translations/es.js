@@ -665,4 +665,11 @@ export const es = {
   membershipOrderSaved: "Ahorraste con tu membresía",
   membershipCardBadge: "Envío gratis",
   membershipBadgePercent: "{{percent}}% menos",
+  rateRestaurant: "Califique {{name}}",
+  rateFood: "Comida",
+  rateRider: "Repartidor",
+  rateRiderNamed: "Repartidor ({{name}})",
+  rateOrdoService: "Servicio de ÖRDO",
+  pleaseAddStarRating: "Primero agregue una calificación",
+  thanksForYourFeedback: "¡Gracias por sus comentarios!",
 };

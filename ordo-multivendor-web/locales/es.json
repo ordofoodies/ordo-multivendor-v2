@@ -1199,5 +1199,10 @@
   "validation_business_chars": "{field}: usa solo letras, números y & ' . , ( ) / # ! + -",
   "validation_name_chars": "{field}: usa solo letras (se permiten espacios, apóstrofos y guiones)",
   "form_fix_errors_more": "…y {count} más",
-  "form_fix_errors_title": "Corrige {count, plural, one {# cosa} other {# cosas}} para continuar:"
+  "form_fix_errors_title": "Corrige {count, plural, one {# cosa} other {# cosas}} para continuar:",
+  "rate_details_title": "Califique los detalles (opcional)",
+  "rate_food_label": "Comida",
+  "rate_rider_label": "Repartidor",
+  "rate_rider_named_label": "Repartidor ({name})",
+  "rate_ordo_service_label": "Servicio de ÖRDO"
 }

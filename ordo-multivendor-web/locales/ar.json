@@ -1200,5 +1200,10 @@
   "validation_business_chars": "{field}: استخدم الحروف والأرقام و & ' . , ( ) / # ! + - فقط",
   "validation_name_chars": "{field}: استخدم الحروف فقط (المسافات والفواصل العليا والشرطات مسموحة)",
   "form_fix_errors_more": "…و{count} أخرى",
-  "form_fix_errors_title": "يرجى إصلاح {count, plural, one {مشكلة واحدة} other {# مشاكل}} للمتابعة:"
+  "form_fix_errors_title": "يرجى إصلاح {count, plural, one {مشكلة واحدة} other {# مشاكل}} للمتابعة:",
+  "rate_details_title": "قيّم التفاصيل (اختياري)",
+  "rate_food_label": "الطعام",
+  "rate_rider_label": "عامل التوصيل",
+  "rate_rider_named_label": "عامل التوصيل ({name})",
+  "rate_ordo_service_label": "خدمة ÖRDO"
 }

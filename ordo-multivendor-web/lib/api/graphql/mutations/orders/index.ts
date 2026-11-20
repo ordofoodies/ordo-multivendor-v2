@@ -104,6 +104,9 @@ export const ADD_REVIEW_ORDER = gql`
   mutation ReviewOrder(
     $order: String!
     $rating: Int!
+    $foodRating: Int
+    $riderRating: Int
+    $serviceRating: Int
     $description: String
     $comments: String
   ) {
@@ -111,6 +114,9 @@ export const ADD_REVIEW_ORDER = gql`
       reviewInput: {
         order: $order
         rating: $rating
+        foodRating: $foodRating
+        riderRating: $riderRating
+        serviceRating: $serviceRating
         description: $description
         comments: $comments
       }

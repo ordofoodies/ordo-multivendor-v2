@@ -1364,5 +1364,7 @@
   "merchant_app_waiting_applicant_hint": "طلبت تعديلات. يمكنك المراجعة بعد إعادة الإرسال أو الرفض الآن.",
   "merchant_app_waiting_applicant": "بانتظار أن يحدّث التاجر طلبه",
   "merchant_app_review_banner_hint": "راجع التفاصيل أدناه ثم وافق أو اطلب تعديلات أو ارفض.",
-  "merchant_app_review_banner": "هذا الطلب بانتظار قرارك"
+  "merchant_app_review_banner": "هذا الطلب بانتظار قرارك",
+  "rider_rating_column": "التقييم",
+  "rider_rating_count": "{count, plural, one {تقييم واحد} other {# تقييمات}}"
 }

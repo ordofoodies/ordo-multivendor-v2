@@ -1360,5 +1360,7 @@
   "merchant_app_waiting_applicant_hint": "Pediste cambios. Podrás revisar cuando reenvíe, o rechazarla ahora.",
   "merchant_app_waiting_applicant": "Esperando que el comercio actualice su solicitud",
   "merchant_app_review_banner_hint": "Revisa los detalles y luego aprueba, pide cambios o rechaza.",
-  "merchant_app_review_banner": "Esta solicitud espera tu decisión"
+  "merchant_app_review_banner": "Esta solicitud espera tu decisión",
+  "rider_rating_column": "Calificación",
+  "rider_rating_count": "{count, plural, one {# calificación} other {# calificaciones}}"
 }

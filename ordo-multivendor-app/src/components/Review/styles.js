@@ -19,6 +19,13 @@ export const styles = StyleSheet.create({
   smallStarContainer: {
     flexDirection: 'row'
   },
+  ratingRow: theme => ({
+    flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
+    alignItems: 'center',
+    paddingVertical: scale(8),
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: theme?.gray200 ?? '#E5E7EB'
+  }),
   headingContainer: theme => ({
     flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
     justifyContent: 'space-between',

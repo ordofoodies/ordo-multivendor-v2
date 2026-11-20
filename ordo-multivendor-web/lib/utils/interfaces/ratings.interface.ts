@@ -9,12 +9,24 @@ export interface IRatingModalProps {
     orderId: string | undefined,
     rating: number,
     comment?: string,
-    aspects?: string[]
+    aspects?: string[],
+    detailed?: IDetailedRatings
   ) => void; // Callback for submitting rating
+}
+
+// Optional per-part ratings (1-5); 0 means not rated
+export interface IDetailedRatings {
+  foodRating: number;
+  riderRating: number;
+  serviceRating: number;
 }
 
 // Props interface for the Second step component
 export interface IRenderStepTwoProps {
+  detailed: IDetailedRatings;
+  setDetailed: (key: keyof IDetailedRatings, value: number) => void;
+  showRider: boolean;
+  riderName?: string;
   selectedAspects: string[];
   handleAspectToggle: (aspect: string) => void;
   handleNext: () => void;

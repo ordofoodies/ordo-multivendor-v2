@@ -1,4 +1,5 @@
 "use client";
+import { IDetailedRatings } from "@/lib/utils/interfaces/ratings.interface";
 
 // Components
 import { PaddingContainer } from "@/lib/ui/useable-components/containers";
@@ -162,7 +163,8 @@ export default function OrderTrackingScreen({
     orderId: string | undefined,
     ratingValue: number,
     comment?: string,
-    aspects: string[] = []
+    aspects: string[] = [],
+    detailed?: IDetailedRatings
   ) => {
     const reviewDescription = comment?.trim() || undefined;
     const reviewComments =
@@ -176,6 +178,9 @@ export default function OrderTrackingScreen({
           description: reviewDescription,
           rating: ratingValue,
           comments: reviewComments,
+          foodRating: detailed?.foodRating || null,
+          riderRating: detailed?.riderRating || null,
+          serviceRating: detailed?.serviceRating || null,
         },
       });
     } catch (error) {

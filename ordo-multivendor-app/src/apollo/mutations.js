@@ -203,11 +203,17 @@ export const selectAddress = `mutation SelectAddress($id:String!){
 export const reviewOrder = `mutation ReviewOrder(
     $order:String!,
     $rating:Int!,
+    $foodRating:Int,
+    $riderRating:Int,
+    $serviceRating:Int,
     $description:String,
   ){
     reviewOrder(reviewInput:{
       order:$order,
       rating:$rating,
+      foodRating:$foodRating,
+      riderRating:$riderRating,
+      serviceRating:$serviceRating,
       description:$description,
     }){
       _id
@@ -261,6 +267,7 @@ export const reviewOrder = `mutation ReviewOrder(
       }
       review{
         _id
+        rating
       }
       paymentMethod
       paidAmount

@@ -713,4 +713,11 @@ export const en = {
   membershipOrderSaved: "You saved with your membership",
   membershipCardBadge: "Free delivery",
   membershipBadgePercent: "{{percent}}% off",
+  rateRestaurant: "Rate {{name}}",
+  rateFood: "Food",
+  rateRider: "Delivery rider",
+  rateRiderNamed: "Rider ({{name}})",
+  rateOrdoService: "ÖRDO service",
+  pleaseAddStarRating: "Please add a star rating first",
+  thanksForYourFeedback: "Thanks for your feedback!",
 }

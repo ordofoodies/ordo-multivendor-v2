@@ -1384,5 +1384,7 @@
   "merchant_app_waiting_applicant_hint": "You asked for changes. You can review again once they resubmit, or reject it now.",
   "merchant_app_waiting_applicant": "Waiting for the merchant to update their application",
   "merchant_app_review_banner_hint": "Check the details below, then approve, ask for changes, or reject.",
-  "merchant_app_review_banner": "This application is waiting for your decision"
+  "merchant_app_review_banner": "This application is waiting for your decision",
+  "rider_rating_column": "Rating",
+  "rider_rating_count": "{count, plural, one {# rating} other {# ratings}}"
 }

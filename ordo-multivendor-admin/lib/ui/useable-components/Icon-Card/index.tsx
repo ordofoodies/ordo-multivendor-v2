@@ -7,6 +7,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
   name,
   orderedItems,
   rating,
+  foodRating,
   imageSrc,
   comments,
   reviewContent,
@@ -56,8 +57,13 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
           )}
         </div>
         <div className="basis-[30%] flex items-center flex-wrap gap-4 justify-center sm:justify-end mt-4 md:mt-0">
-          <div className="flex items-center">
+          <div className="flex flex-col items-center">
             <Rating value={rating ?? 0} readOnly cancel={false} />
+            {foodRating ? (
+              <span className="text-xs text-gray-500 dark:text-white mt-1">
+                Food: ★ {foodRating}/5
+              </span>
+            ) : null}
           </div>
           <button
             onClick={handleReviewClick}

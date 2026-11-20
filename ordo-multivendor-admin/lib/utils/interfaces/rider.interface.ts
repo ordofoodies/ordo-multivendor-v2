@@ -19,6 +19,8 @@ export interface IRiderResponse {
   available: boolean;
   vehicleType: string;
   assigned: string[];
+  reviewAverage?: number | null;
+  reviewCount?: number | null;
   zone: IRiderResponseZone | null;
   madeBy: 'ADMIN' | 'RIDER_REQUEST';
   riderRequestStatus: 'PENDING' | 'ACCEPTED' | 'REJECTED';
