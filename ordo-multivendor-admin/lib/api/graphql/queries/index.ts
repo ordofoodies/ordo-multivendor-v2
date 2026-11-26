@@ -23,3 +23,5 @@ export * from './shop-types'
 export * from './audit';export * from './merchant-applications';
 
 export * from './membership';
+
+export * from './ratings-summary';

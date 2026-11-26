@@ -50,3 +50,4 @@ export * from './shop-type.interface'
 // export * from './loyalty.interface'
 export * from './merchant-application.interface';
 export * from './membership.interface';
+export * from './ratings-summary.interface';

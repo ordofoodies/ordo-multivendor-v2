@@ -19,6 +19,7 @@
     "newArchEnabled": true,
     "plugins": [
       "expo-router",
+      "./plugins/withFmtXcode26Fix",
       [
         "@sentry/react-native/expo",
         {
@@ -64,14 +65,16 @@
           "remote-notification"
         ],
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "appleTeamId": "7J2SGWAVUT"
     },
     "android": {
       "versionCode": 9,
       "googleServicesFile": "./google-services.json",
       "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ],
       "config": {
         "googleMaps": {

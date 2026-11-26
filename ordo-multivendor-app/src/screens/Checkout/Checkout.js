@@ -470,7 +470,7 @@ function Checkout(props) {
   }
   function onError(error) {
     setLoadingOrder(false)
-    if (error.graphQLErrors.length) {
+    if (error?.graphQLErrors?.length) {
       if (error.graphQLErrors[0].message === "Sorry! we can't deliver to your address.") {
         setisModalVisible(true)
       }
@@ -598,11 +598,11 @@ function Checkout(props) {
       })
       return false
     }
-    if (profile?.phone?.length < 1) {
+    if (!profile?.phone) {
       props?.navigation.navigate('PhoneNumber', { name: profile?.name, screen: 'Checkout' })
       return false
     }
-    if (profile.phone.length > 0 && !profile.phoneIsVerified) {
+    if (!profile?.phoneIsVerified) {
       FlashMessage({
         message: t('numberVerificationAlert')
       })

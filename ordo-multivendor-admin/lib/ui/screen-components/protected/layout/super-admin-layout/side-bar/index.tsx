@@ -192,6 +192,12 @@ export default function MakeSidebar() {
           isParent: false,
         },
         {
+          text: 'Ratings',
+          label: t('ratings_summary'),
+          route: '/management/ratings',
+          isParent: false,
+        },
+        {
           text: 'Audit Logs',
           label: t('Audit Logs'),
           route: '/audit-logs',
