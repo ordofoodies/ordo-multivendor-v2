@@ -52,6 +52,19 @@ export const styles = StyleSheet.create({
     flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
     alignItems: 'center'
   }),
+  tagWrap: {
+    flexWrap: 'wrap',
+    gap: scale(8),
+    marginBottom: scale(12)
+  },
+  tagChip: (theme, selected) => ({
+    paddingVertical: scale(8),
+    paddingHorizontal: scale(12),
+    borderRadius: scale(18),
+    borderWidth: 1,
+    borderColor: selected ? theme.primary : (theme?.gray200 ?? '#E5E7EB'),
+    backgroundColor: selected ? theme.primary : 'transparent'
+  }),
   modalInput: (theme)=> ({
     height: scale(40),
     borderWidth: 1,

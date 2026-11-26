@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 import { Linking } from 'react-native'
 import { myOrders } from '../../apollo/queries'
+import { contactRider } from '../contactRider'
 
 // Deep links emitted by the Live Activity (iOS) and the progress notification (Android):
 //   ordo-customer://order-tracking?id=<orderId>[&chat=rider]
@@ -24,13 +25,6 @@ const parse = (url) => {
   return { host: host.replace(/\/$/, '').toLowerCase(), params }
 }
 
-const dialRider = (phone) => {
-  const trimmed = String(phone || '').trim()
-  const digits = trimmed.replace(/\D/g, '')
-  if (digits.length < 5) return
-  Linking.openURL(`tel:${trimmed.startsWith('+') ? '+' : ''}${digits}`).catch(() => {})
-}
-
 const findOrder = async (client, orderId) => {
   try {
     const { data } = await client.query({ query: MY_ORDERS, fetchPolicy: 'cache-first' })
@@ -49,7 +43,8 @@ export const handleLiveActivityUrl = async (url, { client, navigate }) => {
   if (!link) return false
 
   if (link.host === 'call-rider') {
-    dialRider(link.params.phone)
+    // WhatsApp first; a paid direct call only after the customer confirms.
+    contactRider(link.params.phone).catch(() => {})
     return true
   }
 

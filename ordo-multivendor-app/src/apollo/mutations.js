@@ -206,6 +206,7 @@ export const reviewOrder = `mutation ReviewOrder(
     $foodRating:Int,
     $riderRating:Int,
     $serviceRating:Int,
+    $tags:[String!],
     $description:String,
   ){
     reviewOrder(reviewInput:{
@@ -214,6 +215,7 @@ export const reviewOrder = `mutation ReviewOrder(
       foodRating:$foodRating,
       riderRating:$riderRating,
       serviceRating:$serviceRating,
+      tags:$tags,
       description:$description,
     }){
       _id

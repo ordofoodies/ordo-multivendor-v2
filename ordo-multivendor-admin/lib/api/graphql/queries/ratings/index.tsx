@@ -22,6 +22,7 @@ export const GET_REVIEWS = gql`
       }
       rating
       foodRating
+      tags
       comments
       description
       createdAt

@@ -8,8 +8,9 @@ import { alignment } from '../../utils/alignment'
 
 import styles from './styles'
 import color from '../../components/Text/TextDefault/styles'
+import { memberPercentSaved } from '../../utils/memberPricing'
 
-const Taxes = ({ tax, deliveryCharges, memberDelivery = 0, memberOrder = 0, currency }) => {
+const Taxes = ({ tax, deliveryCharges, memberDelivery = 0, memberOrder = 0, memberRatio = 0, points = 0, pointsEarned = false, currency }) => {
   const themeContext = useContext(ThemeContext)
   const { t, i18n } = useTranslation()
   const currentTheme = {
@@ -85,7 +86,7 @@ const Taxes = ({ tax, deliveryCharges, memberDelivery = 0, memberOrder = 0, curr
         >
           <TextDefault H5 isRTL bolder style={{ ...alignment.Mmedium }} textColor={currentTheme.gray900}>
             {' '}
-            {t('membershipMemberDiscountLabel')}
+            {memberRatio > 0 ? t('membershipMemberDiscount', { percent: memberPercentSaved(memberRatio) }) : t('membershipMemberDiscountLabel')}
           </TextDefault>
           <TextDefault H5 bolder textColor='#16a34a' style={{ ...alignment.Mmedium }}>
             -{currency}{memberOrder.toFixed(2)}
@@ -111,6 +112,28 @@ const Taxes = ({ tax, deliveryCharges, memberDelivery = 0, memberOrder = 0, curr
           </TextDefault>
           <TextDefault bolder textColor={currentTheme.main}>
             {currency}{(memberDelivery + memberOrder).toFixed(2)}
+          </TextDefault>
+        </View>
+      ) : null}
+      {points > 0 ? (
+        <View
+          style={{
+            flexDirection: theme?.isRTL ? 'row-reverse' : 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginHorizontal: 10,
+            marginTop: 8,
+            paddingHorizontal: 10,
+            paddingVertical: 8,
+            borderRadius: 10,
+            backgroundColor: 'rgba(255,128,0,0.1)'
+          }}
+        >
+          <TextDefault bold textColor={currentTheme.main}>
+            {pointsEarned ? t('pointsEarnedLabel') : t('pointsToEarnLabel')}
+          </TextDefault>
+          <TextDefault bolder textColor={currentTheme.main}>
+            +{points}
           </TextDefault>
         </View>
       ) : null}

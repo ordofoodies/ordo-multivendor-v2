@@ -6,16 +6,24 @@ import { useTranslation } from 'react-i18next'
 import { alignment } from '../../../utils/alignment'
 import { scale } from '../../../utils/scaling'
 import { ChatButton } from './ChatButton'
+import { RiderContactActions } from './RiderContactActions'
 import { ORDER_STATUS_ENUM } from '../../../utils/enums'
 import { formatNumber } from '../../../utils/formatNumber'
+import { discountedPrice, memberPercentSaved } from '../../../utils/memberPricing'
 
-export default function Detail({ theme, from, orderNo, deliveryAddress, items, currencySymbol, subTotal, tip, tax, deliveryCharges, total, navigation, id, rider, orderStatus }) {
+export default function Detail({ theme, from, orderNo, deliveryAddress, items, currencySymbol, subTotal, tip, tax, deliveryCharges, total, navigation, id, rider, orderStatus, memberRatio = 0 }) {
   const riderPhone = rider?.phone
   const { t } = useTranslation()
- console.log(JSON.stringify(items, null, 2))
+  const canContactRider = !!rider && ![ORDER_STATUS_ENUM.DELIVERED, ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(orderStatus)
+  const openChat = () => navigation.navigate('ChatWithRider', { id, orderNo, total, riderPhone })
   return (
     <View style={styles.container(theme)}>
-      {rider && orderStatus !== ORDER_STATUS_ENUM.DELIVERED && orderStatus !== ORDER_STATUS_ENUM.CANCELLED && <ChatButton onPress={() => navigation.navigate('ChatWithRider', { id, orderNo, total, riderPhone })} title={t('chatWithRider')} description={t('askContactlessDelivery')} theme={theme} />}
+      {canContactRider && (
+        <>
+          <ChatButton onPress={openChat} title={t('chatWithRider')} description={t('askContactlessDelivery')} theme={theme} />
+          <RiderContactActions theme={theme} riderPhone={riderPhone} onChat={openChat} />
+        </>
+      )}
       <TextDefault textColor={theme.gray500} bolder H4 style={{ ...alignment.MBsmall }} isRTL>
         {from}
       </TextDefault>
@@ -56,7 +64,8 @@ export default function Detail({ theme, from, orderNo, deliveryAddress, items, c
               variationTitle={item.variation.title} 
               title={`${item.title}`} 
               currency={currencySymbol} 
-              price={totalItemPrice} 
+ price={totalItemPrice}
+              memberRatio={memberRatio} 
               options={item.addons.map((addon) => addon.options.map(({ title }) => title))} 
               image={item?.image} 
             />
@@ -66,7 +75,7 @@ export default function Detail({ theme, from, orderNo, deliveryAddress, items, c
     </View>
   )
 }
-const ItemRow = ({ theme, quantity, title, variationTitle, options = ['raita', '7up'], price, currency, image }) => {
+const ItemRow = ({ theme, quantity, title, variationTitle, options = ['raita', '7up'], price, currency, image, memberRatio = 0 }) => {
   const { t } = useTranslation()
   return (
     <View style={styles.itemRow(theme)}>
@@ -98,10 +107,26 @@ const ItemRow = ({ theme, quantity, title, variationTitle, options = ['raita', '
           x{quantity}
         </TextDefault>
       </View>
-      <TextDefault style={{ width: '20%', textAlign: 'right', paddingRight: 10 }} bolder textColor={theme.gray900} H5 isRTL>
-        {currency}
-        {formatNumber(price)}
-      </TextDefault>
+      {memberRatio > 0 ? (
+        <View style={{ width: '20%', alignItems: 'flex-end', paddingRight: 10 }}>
+          <TextDefault small textColor={theme.gray500} style={{ textDecorationLine: 'line-through' }}>
+            {currency}
+            {formatNumber(price)}
+          </TextDefault>
+          <TextDefault bolder H5 textColor='#16a34a'>
+            {currency}
+            {formatNumber(discountedPrice(price, memberRatio))}
+          </TextDefault>
+          <TextDefault small bold textColor='#16a34a'>
+            -{memberPercentSaved(memberRatio)}%
+          </TextDefault>
+        </View>
+      ) : (
+        <TextDefault style={{ width: '20%', textAlign: 'right', paddingRight: 10 }} bolder textColor={theme.gray900} H5 isRTL>
+          {currency}
+          {formatNumber(price)}
+        </TextDefault>
+      )}
     </View>
   )
 }

@@ -26,6 +26,11 @@ import {
 // Components
 import HeaderText from '@/lib/ui/useable-components/header-text';
 import Table from '@/lib/ui/useable-components/table';
+import ReviewTags from '@/lib/ui/useable-components/review-tags';
+import {
+  NEGATIVE_REVIEW_TAGS,
+  reviewTagLabel,
+} from '@/lib/utils/constants/review-tags';
 
 // Interfaces
 import {
@@ -39,7 +44,7 @@ import {
 
 type TReviewFilter = 'ALL' | 'COMMENTS' | 'LOW';
 
-const CATEGORIES: { key: TRatingCategory; label: string; statKey: keyof Omit<IRatingsSummary, 'totalReviews' | 'withComments'> }[] = [
+const CATEGORIES: { key: TRatingCategory; label: string; statKey: keyof Omit<IRatingsSummary, 'totalReviews' | 'withComments' | 'topTags'> }[] = [
   { key: 'RESTAURANT', label: 'ratings_restaurant', statKey: 'restaurant' },
   { key: 'FOOD', label: 'ratings_food', statKey: 'food' },
   { key: 'RIDER', label: 'ratings_rider', statKey: 'rider' },
@@ -240,9 +245,17 @@ export default function RatingsSummaryScreen() {
     {
       headerName: t('ratings_comment'),
       propertyName: 'comments',
-      body: (row: IAdminReview) => (
-        <span className="line-clamp-3 max-w-xs text-sm">{row.comments || '-'}</span>
-      ),
+      body: (row: IAdminReview) =>
+        row.tags?.length || row.comments ? (
+          <div className="max-w-xs">
+            <ReviewTags tags={row.tags} />
+            {row.comments && (
+              <span className="mt-1 line-clamp-3 block text-sm">{row.comments}</span>
+            )}
+          </div>
+        ) : (
+          <span className="text-sm">-</span>
+        ),
     },
   ];
 
@@ -332,6 +345,27 @@ export default function RatingsSummaryScreen() {
           )
         )}
       </div>
+
+      {/* Most picked quick-tap feedback */}
+      {!!summary?.topTags?.length && (
+        <div className="mt-4 rounded-lg border border-gray-200 p-4">
+          <p className="mb-3 font-medium">{t('ratings_top_feedback')}</p>
+          <div className="flex flex-wrap gap-2">
+            {summary.topTags.map(({ tag, count }) => (
+              <span
+                key={tag}
+                className={`rounded-full px-3 py-1 text-sm ${
+                  NEGATIVE_REVIEW_TAGS.has(tag)
+                    ? 'bg-red-50 text-red-700'
+                    : 'bg-green-50 text-green-700'
+                }`}
+              >
+                {reviewTagLabel(tag)} · {count}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Lowest rated */}
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">

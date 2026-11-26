@@ -48,6 +48,7 @@ import { useCallback } from 'react'
 import useNetworkStatus from '../../utils/useNetworkStatus'
 import ErrorView from '../../components/ErrorView/ErrorView'
 import useMembership, { computeMemberDiscounts, planPriceText } from '../../ui/hooks/useMembership'
+import { memberDiscountRatio, memberPercentSaved, pointsForOrder, usePointsPercent } from '../../utils/memberPricing'
 
 // Constants
 const PLACEORDER = gql`
@@ -90,6 +91,7 @@ function Checkout(props) {
   const [tax, setTax] = useState(0)
   const [deliveryCharges, setDeliveryCharges] = useState(0)
   const membership = useMembership()
+  const pointsPercent = usePointsPercent()
   const [restaurantName, setrestaurantName] = useState('...')
   const [voucherCode, setVoucherCode] = useState('')
   const [tip, setTip] = useState(null)
@@ -1042,11 +1044,38 @@ function Checkout(props) {
                     <TextDefault numberOfLines={1} normal bold textColor={currentTheme.fontFourthColor}>
                       {t('subTotal')}
                     </TextDefault>
-                    <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
-                      {configuration.currencySymbol}
-                      {calculatePrice(0, false)}
-                    </TextDefault>
+                    {memberDiscounts.order > 0 ? (
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <TextDefault numberOfLines={1} textColor={currentTheme.fontSecondColor} small style={{ textDecorationLine: 'line-through' }}>
+                          {configuration.currencySymbol}
+                          {calculatePrice(0, false)}
+                        </TextDefault>
+                        <TextDefault numberOfLines={1} textColor='#16a34a' normal bolder>
+                          {configuration.currencySymbol}
+                          {(+calculatePrice(0, false) - memberDiscounts.order).toFixed(2)}
+                        </TextDefault>
+                      </View>
+                    ) : (
+                      <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
+                        {configuration.currencySymbol}
+                        {calculatePrice(0, false)}
+                      </TextDefault>
+                    )}
                   </View>
+                  {memberDiscounts.order > 0 && (
+                    <View style={[styles(currentTheme).billsec, { marginTop: -4 }]}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <MaterialCommunityIcons name='crown' size={14} color={currentTheme.main} />
+                        <TextDefault numberOfLines={1} textColor='#16a34a' small bold>
+                          {t('membershipPercentSaved', { percent: memberPercentSaved(memberDiscountRatio(memberDiscounts.order, itemsSubtotal(true))) })}
+                        </TextDefault>
+                      </View>
+                      <TextDefault numberOfLines={1} textColor='#16a34a' small bold>
+                        -{configuration.currencySymbol}
+                        {memberDiscounts.order.toFixed(2)}
+                      </TextDefault>
+                    </View>
+                  )}
                   <View style={styles(currentTheme).horizontalLine2} />
 
                   {!isPickup && (
@@ -1117,24 +1146,6 @@ function Checkout(props) {
                     </View>
                   )}
 
-                  {memberDiscounts.order > 0 && (
-                    <View>
-                      <View style={styles(currentTheme).horizontalLine2} />
-                      <View style={styles(currentTheme).billsec}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                          <MaterialCommunityIcons name='crown' size={14} color={currentTheme.main} />
-                          <TextDefault numberOfLines={1} textColor={currentTheme.fontFourthColor} normal bold>
-                            {t('membershipMemberDiscount', { percent: membership.membership?.benefits?.orderDiscountPercent })}
-                          </TextDefault>
-                        </View>
-                        <TextDefault numberOfLines={1} textColor='#16a34a' normal bold>
-                          -{configuration.currencySymbol}
-                          {memberDiscounts.order.toFixed(2)}
-                        </TextDefault>
-                      </View>
-                    </View>
-                  )}
-
                   {walletAmount > 0 && (
                     <View>
                       <View style={styles(currentTheme).horizontalLine2} />
@@ -1169,6 +1180,24 @@ function Checkout(props) {
                       {calculateTotal()}
                     </TextDefault>
                   </View>
+
+                  {memberDiscounts.delivery + memberDiscounts.order > 0 && (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 10, padding: 10, borderRadius: 10, backgroundColor: 'rgba(22,163,74,0.1)' }}>
+                      <MaterialCommunityIcons name='crown' size={16} color='#16a34a' />
+                      <TextDefault textColor='#16a34a' bold style={{ flex: 1 }}>
+                        {t('membershipYouSave', { amount: `${configuration.currencySymbol}${(memberDiscounts.delivery + memberDiscounts.order).toFixed(2)}` })}
+                      </TextDefault>
+                    </View>
+                  )}
+
+                  {pointsForOrder(+calculateTotal(), pointsPercent) > 0 && (
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8, padding: 10, borderRadius: 10, backgroundColor: 'rgba(255,128,0,0.1)' }}>
+                      <MaterialCommunityIcons name='star-circle' size={16} color={currentTheme.main} />
+                      <TextDefault textColor={currentTheme.main} bold style={{ flex: 1 }}>
+                        {t('pointsToEarn', { points: pointsForOrder(+calculateTotal(), pointsPercent) })}
+                      </TextDefault>
+                    </View>
+                  )}
                 </View>
 
                 <View style={[styles(currentTheme).termsContainer, styles().pT10, styles().mB10]}>

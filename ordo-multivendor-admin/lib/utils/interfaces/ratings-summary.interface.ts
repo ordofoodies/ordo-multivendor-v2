@@ -7,9 +7,15 @@ export interface IRatingStat {
   distribution: number[];
 }
 
+export interface IReviewTagCount {
+  tag: string;
+  count: number;
+}
+
 export interface IRatingsSummary {
   totalReviews: number;
   withComments: number;
+  topTags: IReviewTagCount[];
   restaurant: IRatingStat;
   food: IRatingStat;
   rider: IRatingStat;
@@ -31,6 +37,7 @@ export interface IAdminReview {
   foodRating: number | null;
   riderRating: number | null;
   serviceRating: number | null;
+  tags: string[] | null;
   comments: string | null;
   restaurantId: string | null;
   restaurantName: string | null;

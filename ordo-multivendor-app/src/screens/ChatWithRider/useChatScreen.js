@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useLayoutEffect, useCallback } 
 import ThemeContext from '../../ui/ThemeContext/ThemeContext'
 import { theme } from '../../utils/themeColors'
 import { Ionicons, FontAwesome5, Entypo } from '@expo/vector-icons'
-import { callNumber } from '../../utils/callNumber'
+import { contactRider } from '../../utils/contactRider'
 import gql from 'graphql-tag'
 import { chat } from '../../apollo/queries'
 import { subscriptionNewMessage } from '../../apollo/subscriptions'
@@ -131,10 +131,10 @@ export const useChatScreen = ({ navigation, route }) => {
             ...alignment.MRmedium
           }}>
           <Ionicons
-            name="call-outline"
+            name="logo-whatsapp"
             size={24}
             color={currentTheme.fontFourthColor}
-            onPress={() => callNumber(riderPhone)}
+            onPress={() => contactRider(riderPhone)}
           />
         </View>
       ) : null,

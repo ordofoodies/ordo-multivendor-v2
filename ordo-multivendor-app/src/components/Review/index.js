@@ -13,6 +13,7 @@ import { useApolloClient, useMutation } from '@apollo/client'
 import { reviewOrder } from '../../apollo/mutations'
 import { useTranslation } from 'react-i18next'
 import { FlashMessage } from '../../ui/FlashMessage/FlashMessage'
+import { getReviewTags, isPositiveRating, reviewTagI18nKey } from '../../utils/reviewTags'
 
 const ORDER = gql`${orderQuery}`
 const REVIEWORDER = gql`
@@ -30,6 +31,8 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
   const [overall, setOverall] = useState(rating || 0)
   const [ratings, setRatings] = useState(EMPTY_RATINGS)
   const [description, setDescription] = useState('')
+  const [selectedTags, setSelectedTags] = useState([])
+  const [showComment, setShowComment] = useState(false)
   const [loading, setLoading] = useState(false)
   const [order, setOrder] = useState()
 
@@ -61,6 +64,8 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
     if (!orderId) return
     setRatings(EMPTY_RATINGS)
     setDescription('')
+    setSelectedTags([])
+    setShowComment(false)
     client
       .query({ query: ORDER, variables: { id: orderId } })
       .then((result) => setOrder(result?.data?.order))
@@ -69,6 +74,19 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
 
   const hasRider = Boolean(order?.rider?._id) && !order?.isPickedUp
   const setRating = (key) => (value) => setRatings((prev) => ({ ...prev, [key]: value }))
+
+  // preset feedback follows the overall stars: praise for 4–5, problems for 1–3
+  const availableTags = getReviewTags(overall, { hasRider })
+  const positive = isPositiveRating(overall)
+
+  // drop picks that no longer apply after the customer changes the star rating
+  useEffect(() => {
+    const allowed = new Set(availableTags.map((tag) => tag.key))
+    setSelectedTags((prev) => prev.filter((key) => allowed.has(key)))
+  }, [positive, hasRider])
+
+  const toggleTag = (key) =>
+    setSelectedTags((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
 
   const close = () => ref?.current?.close()
 
@@ -87,11 +105,13 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
           foodRating: ratings.food || null,
           riderRating: hasRider ? ratings.rider || null : null,
           serviceRating: ratings.service || null,
-          description
+          tags: selectedTags,
+          description: description.trim()
         }
       })
       FlashMessage({ message: t('thanksForYourFeedback') })
       setDescription('')
+      setSelectedTags([])
       close()
     } catch (error) {
       FlashMessage({ message: error?.graphQLErrors?.[0]?.message || error?.message || t('somethingWentWrong') })
@@ -152,6 +172,21 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
 
           {overall > 0 && (
             <View>
+              <TextDefault textColor={theme.gray900} H5 bolder style={{ marginTop: scale(4), marginBottom: scale(8) }} isRTL>
+                {positive ? t('reviewTagsPositiveTitle', { defaultValue: 'What did you like?' }) : t('reviewTagsNegativeTitle', { defaultValue: 'What went wrong?' })}
+              </TextDefault>
+              <View style={[styles.tagWrap, { flexDirection: theme?.isRTL ? 'row-reverse' : 'row' }]}>
+                {availableTags.map((tag) => (
+                  <TagChip
+                    key={tag.key}
+                    label={t(reviewTagI18nKey(tag.key), { defaultValue: tag.label })}
+                    selected={selectedTags.includes(tag.key)}
+                    onPress={() => toggleTag(tag.key)}
+                    theme={theme}
+                  />
+                ))}
+              </View>
+
               <RatingRow label={t('rateFood')} value={ratings.food} onSelect={setRating('food')} theme={theme} />
               {hasRider && (
                 <RatingRow
@@ -163,18 +198,25 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
               )}
               <RatingRow label={t('rateOrdoService')} value={ratings.service} onSelect={setRating('service')} theme={theme} />
 
-              <TextDefault textColor={theme.gray900} H5 bolder style={{ marginVertical: scale(8) }} isRTL>
-                {t('tellAboutExp')} {order?.restaurant?.name}
-              </TextDefault>
-              <TextInput
-                placeholder={t('typeHere')}
-                placeholderTextColor={theme.placeholderColor}
-                value={description}
-                onChangeText={setDescription}
-                maxLength={500}
-                multiline
-                style={[styles.modalInput(theme), { minHeight: scale(60), textAlignVertical: 'top' }]}
-              />
+              {/* free text is optional and tucked away: the preset tags cover most feedback */}
+              {showComment ? (
+                <TextInput
+                  autoFocus
+                  placeholder={t('typeHere')}
+                  placeholderTextColor={theme.placeholderColor}
+                  value={description}
+                  onChangeText={setDescription}
+                  maxLength={500}
+                  multiline
+                  style={[styles.modalInput(theme), { minHeight: scale(60), textAlignVertical: 'top', marginTop: scale(8) }]}
+                />
+              ) : (
+                <TouchableOpacity onPress={() => setShowComment(true)} style={{ paddingVertical: scale(10) }}>
+                  <TextDefault textColor={theme.gray500} bold isRTL>
+                    + {t('addCommentOptional', { defaultValue: 'Add a comment (optional)' })}
+                  </TextDefault>
+                </TouchableOpacity>
+              )}
               <Button
                 text={t('submit')}
                 buttonProps={{ onPress: onSubmit, disabled: loading }}
@@ -188,6 +230,15 @@ function Review({ onOverlayPress, theme, orderId, rating }, ref) {
     </Modalize>
   )
 }
+
+const TagChip = ({ label, selected, onPress, theme }) => (
+  <TouchableOpacity activeOpacity={0.7} onPress={onPress} style={styles.tagChip(theme, selected)}>
+    <TextDefault H5 bold={selected} textColor={selected ? theme.black : theme.gray900}>
+      {selected ? '✓ ' : ''}
+      {label}
+    </TextDefault>
+  </TouchableOpacity>
+)
 
 const RatingRow = ({ label, value, onSelect, theme }) => (
   <View style={styles.ratingRow(theme)}>

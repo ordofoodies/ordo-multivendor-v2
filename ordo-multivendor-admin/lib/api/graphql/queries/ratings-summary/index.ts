@@ -11,6 +11,10 @@ export const GET_RATINGS_SUMMARY = gql`
     ratingsSummary(dateFrom: $dateFrom, dateTo: $dateTo) {
       totalReviews
       withComments
+      topTags {
+        tag
+        count
+      }
       restaurant { ${RATING_STAT} }
       food { ${RATING_STAT} }
       rider { ${RATING_STAT} }
@@ -68,6 +72,7 @@ export const GET_ADMIN_REVIEWS = gql`
         foodRating
         riderRating
         serviceRating
+        tags
         comments
         restaurantId
         restaurantName

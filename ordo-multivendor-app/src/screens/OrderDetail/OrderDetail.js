@@ -24,6 +24,7 @@ import { ProgressBar, checkStatus } from '../../components/Main/ActiveOrders/Pro
 import { useNavigation } from '@react-navigation/native'
 import { PriceRow } from '../../components/OrderDetail/PriceRow'
 import { ORDER_STATUS_ENUM } from '../../utils/enums'
+import { memberDiscountRatio, pointsForOrder, usePointsPercent } from '../../utils/memberPricing'
 import { CancelModal } from '../../components/OrderDetail/CancelModal'
 import Button from '../../components/Button/Button'
 import { gql, useMutation } from '@apollo/client'
@@ -55,6 +56,7 @@ function OrderDetail(props) {
   const orderData = props?.route.params ? props?.route.params?.order : null
   // console.log('orderData',orderData)
   const { loadingOrders, errorOrders, orders } = useContext(OrdersContext)
+  const pointsPercent = usePointsPercent()
   const configuration = useContext(ConfigurationContext)
   const themeContext = useContext(ThemeContext)
   const currentTheme = {
@@ -142,6 +144,12 @@ function OrderDetail(props) {
   const memberDelivery = order?.membershipDeliveryDiscount || 0
   const memberOrder = order?.membershipOrderDiscount || 0
   const subTotal = total - tip - tax - (deliveryCharges - memberDelivery) + memberOrder
+  // spreads the member discount over the items so each shows its crossed-out price
+  const memberRatio = memberDiscountRatio(memberOrder, subTotal)
+  // delivered: what was actually awarded; otherwise an estimate from the customer's tier
+  const isDelivered = order?.orderStatus === ORDER_STATUS_ENUM.DELIVERED
+  const isCancelled = [ORDER_STATUS_ENUM.CANCELLED, ORDER_STATUS_ENUM.CANCELLEDBYREST].includes(order?.orderStatus)
+  const points = isCancelled ? 0 : isDelivered ? order?.customerPointsEarned || 0 : pointsForOrder(+total, pointsPercent)
 
   const isOrderPending = order?.orderStatus === ORDER_STATUS_ENUM.PENDING
   const isOrderCancelable = isOrderPending
@@ -260,8 +268,8 @@ function OrderDetail(props) {
           )}
         </View>
         <Instructions title={'Instructions'} theme={currentTheme} message={order?.instructions} />
-        <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} />
-        <Taxes tax={tax} deliveryCharges={deliveryCharges} memberDelivery={memberDelivery} memberOrder={memberOrder} currency={configuration.currencySymbol} />
+        <Detail navigation={props?.navigation} currencySymbol={configuration.currencySymbol} items={items} from={restaurant?.name} orderNo={order?.orderId} deliveryAddress={deliveryAddress?.deliveryAddress} subTotal={subTotal} tip={tip} tax={tax} deliveryCharges={deliveryCharges} total={total} theme={currentTheme} id={id} rider={order?.rider} orderStatus={order?.orderStatus} memberRatio={memberRatio} />
+        <Taxes tax={tax} deliveryCharges={deliveryCharges} memberDelivery={memberDelivery} memberOrder={memberOrder} memberRatio={memberRatio} points={points} pointsEarned={isDelivered} currency={configuration.currencySymbol} />
       </ScrollView>
       <View style={styles().bottomContainer(currentTheme)}>
         {/* Tip is not showing on the tracking page

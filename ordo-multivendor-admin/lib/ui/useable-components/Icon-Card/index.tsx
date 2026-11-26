@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Rating } from 'primereact/rating';
 import { IProfileCardProps } from '@/lib/utils/interfaces';
 import Image from 'next/image';
+import ReviewTags from '@/lib/ui/useable-components/review-tags';
 
 const ProfileCard: React.FC<IProfileCardProps> = ({
   name,
@@ -10,6 +11,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
   foodRating,
   imageSrc,
   comments,
+  tags,
   reviewContent,
   orderId,
   createdAt,
@@ -55,6 +57,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
               Date: {createdAt}
             </div>
           )}
+          <ReviewTags tags={tags} className="mt-2 justify-center md:justify-start" />
         </div>
         <div className="basis-[30%] flex items-center flex-wrap gap-4 justify-center sm:justify-end mt-4 md:mt-0">
           <div className="flex flex-col items-center">
@@ -77,9 +80,11 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
             <span className="mr-1 dark:text-white">💬</span>
             <span className="dark:text-white">Review</span>
           </button>
-          <span className="p-2 text-xs rounded-full bg-gray-100">
-            {comments || 'No comments'}
-          </span>
+          {comments ? (
+            <span className="p-2 text-xs rounded-full bg-gray-100">
+              {comments}
+            </span>
+          ) : null}
         </div>
       </div>
       {reviewContent && showModal && (

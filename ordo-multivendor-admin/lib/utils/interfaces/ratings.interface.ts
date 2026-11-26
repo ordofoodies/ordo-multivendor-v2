@@ -13,6 +13,7 @@ export interface IRating extends IGlobalComponentProps {
   imageSrc: string;
   reviewContent: string;
   comments?: string;
+  tags?: string[] | null;
 }
 
 export interface IReview extends IGlobalComponentProps {
@@ -34,6 +35,7 @@ export interface IReview extends IGlobalComponentProps {
   };
   rating: number;
   foodRating?: number | null;
+  tags?: string[] | null;
   comments: string;
   description: string;
   createdAt: string;

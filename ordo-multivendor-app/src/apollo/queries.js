@@ -424,6 +424,7 @@ export const order = `query Order($id:String!){
     deliveryCharges
     membershipDeliveryDiscount
     membershipOrderDiscount
+    customerPointsEarned
     acceptedAt
     pickedAt
     deliveredAt
@@ -511,6 +512,7 @@ export const myOrders = `query Orders($offset:Int){
     deliveryCharges
     membershipDeliveryDiscount
     membershipOrderDiscount
+    customerPointsEarned
     acceptedAt
     pickedAt
     deliveredAt
@@ -936,6 +938,7 @@ export const orderFragment = `fragment NewOrder on Order {
   rider{
     _id
     name
+    phone
   }
   review{
     _id
@@ -955,6 +958,7 @@ export const orderFragment = `fragment NewOrder on Order {
   deliveryCharges
   membershipDeliveryDiscount
   membershipOrderDiscount
+  customerPointsEarned
   acceptedAt
   pickedAt
   deliveredAt

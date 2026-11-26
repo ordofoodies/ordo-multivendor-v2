@@ -4,6 +4,8 @@ export const subscriptionOrder = `subscription SubscriptionOrder($id:String!){
         orderStatus
         rider{
             _id
+            name
+            phone
         }
         completionTime
         preparationTime
@@ -70,6 +72,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       rider{
         _id
         name
+        phone
       }
       review{
         _id
@@ -89,6 +92,7 @@ export const orderStatusChanged = `subscription OrderStatusChanged($userId:Strin
       deliveryCharges
       membershipDeliveryDiscount
       membershipOrderDiscount
+      customerPointsEarned
       acceptedAt
       pickedAt
       deliveredAt
